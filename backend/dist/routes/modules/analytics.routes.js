@@ -1,0 +1,130 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = analyticsRoutes;
+const dayjs_1 = __importDefault(require("dayjs"));
+const enums_1 = require("../../generated/prisma/enums");
+const statistics_service_1 = require("../../services/statistics.service");
+function buildBuckets(start, count, unit) {
+    const buckets = new Map();
+    for (let i = 0; i < count; i += 1) {
+        const bucketStart = start.add(i, unit).startOf(unit).toISOString();
+        buckets.set(bucketStart, 0);
+    }
+    return buckets;
+}
+function getSuggestedActions({ focusCompletionRate, averageFocusMinutes, dailyGoalMinutes, streak, }) {
+    const suggestions = [];
+    if (focusCompletionRate < 0.6) {
+        suggestions.push("Try shorter focus intervals to build consistency.");
+    }
+    else if (focusCompletionRate > 0.9) {
+        suggestions.push("Great streak! Consider increasing your daily goal slightly.");
+    }
+    if (averageFocusMinutes < dailyGoalMinutes * 0.5) {
+        suggestions.push("Schedule a dedicated focus block early in your day.");
+    }
+    if (streak < 3) {
+        suggestions.push("Log your next session to start building a focus streak.");
+    }
+    else {
+        suggestions.push("Maintain your momentum by planning tomorrow's focus sessions.");
+    }
+    return suggestions;
+}
+async function analyticsRoutes(app) {
+    app.addHook("preHandler", app.authenticate);
+    app.get("/overview", async (request, reply) => {
+        const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
+        if (!user) {
+            return reply.code(404).send({ message: "User not found" });
+        }
+        const [summary, workSessions, focusSessions] = await Promise.all([
+            (0, statistics_service_1.getTimeSummary)(app.prisma, user.id),
+            app.prisma.workSession.findMany({
+                where: {
+                    userId: user.id,
+                    durationMinutes: { not: null },
+                    startedAt: {
+                        gte: (0, dayjs_1.default)().startOf("day").subtract(6, "day").toDate(),
+                    },
+                },
+                select: {
+                    startedAt: true,
+                    durationMinutes: true,
+                },
+            }),
+            app.prisma.focusSession.findMany({
+                where: {
+                    userId: user.id,
+                    durationMinutes: { not: null },
+                    startedAt: {
+                        gte: (0, dayjs_1.default)().startOf("day").subtract(29, "day").toDate(),
+                    },
+                },
+                select: {
+                    startedAt: true,
+                    durationMinutes: true,
+                    completed: true,
+                    distractions: true,
+                    mode: true,
+                },
+            }),
+        ]);
+        const trendBuckets = buildBuckets((0, dayjs_1.default)().startOf("day").subtract(6, "day"), 7, "day");
+        workSessions.forEach((session) => {
+            const bucketKey = (0, dayjs_1.default)(session.startedAt).startOf("day").toISOString();
+            const current = trendBuckets.get(bucketKey) ?? 0;
+            trendBuckets.set(bucketKey, current + (session.durationMinutes ?? 0));
+        });
+        const focusStats = focusSessions.reduce((acc, session) => {
+            if (session.mode === enums_1.FocusSessionMode.FOCUS) {
+                acc.focusMinutes += session.durationMinutes ?? 0;
+                acc.focusSessions += 1;
+                if (session.completed) {
+                    acc.completedSessions += 1;
+                }
+            }
+            else {
+                acc.breakMinutes += session.durationMinutes ?? 0;
+            }
+            acc.distractions += session.distractions ?? 0;
+            return acc;
+        }, {
+            focusMinutes: 0,
+            breakMinutes: 0,
+            focusSessions: 0,
+            completedSessions: 0,
+            distractions: 0,
+        });
+        const focusCompletionRate = focusStats.focusSessions === 0 ? 0 : focusStats.completedSessions / focusStats.focusSessions;
+        const averageFocusMinutes = focusStats.focusSessions === 0 ? 0 : focusStats.focusMinutes / focusStats.focusSessions;
+        const suggestions = getSuggestedActions({
+            focusCompletionRate,
+            averageFocusMinutes,
+            dailyGoalMinutes: user.dailyGoalMinutes,
+            streak: user.focusStreak,
+        });
+        return {
+            summary,
+            focus: {
+                totalMinutes: focusStats.focusMinutes,
+                breakMinutes: focusStats.breakMinutes,
+                completionRate: focusCompletionRate,
+                averageFocusMinutes,
+                totalSessions: focusStats.focusSessions,
+                completedSessions: focusStats.completedSessions,
+                distractions: focusStats.distractions,
+            },
+            streak: user.focusStreak,
+            productivityTrend: Array.from(trendBuckets.entries()).map(([date, minutes]) => ({
+                date,
+                minutes,
+            })),
+            suggestions,
+        };
+    });
+}
+//# sourceMappingURL=analytics.routes.js.map
