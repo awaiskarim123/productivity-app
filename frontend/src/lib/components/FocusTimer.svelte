@@ -104,11 +104,11 @@ let currentSessionId: string | null = null;
 	};
 </script>
 
-<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg backdrop-blur">
-	<div class="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-lg backdrop-blur sm:p-6">
+	<div class="flex flex-col gap-4 sm:gap-6 md:flex-row md:items-start md:justify-between">
 		<div>
-			<h2 class="text-lg font-semibold text-slate-100">Focus Timer</h2>
-			<p class="text-sm text-slate-400">
+			<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus Timer</h2>
+			<p class="mt-1 text-xs text-slate-400 sm:text-sm">
 				Stay in flow with guided Pomodoro-style focus and recovery blocks
 			</p>
 		</div>
@@ -121,9 +121,9 @@ let currentSessionId: string | null = null;
 		{/if}
 	</div>
 
-	<div class="mt-8 grid gap-8 lg:grid-cols-[1.2fr,0.8fr]">
-		<div class="flex flex-col items-center justify-center rounded-2xl border border-slate-800/60 bg-slate-950/50 p-8">
-			<div class="relative flex h-48 w-48 items-center justify-center rounded-full border border-slate-800 bg-slate-900/60">
+	<div class="mt-6 grid gap-6 sm:mt-8 sm:gap-8 lg:grid-cols-[1.2fr,0.8fr]">
+		<div class="flex flex-col items-center justify-center rounded-2xl border border-slate-800/60 bg-slate-950/50 p-4 sm:p-6 md:p-8">
+			<div class="relative flex h-40 w-40 items-center justify-center rounded-full border border-slate-800 bg-slate-900/60 sm:h-48 sm:w-48">
 				<svg class="absolute h-full w-full -rotate-90 transform" viewBox="0 0 100 100">
 					<circle
 						class="stroke-slate-800"
@@ -153,7 +153,7 @@ let currentSessionId: string | null = null;
 					{/if}
 				</svg>
 				<div class="relative flex flex-col items-center justify-center gap-1">
-					<span class="text-4xl font-semibold text-white">
+					<span class="text-3xl font-semibold text-white sm:text-4xl">
 						{formatTime(activeSession ? remainingSeconds : focusDuration * 60)}
 					</span>
 					<span class="text-xs uppercase tracking-wide text-slate-400">
@@ -167,16 +167,16 @@ let currentSessionId: string | null = null;
 			</div>
 
 			{#if activeSession}
-				<div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+				<div class="mt-4 flex flex-wrap items-center justify-center gap-2 sm:mt-6 sm:gap-3">
 					<button
-						class="rounded-xl border border-emerald-500/60 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-200 transition hover:bg-emerald-500/20"
+						class="rounded-xl border border-emerald-500/60 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-200 transition hover:bg-emerald-500/20 sm:px-4 sm:py-2 sm:text-sm"
 						type="button"
 						onclick={() => handleEnd(true)}
 					>
 						Complete session
 					</button>
 					<button
-						class="rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-700"
+						class="rounded-xl border border-slate-700 bg-slate-800/80 px-3 py-1.5 text-xs font-medium text-slate-200 transition hover:bg-slate-700 sm:px-4 sm:py-2 sm:text-sm"
 						type="button"
 						onclick={() => handleEnd(false)}
 					>
@@ -184,16 +184,16 @@ let currentSessionId: string | null = null;
 					</button>
 				</div>
 			{:else}
-				<div class="mt-6 grid w-full gap-4 md:grid-cols-2">
+				<div class="mt-4 grid w-full gap-3 sm:mt-6 sm:gap-4 md:grid-cols-2">
 					<button
-						class="rounded-xl bg-emerald-500/90 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+						class="rounded-xl bg-emerald-500/90 px-3 py-2 text-xs font-semibold text-white transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300 sm:px-4 sm:py-3 sm:text-sm"
 						type="button"
 						onclick={() => handleStart('FOCUS')}
 					>
 						Start focus session
 					</button>
 					<button
-						class="rounded-xl bg-sky-500/90 px-4 py-3 text-sm font-semibold text-white transition hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300"
+						class="rounded-xl bg-sky-500/90 px-3 py-2 text-xs font-semibold text-white transition hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300 sm:px-4 sm:py-3 sm:text-sm"
 						type="button"
 						onclick={() => handleStart('BREAK')}
 					>
@@ -203,8 +203,8 @@ let currentSessionId: string | null = null;
 			{/if}
 		</div>
 
-		<div class="space-y-6">
-			<div class="grid gap-4">
+		<div class="space-y-4 sm:space-y-6">
+			<div class="grid gap-3 sm:gap-4">
 				<label class="space-y-2">
 					<span class="flex items-center justify-between text-xs font-medium uppercase tracking-wide text-slate-400">
 						<span>Focus length</span>

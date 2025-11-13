@@ -12,7 +12,8 @@
 		fetchWorkSessions,
 		fetchWorkSummary,
 		startFocusSession,
-		startWorkSession
+		startWorkSession,
+		updateProfile
 	} from '$lib/api';
 	import { authStore } from '$lib/stores/auth';
 	import type {
@@ -190,6 +191,42 @@ dayjs.extend(relativeTime);
 		{ label: 'Last 8 weeks', value: 'weekly' },
 		{ label: 'Last 6 months', value: 'monthly' }
 	];
+
+	let editingDailyGoal = false;
+	let newDailyGoal = 300;
+	let goalUpdateError: string | null = null;
+
+	function startEditingGoal() {
+		if (profile) {
+			newDailyGoal = profile.dailyGoalMinutes;
+			editingDailyGoal = true;
+			goalUpdateError = null;
+		}
+	}
+
+	function cancelEditingGoal() {
+		editingDailyGoal = false;
+		goalUpdateError = null;
+	}
+
+	async function saveDailyGoal() {
+		if (!profile) return;
+		
+		if (newDailyGoal < 30 || newDailyGoal > 1440) {
+			goalUpdateError = 'Daily goal must be between 30 and 1440 minutes';
+			return;
+		}
+
+		try {
+			const response = await updateProfile({ dailyGoalMinutes: newDailyGoal });
+			profile = response.profile;
+			authStore.setUser(response.profile);
+			editingDailyGoal = false;
+			goalUpdateError = null;
+		} catch (error) {
+			goalUpdateError = error instanceof Error ? error.message : 'Failed to update daily goal';
+		}
+	}
 </script>
 
 {#if loading}
@@ -212,40 +249,100 @@ dayjs.extend(relativeTime);
 		</button>
 	</div>
 {:else if profile && summary && analytics && focusStats && workSummary}
-	<div class="space-y-10">
-		<section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-5 py-4">
-				<h3 class="text-xs font-medium uppercase tracking-wide text-slate-400">Today's focus</h3>
-				<p class="mt-3 text-2xl font-semibold text-white">{formatMinutes(summary.todayMinutes)}</p>
-				<p class="text-xs text-slate-500">Goal: {profile.dailyGoalMinutes} minutes</p>
+	<div class="space-y-6 sm:space-y-10">
+		<section class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-4 py-3 sm:px-5 sm:py-4">
+				<div class="flex items-start justify-between">
+					<div class="flex-1 min-w-0">
+						<h3 class="text-xs font-medium uppercase tracking-wide text-slate-400">Today's focus</h3>
+						<p class="mt-2 text-xl font-semibold text-white sm:mt-3 sm:text-2xl">{formatMinutes(summary.todayMinutes)}</p>
+						{#if editingDailyGoal}
+							<div class="mt-2 space-y-2">
+								<input
+									type="number"
+									bind:value={newDailyGoal}
+									min="30"
+									max="1440"
+									class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
+									placeholder="Minutes"
+									onkeydown={(e) => e.key === 'Enter' && saveDailyGoal()}
+								/>
+								{#if goalUpdateError}
+									<p class="text-xs text-rose-400">{goalUpdateError}</p>
+								{/if}
+								<div class="flex gap-2">
+									<button
+										type="button"
+										onclick={saveDailyGoal}
+										class="flex-1 rounded-lg bg-emerald-500/90 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-emerald-400"
+									>
+										Save
+									</button>
+									<button
+										type="button"
+										onclick={cancelEditingGoal}
+										class="flex-1 rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-800"
+									>
+										Cancel
+									</button>
+								</div>
+							</div>
+						{:else}
+							<div class="mt-2 flex items-center gap-2">
+								<p class="text-xs text-slate-500">Goal: {profile.dailyGoalMinutes} minutes</p>
+								<button
+									type="button"
+									onclick={startEditingGoal}
+									class="text-xs text-emerald-400 hover:text-emerald-300 transition"
+									title="Edit daily goal"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										class="h-3.5 w-3.5"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+										/>
+									</svg>
+								</button>
+							</div>
+						{/if}
+					</div>
+				</div>
 			</div>
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-5 py-4">
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-4 py-3 sm:px-5 sm:py-4">
 				<h3 class="text-xs font-medium uppercase tracking-wide text-slate-400">Weekly progress</h3>
-				<p class="mt-3 text-2xl font-semibold text-white">{formatMinutes(summary.weeklyMinutes)}</p>
-				<p class="text-xs text-slate-500">Last 7 days of work</p>
+				<p class="mt-2 text-xl font-semibold text-white sm:mt-3 sm:text-2xl">{formatMinutes(summary.weeklyMinutes)}</p>
+				<p class="mt-1 text-xs text-slate-500">Last 7 days of work</p>
 			</div>
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-5 py-4">
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-4 py-3 sm:px-5 sm:py-4">
 				<h3 class="text-xs font-medium uppercase tracking-wide text-slate-400">Monthly output</h3>
-				<p class="mt-3 text-2xl font-semibold text-white">{formatMinutes(summary.monthlyMinutes)}</p>
-				<p class="text-xs text-slate-500">Steady habit is forming</p>
+				<p class="mt-2 text-xl font-semibold text-white sm:mt-3 sm:text-2xl">{formatMinutes(summary.monthlyMinutes)}</p>
+				<p class="mt-1 text-xs text-slate-500">Steady habit is forming</p>
 			</div>
-			<div class="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4">
+			<div class="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 sm:px-5 sm:py-4">
 				<h3 class="text-xs font-medium uppercase tracking-wide text-emerald-200">Focus streak</h3>
-				<p class="mt-3 text-2xl font-semibold text-emerald-100">{profile.focusStreak} days</p>
-				<p class="text-xs text-emerald-200/70">Keep the momentum going</p>
+				<p class="mt-2 text-xl font-semibold text-emerald-100 sm:mt-3 sm:text-2xl">{profile.focusStreak} days</p>
+				<p class="mt-1 text-xs text-emerald-200/70">Keep the momentum going</p>
 			</div>
 		</section>
 
 		<section class="grid gap-6 lg:grid-cols-[1fr,420px]">
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-6">
-				<div class="flex flex-wrap items-center justify-between gap-3">
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 sm:p-6">
+				<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 					<div>
-						<h2 class="text-lg font-semibold text-slate-100">Focus trends</h2>
-						<p class="text-sm text-slate-400">
+						<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus trends</h2>
+						<p class="mt-1 text-xs text-slate-400 sm:text-sm">
 							Monitor how your focus time evolves across chosen ranges
 						</p>
 					</div>
-					<div class="flex items-center gap-2 rounded-full border border-slate-800 bg-slate-950/50 px-1 py-1">
+					<div class="flex flex-wrap items-center gap-2 rounded-full border border-slate-800 bg-slate-950/50 px-1 py-1">
 						{#each summaryPeriods as period}
 							<button
 								type="button"
@@ -268,16 +365,16 @@ dayjs.extend(relativeTime);
 			</div>
 
 			<div class="space-y-6">
-				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-6">
-					<h2 class="text-lg font-semibold text-slate-100">Motivation snapshot</h2>
+				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 sm:p-6">
+					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Motivation snapshot</h2>
 					<p class="mt-4 text-sm text-slate-300">{quote?.text}</p>
 					<p class="mt-2 text-xs uppercase tracking-wide text-slate-500">
 						{quote?.author ?? 'Unknown'}
 					</p>
 				</div>
 
-				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-6">
-					<h2 class="text-lg font-semibold text-slate-100">Focus stats</h2>
+				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 sm:p-6">
+					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus stats</h2>
 					<div class="mt-5 space-y-4">
 						<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
 							<span class="text-sm text-slate-400">Past {focusStats.rangeDays} days</span>
@@ -310,17 +407,17 @@ dayjs.extend(relativeTime);
 
 		<section class="grid gap-6 lg:grid-cols-[1fr,420px]">
 			<div class="space-y-6">
-				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-6">
-					<div class="flex flex-wrap items-center justify-between gap-3">
+				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 sm:p-6">
+					<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 						<div>
-							<h2 class="text-lg font-semibold text-slate-100">
+							<h2 class="text-base font-semibold text-slate-100 sm:text-lg">
 								{activeWorkSession ? 'Active session' : 'Work sessions'}
 							</h2>
-							<p class="text-sm text-slate-400">
+							<p class="mt-1 text-xs text-slate-400 sm:text-sm">
 								Track deep work from start to finish
 							</p>
 						</div>
-						<div class="flex gap-2">
+						<div class="flex gap-2 sm:flex-shrink-0">
 							{#if activeWorkSession}
 								<button
 									type="button"
@@ -377,8 +474,8 @@ dayjs.extend(relativeTime);
 					</ul>
 				</div>
 
-				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-6">
-					<h2 class="text-lg font-semibold text-slate-100">Productivity insights</h2>
+				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 sm:p-6">
+					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Productivity insights</h2>
 					<ul class="mt-4 space-y-3">
 						{#each analytics.suggestions as suggestion}
 							<li class="flex items-start gap-3 rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3 text-sm text-slate-300">

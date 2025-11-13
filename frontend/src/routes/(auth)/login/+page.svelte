@@ -18,13 +18,13 @@
 	};
 </script>
 
-<div class="w-full max-w-md space-y-8">
+<div class="w-full max-w-md space-y-6 sm:space-y-8 px-4">
 	<div class="text-center">
-		<h1 class="text-3xl font-semibold text-white">Welcome back</h1>
-		<p class="mt-2 text-sm text-slate-400">Track your focus and stay productive</p>
+		<h1 class="text-2xl font-semibold text-white sm:text-3xl">Welcome back</h1>
+		<p class="mt-2 text-xs text-slate-400 sm:text-sm">Track your focus and stay productive</p>
 	</div>
 
-	<form class="space-y-6 rounded-2xl border border-slate-800 bg-slate-900/70 p-8 shadow-xl backdrop-blur" on:submit={handleSubmit}>
+	<form class="space-y-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl backdrop-blur sm:space-y-6 sm:p-8" on:submit={handleSubmit}>
 		{#if errorMessage}
 			<div class="rounded-lg border border-rose-500/50 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
 				{errorMessage}
@@ -70,7 +70,7 @@
 		</button>
 	</form>
 
-	<p class="text-center text-sm text-slate-400">
+	<p class="text-center text-xs text-slate-400 sm:text-sm">
 		Don't have an account?
 		<a class="font-medium text-emerald-400 hover:text-emerald-300" href="/register">Create one</a>
 	</p>
