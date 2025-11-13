@@ -20,13 +20,13 @@
 	};
 </script>
 
-<div class="w-full max-w-2xl space-y-8">
-	<div class="text-center">
-		<h1 class="text-3xl font-semibold text-white">Create your focus hub</h1>
-		<p class="mt-2 text-sm text-slate-400">Set goals, track work, and stay motivated</p>
+<div class="w-full max-w-2xl space-y-6 sm:space-y-8">
+	<div class="text-center px-4">
+		<h1 class="text-2xl font-semibold text-white sm:text-3xl">Create your focus hub</h1>
+		<p class="mt-2 text-xs text-slate-400 sm:text-sm">Set goals, track work, and stay motivated</p>
 	</div>
 
-	<form class="grid gap-6 rounded-2xl border border-slate-800 bg-slate-900/70 p-8 shadow-xl backdrop-blur md:grid-cols-2" on:submit={handleSubmit}>
+	<form class="grid gap-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-xl backdrop-blur sm:gap-6 sm:p-6 md:p-8 md:grid-cols-2" on:submit={handleSubmit}>
 		{#if errorMessage}
 			<div class="md:col-span-2 rounded-lg border border-rose-500/50 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
 				{errorMessage}
@@ -92,7 +92,7 @@
 		</button>
 	</form>
 
-	<p class="text-center text-sm text-slate-400">
+	<p class="text-center text-xs text-slate-400 sm:text-sm px-4">
 		Already tracking your focus?
 		<a class="font-medium text-emerald-400 hover:text-emerald-300" href="/login">Sign in</a>
 	</p>
