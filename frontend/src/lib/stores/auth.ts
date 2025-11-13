@@ -36,20 +36,40 @@ function persist(state: AuthState) {
 }
 
 async function requestAuth(endpoint: string, payload: Record<string, unknown>) {
-	const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(payload)
-	});
+	const url = `${API_BASE_URL}${endpoint}`;
+	
+	try {
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(payload)
+		});
 
-	if (!response.ok) {
-		const errorBody = await response.json().catch(() => ({}));
-		throw new Error(errorBody.message ?? 'Authentication failed');
+		if (!response.ok) {
+			const errorBody = await response.json().catch(() => ({}));
+			const errorMessage = errorBody.message ?? `Authentication failed with status ${response.status}`;
+			console.error(`Auth Error [POST ${endpoint}]:`, {
+				status: response.status,
+				statusText: response.statusText,
+				message: errorMessage,
+				errors: errorBody.errors
+			});
+			throw new Error(errorMessage);
+		}
+
+		return (await response.json()) as AuthResponse;
+	} catch (error) {
+		if (error instanceof TypeError && error.message.includes('fetch')) {
+			console.error(`Network Error [POST ${endpoint}]:`, {
+				url,
+				error: error.message
+			});
+			throw new Error(`Unable to connect to API. Please ensure the backend server is running at ${API_BASE_URL}`);
+		}
+		throw error;
 	}
-
-	return (await response.json()) as AuthResponse;
 }
 
 function createAuthStore() {

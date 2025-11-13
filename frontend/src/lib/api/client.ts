@@ -38,32 +38,52 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 		headers.set('Authorization', `Bearer ${state.accessToken}`);
 	}
 
-	let response = await fetch(`${API_BASE_URL}${path}`, {
-		...options,
-		method,
-		headers,
-		body
-	});
+	const url = `${API_BASE_URL}${path}`;
+	
+	try {
+		let response = await fetch(url, {
+			...options,
+			method,
+			headers,
+			body
+		});
 
-	if (response.status === 401 && auth && state.refreshToken) {
-		const refreshed = await authStore.refresh();
-		if (refreshed) {
-			const refreshedState = get(authStore);
-			headers.set('Authorization', `Bearer ${refreshedState.accessToken}`);
-			response = await fetch(`${API_BASE_URL}${path}`, {
-				...options,
-				method,
-				headers,
-				body
-			});
+		if (response.status === 401 && auth && state.refreshToken) {
+			const refreshed = await authStore.refresh();
+			if (refreshed) {
+				const refreshedState = get(authStore);
+				headers.set('Authorization', `Bearer ${refreshedState.accessToken}`);
+				response = await fetch(url, {
+					...options,
+					method,
+					headers,
+					body
+				});
+			}
 		}
-	}
 
-	if (!response.ok) {
-		const errorBody = await response.json().catch(() => ({}));
-		throw new Error(errorBody.message ?? 'Request failed');
-	}
+		if (!response.ok) {
+			const errorBody = await response.json().catch(() => ({}));
+			const errorMessage = errorBody.message ?? `Request failed with status ${response.status}`;
+			console.error(`API Error [${method} ${path}]:`, {
+				status: response.status,
+				statusText: response.statusText,
+				message: errorMessage,
+				errors: errorBody.errors
+			});
+			throw new Error(errorMessage);
+		}
 
-	return parseResponse<T>(response);
+		return parseResponse<T>(response);
+	} catch (error) {
+		if (error instanceof TypeError && error.message.includes('fetch')) {
+			console.error(`Network Error [${method} ${path}]:`, {
+				url,
+				error: error.message
+			});
+			throw new Error(`Unable to connect to API. Please ensure the backend server is running at ${API_BASE_URL}`);
+		}
+		throw error;
+	}
 }
 
