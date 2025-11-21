@@ -27,6 +27,13 @@
 		sidebarOpen = false;
 	}
 
+	function handleOverlayKeydown(event: KeyboardEvent) {
+		if (event.key === 'Enter' || event.key === ' ') {
+			event.preventDefault();
+			closeSidebar();
+		}
+	}
+
 	const navItems = [
 		{
 			label: 'Dashboard',
@@ -154,6 +161,8 @@
 		<div
 			class="fixed inset-0 z-20 bg-black/50 lg:hidden"
 			onclick={closeSidebar}
+			onkeydown={handleOverlayKeydown}
+			tabindex="-1"
 		></div>
 	{/if}
 
