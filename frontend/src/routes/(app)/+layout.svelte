@@ -45,7 +45,7 @@
 <div class="flex min-h-screen w-full bg-slate-950 text-slate-100">
 	<!-- Sidebar -->
 	<aside
-		class="fixed inset-y-0 left-0 z-30 w-72 transform border-r border-slate-800/60 bg-slate-900/95 backdrop-blur transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 {sidebarOpen
+		class="fixed inset-y-0 left-0 z-30 w-64 transform border-r border-slate-800/60 bg-slate-900/95 backdrop-blur transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:w-72 {sidebarOpen
 			? 'translate-x-0'
 			: '-translate-x-full'}"
 	>
@@ -161,7 +161,7 @@
 	<!-- Main Content -->
 	<div class="flex w-full flex-col lg:pl-72">
 		<header class="sticky top-0 z-10 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur">
-			<div class="flex items-center justify-between gap-2 px-2 py-1.5 sm:gap-3 sm:px-3 sm:py-2">
+			<div class="flex items-center justify-between gap-2 px-2 py-1.5 sm:gap-2 sm:px-2.5 sm:py-2">
 				<button
 					type="button"
 					onclick={toggleSidebar}
@@ -205,7 +205,7 @@
 			</div>
 		</header>
 
-		<main class="flex-1 px-2 py-2 sm:px-3 sm:py-3 lg:px-4 lg:py-4">
+		<main class="flex-1 px-2 py-2 sm:px-2.5 sm:py-2 lg:px-2 lg:py-2.5">
 			{@render children()}
 		</main>
 	</div>
