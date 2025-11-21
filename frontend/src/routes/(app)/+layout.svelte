@@ -160,6 +160,8 @@
 	{#if sidebarOpen}
 		<div
 			class="fixed inset-0 z-20 bg-black/50 lg:hidden"
+			role="button"
+			aria-label="Close sidebar"
 			onclick={closeSidebar}
 			onkeydown={handleOverlayKeydown}
 			tabindex="-1"
