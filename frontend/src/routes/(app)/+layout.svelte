@@ -159,7 +159,7 @@
 	{/if}
 
 	<!-- Main Content -->
-	<div class="flex w-full flex-col lg:pl-72">
+	<div class="flex w-full flex-col lg:pl-[280px]">
 		<header class="sticky top-0 z-10 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur">
 			<div class="flex items-center justify-between gap-2 px-2 py-1.5 sm:gap-2 sm:px-2.5 sm:py-2">
 				<button
@@ -205,7 +205,7 @@
 			</div>
 		</header>
 
-		<main class="flex-1 px-2 py-2 sm:px-2.5 sm:py-2 lg:px-2 lg:py-2.5">
+		<main class="flex-1 px-1 py-1.5 sm:px-1.5 sm:py-2 lg:px-1 lg:py-2">
 			{@render children()}
 		</main>
 	</div>
