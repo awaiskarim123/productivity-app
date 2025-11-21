@@ -51,7 +51,7 @@
 	>
 		<div class="flex h-full flex-col">
 			<!-- Sidebar Header -->
-			<div class="flex items-center justify-between border-b border-slate-800/60 px-4 py-4 lg:px-6">
+			<div class="flex items-center justify-between border-b border-slate-800/60 px-3 py-3 sm:px-4">
 				<div class="flex items-center gap-2">
 					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20">
 						<svg
@@ -97,7 +97,7 @@
 			</div>
 
 			<!-- Navigation -->
-			<nav class="flex-1 space-y-1 px-3 py-4 lg:px-4">
+			<nav class="flex-1 space-y-1 px-2 py-3 sm:px-3">
 				{#each navItems as item}
 					{@const active = isActive(item.href)}
 					<a
@@ -115,8 +115,8 @@
 
 			<!-- User Section -->
 			{#if $authStore.user}
-				<div class="border-t border-slate-800/60 p-4">
-					<div class="rounded-lg border border-slate-800/60 bg-slate-950/50 p-3">
+				<div class="border-t border-slate-800/60 p-3">
+					<div class="rounded-lg border border-slate-800/60 bg-slate-950/50 p-2.5 sm:p-3">
 						<div class="flex items-center gap-3">
 							<div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400">
 								<span class="text-sm font-semibold">
@@ -161,7 +161,7 @@
 	<!-- Main Content -->
 	<div class="flex w-full flex-col lg:pl-64">
 		<header class="sticky top-0 z-10 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur">
-			<div class="flex items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4">
+			<div class="flex items-center justify-between gap-3 px-3 py-2 sm:gap-4 sm:px-4 sm:py-2.5">
 				<button
 					type="button"
 					onclick={toggleSidebar}
@@ -205,7 +205,7 @@
 			</div>
 		</header>
 
-		<main class="flex-1 px-4 py-6 sm:px-6 sm:py-10">
+		<main class="flex-1 px-3 py-3 sm:px-4 sm:py-4 lg:px-5 lg:py-5">
 			{@render children()}
 		</main>
 	</div>

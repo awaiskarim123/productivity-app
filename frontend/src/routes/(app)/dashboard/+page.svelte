@@ -249,8 +249,8 @@ dayjs.extend(relativeTime);
 		</button>
 	</div>
 {:else if profile && summary && analytics && focusStats && workSummary}
-	<div class="space-y-6 sm:space-y-10">
-		<section class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+	<div class="space-y-3 sm:space-y-4 lg:space-y-5">
+		<section class="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4 lg:gap-3">
 			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-4 py-3 sm:px-5 sm:py-4">
 				<div class="flex items-start justify-between">
 					<div class="flex-1 min-w-0">
@@ -333,8 +333,8 @@ dayjs.extend(relativeTime);
 			</div>
 		</section>
 
-		<section class="grid gap-6 lg:grid-cols-[1fr,420px]">
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 sm:p-6">
+		<section class="grid gap-3 sm:gap-4 lg:grid-cols-[1fr,420px] lg:gap-4">
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
 				<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 					<div>
 						<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus trends</h2>
@@ -354,7 +354,7 @@ dayjs.extend(relativeTime);
 						{/each}
 					</div>
 				</div>
-				<div class="mt-6">
+				<div class="mt-4 sm:mt-5">
 					<WorkSummaryChart
 						title="Focus minutes"
 						labels={workSummary.summary.map((point) => dayjs(point.periodStart).format('MMM D'))}
@@ -364,18 +364,18 @@ dayjs.extend(relativeTime);
 				</div>
 			</div>
 
-			<div class="space-y-6">
-				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 sm:p-6">
+			<div class="space-y-3 sm:space-y-4">
+				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
 					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Motivation snapshot</h2>
-					<p class="mt-4 text-sm text-slate-300">{quote?.text}</p>
+					<p class="mt-3 text-sm text-slate-300 sm:mt-4">{quote?.text}</p>
 					<p class="mt-2 text-xs uppercase tracking-wide text-slate-500">
 						{quote?.author ?? 'Unknown'}
 					</p>
 				</div>
 
-				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 sm:p-6">
+				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
 					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus stats</h2>
-					<div class="mt-5 space-y-4">
+					<div class="mt-3 space-y-2.5 sm:mt-4 sm:space-y-3">
 						<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
 							<span class="text-sm text-slate-400">Past {focusStats.rangeDays} days</span>
 							<span class="text-sm font-semibold text-white">
@@ -405,9 +405,9 @@ dayjs.extend(relativeTime);
 			</div>
 		</section>
 
-		<section class="grid gap-6 lg:grid-cols-[1fr,420px]">
-			<div class="space-y-6">
-				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 sm:p-6">
+		<section class="grid gap-3 sm:gap-4 lg:grid-cols-[1fr,420px] lg:gap-4">
+			<div class="space-y-3 sm:space-y-4">
+				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
 					<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 						<div>
 							<h2 class="text-base font-semibold text-slate-100 sm:text-lg">
@@ -438,7 +438,7 @@ dayjs.extend(relativeTime);
 						</div>
 					</div>
 
-					<ul class="mt-6 space-y-3">
+					<ul class="mt-4 space-y-2 sm:mt-5 sm:space-y-2.5">
 						{#if workSessions.length === 0}
 							<li class="rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-6 text-sm text-slate-400">
 								No sessions logged yet. Start one to see your progress here.
@@ -474,9 +474,9 @@ dayjs.extend(relativeTime);
 					</ul>
 				</div>
 
-				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 sm:p-6">
+				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
 					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Productivity insights</h2>
-					<ul class="mt-4 space-y-3">
+					<ul class="mt-3 space-y-2 sm:mt-4 sm:space-y-2.5">
 						{#each analytics.suggestions as suggestion}
 							<li class="flex items-start gap-3 rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3 text-sm text-slate-300">
 								<span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span>
