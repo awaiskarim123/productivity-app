@@ -161,7 +161,7 @@
 	<!-- Main Content -->
 	<div class="flex w-full flex-col lg:pl-72">
 		<header class="sticky top-0 z-10 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur">
-			<div class="flex items-center justify-between gap-3 px-3 py-2 sm:gap-4 sm:px-4 sm:py-2.5">
+			<div class="flex items-center justify-between gap-2 px-2 py-1.5 sm:gap-3 sm:px-3 sm:py-2">
 				<button
 					type="button"
 					onclick={toggleSidebar}
@@ -205,7 +205,7 @@
 			</div>
 		</header>
 
-		<main class="flex-1 px-3 py-3 sm:px-4 sm:py-4 lg:px-5 lg:py-5">
+		<main class="flex-1 px-2 py-2 sm:px-3 sm:py-3 lg:px-4 lg:py-4">
 			{@render children()}
 		</main>
 	</div>

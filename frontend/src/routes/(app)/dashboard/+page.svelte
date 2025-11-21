@@ -249,9 +249,9 @@ dayjs.extend(relativeTime);
 		</button>
 	</div>
 {:else if profile && summary && analytics && focusStats && workSummary}
-	<div class="space-y-3 sm:space-y-4 lg:space-y-5">
+	<div class="space-y-2 sm:space-y-3 lg:space-y-4">
 		<section class="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4 lg:gap-3">
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-4 py-3 sm:px-5 sm:py-4">
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3">
 				<div class="flex items-start justify-between">
 					<div class="flex-1 min-w-0">
 						<h3 class="text-xs font-medium uppercase tracking-wide text-slate-400">Today's focus</h3>
@@ -316,17 +316,17 @@ dayjs.extend(relativeTime);
 					</div>
 				</div>
 			</div>
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-4 py-3 sm:px-5 sm:py-4">
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3">
 				<h3 class="text-xs font-medium uppercase tracking-wide text-slate-400">Weekly progress</h3>
 				<p class="mt-2 text-xl font-semibold text-white sm:mt-3 sm:text-2xl">{formatMinutes(summary.weeklyMinutes)}</p>
 				<p class="mt-1 text-xs text-slate-500">Last 7 days of work</p>
 			</div>
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-4 py-3 sm:px-5 sm:py-4">
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3">
 				<h3 class="text-xs font-medium uppercase tracking-wide text-slate-400">Monthly output</h3>
 				<p class="mt-2 text-xl font-semibold text-white sm:mt-3 sm:text-2xl">{formatMinutes(summary.monthlyMinutes)}</p>
 				<p class="mt-1 text-xs text-slate-500">Steady habit is forming</p>
 			</div>
-			<div class="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 sm:px-5 sm:py-4">
+			<div class="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2.5 sm:px-4 sm:py-3">
 				<h3 class="text-xs font-medium uppercase tracking-wide text-emerald-200">Focus streak</h3>
 				<p class="mt-2 text-xl font-semibold text-emerald-100 sm:mt-3 sm:text-2xl">{profile.focusStreak} days</p>
 				<p class="mt-1 text-xs text-emerald-200/70">Keep the momentum going</p>
@@ -334,7 +334,7 @@ dayjs.extend(relativeTime);
 		</section>
 
 		<!-- Focus Timer Section - Prominent placement -->
-		<section class="grid gap-3 sm:gap-4 lg:grid-cols-[1.2fr,0.8fr] lg:gap-4">
+		<section class="grid gap-2 sm:gap-3 lg:grid-cols-[1.2fr,0.8fr] lg:gap-3">
 			<FocusTimer
 				activeSession={activeFocusSession}
 				onStartFocus={handleFocusStart}
@@ -342,9 +342,9 @@ dayjs.extend(relativeTime);
 				onEndSession={handleFocusEnd}
 			/>
 
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
 				<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus stats</h2>
-				<div class="mt-3 space-y-2.5 sm:mt-4 sm:space-y-3">
+				<div class="mt-2.5 space-y-2 sm:mt-3 sm:space-y-2.5">
 					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
 						<span class="text-sm text-slate-400">Past {focusStats.rangeDays} days</span>
 						<span class="text-sm font-semibold text-white">
@@ -374,8 +374,8 @@ dayjs.extend(relativeTime);
 		</section>
 
 		<!-- Focus Trends and Motivation Section - Side by side -->
-		<section class="grid gap-3 sm:gap-4 lg:grid-cols-[1fr,400px] lg:gap-4">
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
+		<section class="grid gap-2 sm:gap-3 lg:grid-cols-[1fr,400px] lg:gap-3">
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
 				<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 					<div>
 						<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus trends</h2>
@@ -395,7 +395,7 @@ dayjs.extend(relativeTime);
 						{/each}
 					</div>
 				</div>
-				<div class="mt-4 sm:mt-5">
+				<div class="mt-3 sm:mt-4">
 					<WorkSummaryChart
 						title="Focus minutes"
 						labels={workSummary.summary.map((point) => dayjs(point.periodStart).format('MMM D'))}
@@ -405,7 +405,7 @@ dayjs.extend(relativeTime);
 				</div>
 			</div>
 
-			<div class="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/10 to-slate-900/70 p-4 sm:p-5 lg:p-6">
+			<div class="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/10 to-slate-900/70 p-3 sm:p-4 lg:p-5">
 				<div class="flex items-start gap-3">
 					<div class="flex-shrink-0 mt-1">
 						<svg
@@ -441,8 +441,8 @@ dayjs.extend(relativeTime);
 		</section>
 
 		<!-- Work Sessions and Insights Section -->
-		<section class="grid gap-3 sm:gap-4 lg:grid-cols-2 lg:gap-4">
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
+		<section class="grid gap-2 sm:gap-3 lg:grid-cols-2 lg:gap-3">
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
 				<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 					<div>
 						<h2 class="text-base font-semibold text-slate-100 sm:text-lg">
@@ -473,7 +473,7 @@ dayjs.extend(relativeTime);
 					</div>
 				</div>
 
-				<ul class="mt-4 space-y-2 sm:mt-5 sm:space-y-2.5">
+				<ul class="mt-3 space-y-2 sm:mt-4 sm:space-y-2">
 					{#if workSessions.length === 0}
 						<li class="rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-6 text-sm text-slate-400">
 							No sessions logged yet. Start one to see your progress here.
@@ -509,7 +509,7 @@ dayjs.extend(relativeTime);
 				</ul>
 			</div>
 
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
 				<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Productivity insights</h2>
 				<ul class="mt-3 space-y-2 sm:mt-4 sm:space-y-2.5">
 					{#each analytics.suggestions as suggestion}
