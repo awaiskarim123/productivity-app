@@ -77,6 +77,7 @@
 				<button
 					type="button"
 					onclick={closeSidebar}
+					aria-label="Close sidebar"
 					class="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-slate-200 lg:hidden"
 				>
 					<svg
@@ -128,7 +129,7 @@
 									{$authStore.user.name ?? 'User'}
 								</p>
 								<p class="truncate text-xs text-slate-400">
-									{$authStore.user.dailyGoalMinutes} min goal
+									{$authStore.user.dailyGoalMinutes ?? 0} min goal
 								</p>
 							</div>
 						</div>
@@ -153,8 +154,6 @@
 		<div
 			class="fixed inset-0 z-20 bg-black/50 lg:hidden"
 			onclick={closeSidebar}
-			role="button"
-			tabindex="-1"
 		></div>
 	{/if}
 
@@ -165,6 +164,7 @@
 				<button
 					type="button"
 					onclick={toggleSidebar}
+					aria-label="Open sidebar"
 					class="rounded-lg p-2 text-slate-400 transition hover:bg-slate-800 hover:text-slate-200 lg:hidden"
 				>
 					<svg

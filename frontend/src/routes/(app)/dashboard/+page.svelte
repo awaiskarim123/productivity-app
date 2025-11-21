@@ -492,7 +492,7 @@ dayjs.extend(relativeTime);
 									</div>
 									<div class="text-right">
 										<p class="text-sm font-semibold text-white">
-											{session.durationMinutes
+											{session.durationMinutes != null
 												? formatMinutes(session.durationMinutes)
 												: 'In progress'}
 										</p>
