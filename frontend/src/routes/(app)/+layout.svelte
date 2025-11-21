@@ -45,7 +45,7 @@
 <div class="flex min-h-screen w-full bg-slate-950 text-slate-100">
 	<!-- Sidebar -->
 	<aside
-		class="fixed inset-y-0 left-0 z-30 w-64 transform border-r border-slate-800/60 bg-slate-900/95 backdrop-blur transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 {sidebarOpen
+		class="fixed inset-y-0 left-0 z-30 w-72 transform border-r border-slate-800/60 bg-slate-900/95 backdrop-blur transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 {sidebarOpen
 			? 'translate-x-0'
 			: '-translate-x-full'}"
 	>
@@ -159,7 +159,7 @@
 	{/if}
 
 	<!-- Main Content -->
-	<div class="flex w-full flex-col lg:pl-64">
+	<div class="flex w-full flex-col lg:pl-72">
 		<header class="sticky top-0 z-10 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur">
 			<div class="flex items-center justify-between gap-3 px-3 py-2 sm:gap-4 sm:px-4 sm:py-2.5">
 				<button

@@ -333,46 +333,16 @@ dayjs.extend(relativeTime);
 			</div>
 		</section>
 
-		<section class="grid gap-3 sm:gap-4 lg:grid-cols-[1fr,420px] lg:gap-4">
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
-				<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-					<div>
-						<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus trends</h2>
-						<p class="mt-1 text-xs text-slate-400 sm:text-sm">
-							Monitor how your focus time evolves across chosen ranges
-						</p>
-					</div>
-					<div class="flex flex-wrap items-center gap-2 rounded-full border border-slate-800 bg-slate-950/50 px-1 py-1">
-						{#each summaryPeriods as period}
-							<button
-								type="button"
-								class={`rounded-full px-3 py-1 text-xs font-medium transition ${selectedSummaryPeriod === period.value ? 'bg-emerald-500/30 text-emerald-100' : 'text-slate-400'}`}
-								onclick={() => refreshSummary(period.value)}
-							>
-								{period.label}
-							</button>
-						{/each}
-					</div>
-				</div>
-				<div class="mt-4 sm:mt-5">
-					<WorkSummaryChart
-						title="Focus minutes"
-						labels={workSummary.summary.map((point) => dayjs(point.periodStart).format('MMM D'))}
-						data={workSummary.summary.map((point) => point.minutes)}
-						accentColor="#34d399"
-					/>
-				</div>
-			</div>
+		<!-- Focus Timer Section - Prominent placement -->
+		<section class="grid gap-3 sm:gap-4 lg:grid-cols-[1.2fr,0.8fr] lg:gap-4">
+			<FocusTimer
+				activeSession={activeFocusSession}
+				onStartFocus={handleFocusStart}
+				onStartBreak={handleBreakStart}
+				onEndSession={handleFocusEnd}
+			/>
 
 			<div class="space-y-3 sm:space-y-4">
-				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
-					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Motivation snapshot</h2>
-					<p class="mt-3 text-sm text-slate-300 sm:mt-4">{quote?.text}</p>
-					<p class="mt-2 text-xs uppercase tracking-wide text-slate-500">
-						{quote?.author ?? 'Unknown'}
-					</p>
-				</div>
-
 				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
 					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus stats</h2>
 					<div class="mt-3 space-y-2.5 sm:mt-4 sm:space-y-3">
@@ -402,97 +372,130 @@ dayjs.extend(relativeTime);
 						</div>
 					</div>
 				</div>
+
+				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
+					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Motivation snapshot</h2>
+					<p class="mt-3 text-sm text-slate-300 sm:mt-4">{quote?.text}</p>
+					<p class="mt-2 text-xs uppercase tracking-wide text-slate-500">
+						{quote?.author ?? 'Unknown'}
+					</p>
+				</div>
 			</div>
 		</section>
 
-		<section class="grid gap-3 sm:gap-4 lg:grid-cols-[1fr,420px] lg:gap-4">
-			<div class="space-y-3 sm:space-y-4">
-				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
-					<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-						<div>
-							<h2 class="text-base font-semibold text-slate-100 sm:text-lg">
-								{activeWorkSession ? 'Active session' : 'Work sessions'}
-							</h2>
-							<p class="mt-1 text-xs text-slate-400 sm:text-sm">
-								Track deep work from start to finish
-							</p>
-						</div>
-						<div class="flex gap-2 sm:flex-shrink-0">
-							{#if activeWorkSession}
-								<button
-									type="button"
-									class="rounded-xl bg-rose-500/90 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-400"
-									onclick={handleEndWork}
-								>
-									End session
-								</button>
-							{:else}
-								<button
-									type="button"
-									class="rounded-xl bg-emerald-500/90 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-400"
-									onclick={handleStartWork}
-								>
-									Start work
-								</button>
-							{/if}
-						</div>
+		<!-- Focus Trends Section - Full width for better visibility -->
+		<section>
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
+				<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+					<div>
+						<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus trends</h2>
+						<p class="mt-1 text-xs text-slate-400 sm:text-sm">
+							Monitor how your focus time evolves across chosen ranges
+						</p>
 					</div>
-
-					<ul class="mt-4 space-y-2 sm:mt-5 sm:space-y-2.5">
-						{#if workSessions.length === 0}
-							<li class="rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-6 text-sm text-slate-400">
-								No sessions logged yet. Start one to see your progress here.
-							</li>
-						{:else}
-							{#each workSessions.slice(0, 8) as session}
-								<li class="rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-4">
-									<div class="flex flex-wrap items-center justify-between gap-3">
-										<div>
-											<p class="text-sm font-semibold text-slate-100">
-												{dayjs(session.startedAt).format('MMM D, HH:mm')}
-											</p>
-											<p class="text-xs text-slate-400">
-												{session.notes ?? 'Focused work'}
-											</p>
-										</div>
-										<div class="text-right">
-											<p class="text-sm font-semibold text-white">
-												{session.durationMinutes
-													? formatMinutes(session.durationMinutes)
-													: 'In progress'}
-											</p>
-											<p class="text-xs text-slate-500">
-												{session.endedAt
-													? `Ended ${dayjs(session.endedAt).fromNow()}`
-													: 'Active now'}
-											</p>
-										</div>
-									</div>
-								</li>
-							{/each}
-						{/if}
-					</ul>
-				</div>
-
-				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
-					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Productivity insights</h2>
-					<ul class="mt-3 space-y-2 sm:mt-4 sm:space-y-2.5">
-						{#each analytics.suggestions as suggestion}
-							<li class="flex items-start gap-3 rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3 text-sm text-slate-300">
-								<span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span>
-								<span>{suggestion}</span>
-							</li>
+					<div class="flex flex-wrap items-center gap-2 rounded-full border border-slate-800 bg-slate-950/50 px-1 py-1">
+						{#each summaryPeriods as period}
+							<button
+								type="button"
+								class={`rounded-full px-3 py-1 text-xs font-medium transition ${selectedSummaryPeriod === period.value ? 'bg-emerald-500/30 text-emerald-100' : 'text-slate-400'}`}
+								onclick={() => refreshSummary(period.value)}
+							>
+								{period.label}
+							</button>
 						{/each}
-					</ul>
+					</div>
+				</div>
+				<div class="mt-4 sm:mt-5">
+					<WorkSummaryChart
+						title="Focus minutes"
+						labels={workSummary.summary.map((point) => dayjs(point.periodStart).format('MMM D'))}
+						data={workSummary.summary.map((point) => point.minutes)}
+						accentColor="#34d399"
+					/>
 				</div>
 			</div>
+		</section>
 
-			<FocusTimer
-				activeSession={activeFocusSession}
-				onStartFocus={handleFocusStart}
-				onStartBreak={handleBreakStart}
-				onEndSession={handleFocusEnd}
-			/>
+		<!-- Work Sessions and Insights Section -->
+		<section class="grid gap-3 sm:gap-4 lg:grid-cols-2 lg:gap-4">
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
+				<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+					<div>
+						<h2 class="text-base font-semibold text-slate-100 sm:text-lg">
+							{activeWorkSession ? 'Active session' : 'Work sessions'}
+						</h2>
+						<p class="mt-1 text-xs text-slate-400 sm:text-sm">
+							Track deep work from start to finish
+						</p>
+					</div>
+					<div class="flex gap-2 sm:flex-shrink-0">
+						{#if activeWorkSession}
+							<button
+								type="button"
+								class="rounded-xl bg-rose-500/90 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-400"
+								onclick={handleEndWork}
+							>
+								End session
+							</button>
+						{:else}
+							<button
+								type="button"
+								class="rounded-xl bg-emerald-500/90 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-400"
+								onclick={handleStartWork}
+							>
+								Start work
+							</button>
+						{/if}
+					</div>
+				</div>
+
+				<ul class="mt-4 space-y-2 sm:mt-5 sm:space-y-2.5">
+					{#if workSessions.length === 0}
+						<li class="rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-6 text-sm text-slate-400">
+							No sessions logged yet. Start one to see your progress here.
+						</li>
+					{:else}
+						{#each workSessions.slice(0, 8) as session}
+							<li class="rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-4">
+								<div class="flex flex-wrap items-center justify-between gap-3">
+									<div>
+										<p class="text-sm font-semibold text-slate-100">
+											{dayjs(session.startedAt).format('MMM D, HH:mm')}
+										</p>
+										<p class="text-xs text-slate-400">
+											{session.notes ?? 'Focused work'}
+										</p>
+									</div>
+									<div class="text-right">
+										<p class="text-sm font-semibold text-white">
+											{session.durationMinutes
+												? formatMinutes(session.durationMinutes)
+												: 'In progress'}
+										</p>
+										<p class="text-xs text-slate-500">
+											{session.endedAt
+												? `Ended ${dayjs(session.endedAt).fromNow()}`
+												: 'Active now'}
+										</p>
+									</div>
+								</div>
+							</li>
+						{/each}
+					{/if}
+				</ul>
+			</div>
+
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
+				<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Productivity insights</h2>
+				<ul class="mt-3 space-y-2 sm:mt-4 sm:space-y-2.5">
+					{#each analytics.suggestions as suggestion}
+						<li class="flex items-start gap-3 rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3 text-sm text-slate-300">
+							<span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span>
+							<span>{suggestion}</span>
+						</li>
+					{/each}
+				</ul>
+			</div>
 		</section>
 	</div>
 {:else}
