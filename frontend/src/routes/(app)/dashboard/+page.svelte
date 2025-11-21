@@ -342,49 +342,39 @@ dayjs.extend(relativeTime);
 				onEndSession={handleFocusEnd}
 			/>
 
-			<div class="space-y-3 sm:space-y-4">
-				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
-					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus stats</h2>
-					<div class="mt-3 space-y-2.5 sm:mt-4 sm:space-y-3">
-						<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
-							<span class="text-sm text-slate-400">Past {focusStats.rangeDays} days</span>
-							<span class="text-sm font-semibold text-white">
-								{formatMinutes(focusStats.totalFocusMinutes)}
-							</span>
-						</div>
-						<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
-							<span class="text-sm text-slate-400">Sessions completed</span>
-							<span class="text-sm font-semibold text-white">
-								{focusStats.completedSessions}/{focusStats.daily.length}
-							</span>
-						</div>
-						<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
-							<span class="text-sm text-slate-400">Average focus session</span>
-							<span class="text-sm font-semibold text-white">
-								{analytics.focus.averageFocusMinutes.toFixed(1)} min
-							</span>
-						</div>
-						<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
-							<span class="text-sm text-slate-400">Distractions tracked</span>
-							<span class="text-sm font-semibold text-white">
-								{analytics.focus.distractions}
-							</span>
-						</div>
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
+				<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus stats</h2>
+				<div class="mt-3 space-y-2.5 sm:mt-4 sm:space-y-3">
+					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
+						<span class="text-sm text-slate-400">Past {focusStats.rangeDays} days</span>
+						<span class="text-sm font-semibold text-white">
+							{formatMinutes(focusStats.totalFocusMinutes)}
+						</span>
 					</div>
-				</div>
-
-				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
-					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Motivation snapshot</h2>
-					<p class="mt-3 text-sm text-slate-300 sm:mt-4">{quote?.text}</p>
-					<p class="mt-2 text-xs uppercase tracking-wide text-slate-500">
-						{quote?.author ?? 'Unknown'}
-					</p>
+					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
+						<span class="text-sm text-slate-400">Sessions completed</span>
+						<span class="text-sm font-semibold text-white">
+							{focusStats.completedSessions}/{focusStats.daily.length}
+						</span>
+					</div>
+					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
+						<span class="text-sm text-slate-400">Average focus session</span>
+						<span class="text-sm font-semibold text-white">
+							{analytics.focus.averageFocusMinutes.toFixed(1)} min
+						</span>
+					</div>
+					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
+						<span class="text-sm text-slate-400">Distractions tracked</span>
+						<span class="text-sm font-semibold text-white">
+							{analytics.focus.distractions}
+						</span>
+					</div>
 				</div>
 			</div>
 		</section>
 
-		<!-- Focus Trends Section - Full width for better visibility -->
-		<section>
+		<!-- Focus Trends and Motivation Section - Side by side -->
+		<section class="grid gap-3 sm:gap-4 lg:grid-cols-[1fr,400px] lg:gap-4">
 			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
 				<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 					<div>
@@ -412,6 +402,40 @@ dayjs.extend(relativeTime);
 						data={workSummary.summary.map((point) => point.minutes)}
 						accentColor="#34d399"
 					/>
+				</div>
+			</div>
+
+			<div class="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/10 to-slate-900/70 p-4 sm:p-5 lg:p-6">
+				<div class="flex items-start gap-3">
+					<div class="flex-shrink-0 mt-1">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-5 w-5 text-emerald-400"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+							/>
+						</svg>
+					</div>
+					<div class="flex-1 min-w-0">
+						<h2 class="text-sm font-semibold text-emerald-100 sm:text-base">Daily motivation</h2>
+						<blockquote class="mt-3">
+							<p class="text-sm leading-relaxed text-slate-200 sm:text-base">
+								"{quote?.text}"
+							</p>
+						</blockquote>
+						<cite class="mt-3 block not-italic">
+							<span class="text-xs font-medium text-emerald-300/80 sm:text-sm">
+								— {quote?.author ?? 'Unknown'}
+							</span>
+						</cite>
+					</div>
 				</div>
 			</div>
 		</section>
