@@ -170,51 +170,28 @@
 
 	<!-- Main Content -->
 	<div class="flex flex-1 flex-col">
-		<header class="sticky top-0 z-10 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur">
-			<div class="flex items-center justify-between gap-2 px-2 py-1.5 sm:gap-2 sm:px-2.5 sm:py-2">
-				<button
-					type="button"
-					onclick={toggleSidebar}
-					aria-label="Open sidebar"
-					class="rounded-lg p-2 text-slate-400 transition hover:bg-slate-800 hover:text-slate-200 lg:hidden"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-6 w-6"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M4 6h16M4 12h16M4 18h16"
-						/>
-					</svg>
-				</button>
-				<div class="flex-1 lg:hidden">
-					<h1 class="text-lg font-semibold text-white">Focus Flow</h1>
-				</div>
-				<div class="hidden items-center gap-4 lg:flex">
-					<div class="text-right">
-						<p class="text-sm font-medium text-slate-100">
-							{$authStore.user?.name ?? 'User'}
-						</p>
-						<p class="text-xs text-slate-400">
-							Daily goal: {$authStore.user?.dailyGoalMinutes ?? 0} min
-						</p>
-					</div>
-					<button
-						type="button"
-						class="rounded-full border border-slate-700 bg-slate-900/80 px-4 py-2 text-xs font-medium text-slate-300 transition hover:bg-slate-800"
-						onclick={() => authStore.logout()}
-					>
-						Log out
-					</button>
-				</div>
-			</div>
-		</header>
+		<!-- Mobile hamburger menu button -->
+		<button
+			type="button"
+			onclick={toggleSidebar}
+			aria-label="Open sidebar"
+			class="fixed top-4 left-4 z-40 rounded-lg p-2 text-slate-400 transition hover:bg-slate-800 hover:text-slate-200 lg:hidden"
+		>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				class="h-6 w-6"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke="currentColor"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M4 6h16M4 12h16M4 18h16"
+				/>
+			</svg>
+		</button>
 
 		<main class="flex-1 py-1.5 pr-1 pl-1 sm:py-2 sm:pr-1.5 sm:pl-1.5 lg:py-2 lg:pr-1 lg:pl-2">
 			{@render children()}
