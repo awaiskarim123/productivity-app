@@ -216,7 +216,7 @@
 			</div>
 		</header>
 
-		<main class="flex-1 py-1.5 pr-1 pl-1 sm:py-2 sm:pr-1.5 sm:pl-1.5 lg:py-2 lg:pr-1 lg:pl-0">
+		<main class="flex-1 py-1.5 pr-1 pl-1 sm:py-2 sm:pr-1.5 sm:pl-1.5 lg:py-2 lg:pr-1 lg:pl-2">
 			{@render children()}
 		</main>
 	</div>
