@@ -169,7 +169,7 @@
 	{/if}
 
 	<!-- Main Content -->
-	<div class="flex w-full flex-col lg:pl-72">
+	<div class="flex flex-1 flex-col">
 		<header class="sticky top-0 z-10 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur">
 			<div class="flex items-center justify-between gap-2 px-2 py-1.5 sm:gap-2 sm:px-2.5 sm:py-2">
 				<button
