@@ -81,3 +81,69 @@ export interface AuthResponse {
 	refreshToken: string;
 }
 
+export interface Task {
+	id: string;
+	userId: string;
+	title: string;
+	description: string | null;
+	completed: boolean;
+	priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
+	dueDate: string | null;
+	category: string | null;
+	createdAt: string;
+	updatedAt: string;
+	completedAt: string | null;
+}
+
+export interface TaskStats {
+	total: number;
+	completed: number;
+	overdue: number;
+	today: number;
+	thisWeek: number;
+}
+
+export interface Habit {
+	id: string;
+	userId: string;
+	name: string;
+	description: string | null;
+	color: string;
+	icon: string | null;
+	targetDays: number;
+	streak: number;
+	bestStreak: number;
+	isActive: boolean;
+	createdAt: string;
+	updatedAt: string;
+	logs?: HabitLog[];
+}
+
+export interface HabitLog {
+	id: string;
+	habitId: string;
+	date: string;
+	notes: string | null;
+	createdAt: string;
+}
+
+export interface HabitStats {
+	totalLogs: number;
+	weekLogs: number;
+	monthLogs: number;
+	yearLogs: number;
+	streak: number;
+	bestStreak: number;
+}
+
+export interface Note {
+	id: string;
+	userId: string;
+	title: string;
+	content: string;
+	tags: string[];
+	isPinned: boolean;
+	createdAt: string;
+	updatedAt: string;
+}
+

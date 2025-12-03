@@ -8,6 +8,7 @@ declare module "fastify" {
 }
 
 export default fp(async (fastify) => {
+  // PrismaClient will automatically read from prisma.config.ts
   const prisma = new PrismaClient();
 
   fastify.decorate("prisma", prisma);

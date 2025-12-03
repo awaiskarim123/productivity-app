@@ -1,6 +1,9 @@
 <script lang="ts">
 	import FocusTimer from '$lib/components/FocusTimer.svelte';
 	import WorkSummaryChart from '$lib/components/WorkSummaryChart.svelte';
+	import TaskList from '$lib/components/TaskList.svelte';
+	import HabitTracker from '$lib/components/HabitTracker.svelte';
+	import QuickNotes from '$lib/components/QuickNotes.svelte';
 	import {
 		endFocusSession,
 		endWorkSession,
@@ -520,6 +523,13 @@ dayjs.extend(relativeTime);
 					{/each}
 				</ul>
 			</div>
+		</section>
+
+		<!-- New Features: Tasks, Habits, and Notes -->
+		<section class="grid gap-2 sm:gap-3 lg:grid-cols-3 lg:gap-3">
+			<TaskList limit={5} />
+			<HabitTracker limit={5} />
+			<QuickNotes limit={5} />
 		</section>
 	</div>
 {:else}
