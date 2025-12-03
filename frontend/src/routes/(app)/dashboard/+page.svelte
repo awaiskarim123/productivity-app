@@ -3,16 +3,13 @@
 	import WorkSummaryChart from '$lib/components/WorkSummaryChart.svelte';
 	import {
 		endFocusSession,
-		endWorkSession,
 		fetchActiveFocusSession,
 		fetchAnalyticsOverview,
 		fetchFocusStats,
 		fetchMotivationQuote,
 		fetchProfile,
-		fetchWorkSessions,
 		fetchWorkSummary,
 		startFocusSession,
-		startWorkSession,
 		updateProfile
 	} from '$lib/api';
 	import { authStore } from '$lib/stores/auth';
@@ -23,7 +20,6 @@
 		Quote,
 		TimeSummary,
 		User,
-		WorkSession,
 		WorkSummaryPoint
 	} from '$lib/types';
 import dayjs from 'dayjs';
@@ -39,12 +35,10 @@ dayjs.extend(relativeTime);
 	let summary: TimeSummary | null = null;
 	let analytics: AnalyticsOverview | null = null;
 	let focusStats: FocusStats | null = null;
-	let workSessions: WorkSession[] = [];
 	let workSummary: WorkSummaryPoint | null = null;
 	let quote: Quote | null = null;
 	let activeFocusSession: FocusSession | null = null;
 	let selectedSummaryPeriod: 'daily' | 'weekly' | 'monthly' = 'daily';
-	let activeWorkSession: WorkSession | null = null;
 
 	async function loadDashboard() {
 		loading = true;
@@ -54,7 +48,6 @@ dayjs.extend(relativeTime);
 				profileResponse,
 				analyticsResponse,
 				focusResponse,
-				sessionsResponse,
 				summaryResponse,
 				quoteResponse,
 				activeFocusResponse
@@ -62,7 +55,6 @@ dayjs.extend(relativeTime);
 				fetchProfile(),
 				fetchAnalyticsOverview(),
 				fetchFocusStats(),
-				fetchWorkSessions({ limit: 10 }),
 				fetchWorkSummary(selectedSummaryPeriod),
 				fetchMotivationQuote(),
 				fetchActiveFocusSession()
@@ -72,12 +64,9 @@ dayjs.extend(relativeTime);
 			summary = profileResponse.summary;
 			analytics = analyticsResponse;
 			focusStats = focusResponse;
-			workSessions = sessionsResponse.sessions;
 			workSummary = summaryResponse;
 			quote = quoteResponse.quote;
 			activeFocusSession = activeFocusResponse.activeSession;
-
-			activeWorkSession = workSessions.find((session) => session.endedAt === null) ?? null;
 
 			if (profile) {
 				authStore.setUser(profile);
@@ -103,43 +92,6 @@ dayjs.extend(relativeTime);
 		}
 	}
 
-	function formatMinutes(minutes: number) {
-		const hours = Math.floor(minutes / 60);
-		const remaining = minutes % 60;
-		if (hours === 0) return `${minutes}m`;
-		return `${hours}h ${remaining}m`;
-	}
-
-	async function handleStartWork() {
-		try {
-			const response = await startWorkSession({});
-			activeWorkSession = response.session;
-			workSessions = [response.session, ...workSessions];
-		} catch (error) {
-			console.error('Unable to start work session', error);
-		}
-	}
-
-	async function handleEndWork() {
-		if (!activeWorkSession) return;
-		try {
-			const response = await endWorkSession({ sessionId: activeWorkSession.id });
-			activeWorkSession = null;
-			workSessions = workSessions.map((session) =>
-				session.id === response.session.id ? response.session : session
-			);
-			if (summary) {
-				summary = response.summary;
-			}
-			if (profile) {
-				profile = { ...profile, focusStreak: response.focusStreak };
-				authStore.setUser(profile);
-			}
-			await Promise.all([refreshSummary(selectedSummaryPeriod), refreshAnalytics()]);
-		} catch (error) {
-			console.error('Unable to end work session', error);
-		}
-	}
 
 	async function refreshAnalytics() {
 		try {
@@ -440,75 +392,8 @@ dayjs.extend(relativeTime);
 			</div>
 		</section>
 
-		<!-- Work Sessions and Insights Section -->
-		<section class="grid gap-2 sm:gap-3 lg:grid-cols-2 lg:gap-3">
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
-				<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-					<div>
-						<h2 class="text-base font-semibold text-slate-100 sm:text-lg">
-							{activeWorkSession ? 'Active session' : 'Work sessions'}
-						</h2>
-						<p class="mt-1 text-xs text-slate-400 sm:text-sm">
-							Track deep work from start to finish
-						</p>
-					</div>
-					<div class="flex gap-2 sm:flex-shrink-0">
-						{#if activeWorkSession}
-							<button
-								type="button"
-								class="rounded-xl bg-rose-500/90 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-400"
-								onclick={handleEndWork}
-							>
-								End session
-							</button>
-						{:else}
-							<button
-								type="button"
-								class="rounded-xl bg-emerald-500/90 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-400"
-								onclick={handleStartWork}
-							>
-								Start work
-							</button>
-						{/if}
-					</div>
-				</div>
-
-				<ul class="mt-3 space-y-2 sm:mt-4 sm:space-y-2">
-					{#if workSessions.length === 0}
-						<li class="rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-6 text-sm text-slate-400">
-							No sessions logged yet. Start one to see your progress here.
-						</li>
-					{:else}
-						{#each workSessions.slice(0, 8) as session}
-							<li class="rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-4">
-								<div class="flex flex-wrap items-center justify-between gap-3">
-									<div>
-										<p class="text-sm font-semibold text-slate-100">
-											{dayjs(session.startedAt).format('MMM D, HH:mm')}
-										</p>
-										<p class="text-xs text-slate-400">
-											{session.notes ?? 'Focused work'}
-										</p>
-									</div>
-									<div class="text-right">
-										<p class="text-sm font-semibold text-white">
-											{session.durationMinutes != null
-												? formatMinutes(session.durationMinutes)
-												: 'In progress'}
-										</p>
-										<p class="text-xs text-slate-500">
-											{session.endedAt
-												? `Ended ${dayjs(session.endedAt).fromNow()}`
-												: 'Active now'}
-										</p>
-									</div>
-								</div>
-							</li>
-						{/each}
-					{/if}
-				</ul>
-			</div>
-
+		<!-- Productivity Insights Section -->
+		<section>
 			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
 				<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Productivity insights</h2>
 				<ul class="mt-3 space-y-2 sm:mt-4 sm:space-y-2.5">
