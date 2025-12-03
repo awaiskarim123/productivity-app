@@ -43,16 +43,35 @@ dayjs.extend(relativeTime);
 	async function loadDashboard() {
 		loading = true;
 		errorMessage = null;
+		
+		// Load critical data first
+		try {
+			const profileResponse = await fetchProfile();
+			profile = profileResponse.profile;
+			summary = profileResponse.summary;
+			
+			if (profile) {
+				authStore.setUser(profile);
+			}
+			
+			// Show dashboard as soon as we have profile data
+			loading = false;
+		} catch (error) {
+			console.error('Failed to load profile:', error);
+			errorMessage = error instanceof Error ? error.message : 'Failed to load dashboard';
+			loading = false;
+			return;
+		}
+
+		// Load remaining data in parallel (non-blocking)
 		try {
 			const [
-				profileResponse,
 				analyticsResponse,
 				focusResponse,
 				summaryResponse,
 				quoteResponse,
 				activeFocusResponse
-			] = await Promise.all([
-				fetchProfile(),
+			] = await Promise.allSettled([
 				fetchAnalyticsOverview(),
 				fetchFocusStats(),
 				fetchWorkSummary(selectedSummaryPeriod),
@@ -60,22 +79,38 @@ dayjs.extend(relativeTime);
 				fetchActiveFocusSession()
 			]);
 
-			profile = profileResponse.profile;
-			summary = profileResponse.summary;
-			analytics = analyticsResponse;
-			focusStats = focusResponse;
-			workSummary = summaryResponse;
-			quote = quoteResponse.quote;
-			activeFocusSession = activeFocusResponse.activeSession;
+			if (analyticsResponse.status === 'fulfilled') {
+				analytics = analyticsResponse.value;
+			} else {
+				console.error('Failed to load analytics:', analyticsResponse.reason);
+			}
 
-			if (profile) {
-				authStore.setUser(profile);
+			if (focusResponse.status === 'fulfilled') {
+				focusStats = focusResponse.value;
+			} else {
+				console.error('Failed to load focus stats:', focusResponse.reason);
+			}
+
+			if (summaryResponse.status === 'fulfilled') {
+				workSummary = summaryResponse.value;
+			} else {
+				console.error('Failed to load work summary:', summaryResponse.reason);
+			}
+
+			if (quoteResponse.status === 'fulfilled') {
+				quote = quoteResponse.value.quote;
+			} else {
+				console.error('Failed to load quote:', quoteResponse.reason);
+			}
+
+			if (activeFocusResponse.status === 'fulfilled') {
+				activeFocusSession = activeFocusResponse.value.activeSession;
+			} else {
+				console.error('Failed to load active focus session:', activeFocusResponse.reason);
 			}
 		} catch (error) {
-			console.error(error);
-			errorMessage = error instanceof Error ? error.message : 'Failed to load dashboard';
-		} finally {
-			loading = false;
+			console.error('Error loading additional data:', error);
+			// Don't set errorMessage here since we already have profile data
 		}
 	}
 
@@ -136,6 +171,13 @@ dayjs.extend(relativeTime);
 		});
 		activeFocusSession = null;
 		await refreshAnalytics();
+	}
+
+	function formatMinutes(minutes: number) {
+		const hours = Math.floor(minutes / 60);
+		const remaining = minutes % 60;
+		if (hours === 0) return `${minutes}m`;
+		return `${hours}h ${remaining}m`;
 	}
 
 	const summaryPeriods: Array<{ label: string; value: 'daily' | 'weekly' | 'monthly' }> = [
@@ -200,7 +242,7 @@ dayjs.extend(relativeTime);
 			Try again
 		</button>
 	</div>
-{:else if profile && summary && analytics && focusStats && workSummary}
+{:else if profile && summary}
 	<div class="space-y-2 sm:space-y-3 lg:space-y-4">
 		<section class="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4 lg:gap-3">
 			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3">
@@ -294,35 +336,42 @@ dayjs.extend(relativeTime);
 				onEndSession={handleFocusEnd}
 			/>
 
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
-				<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus stats</h2>
-				<div class="mt-2.5 space-y-2 sm:mt-3 sm:space-y-2.5">
-					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
-						<span class="text-sm text-slate-400">Past {focusStats.rangeDays} days</span>
-						<span class="text-sm font-semibold text-white">
-							{formatMinutes(focusStats.totalFocusMinutes)}
-						</span>
-					</div>
-					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
-						<span class="text-sm text-slate-400">Sessions completed</span>
-						<span class="text-sm font-semibold text-white">
-							{focusStats.completedSessions}/{focusStats.daily.length}
-						</span>
-					</div>
-					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
-						<span class="text-sm text-slate-400">Average focus session</span>
-						<span class="text-sm font-semibold text-white">
-							{analytics.focus.averageFocusMinutes.toFixed(1)} min
-						</span>
-					</div>
-					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
-						<span class="text-sm text-slate-400">Distractions tracked</span>
-						<span class="text-sm font-semibold text-white">
-							{analytics.focus.distractions}
-						</span>
+			{#if focusStats && analytics}
+				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
+					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus stats</h2>
+					<div class="mt-2.5 space-y-2 sm:mt-3 sm:space-y-2.5">
+						<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
+							<span class="text-sm text-slate-400">Past {focusStats.rangeDays} days</span>
+							<span class="text-sm font-semibold text-white">
+								{formatMinutes(focusStats.totalFocusMinutes)}
+							</span>
+						</div>
+						<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
+							<span class="text-sm text-slate-400">Sessions completed</span>
+							<span class="text-sm font-semibold text-white">
+								{focusStats.completedSessions}/{focusStats.daily.length}
+							</span>
+						</div>
+						<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
+							<span class="text-sm text-slate-400">Average focus session</span>
+							<span class="text-sm font-semibold text-white">
+								{analytics.focus.averageFocusMinutes.toFixed(1)} min
+							</span>
+						</div>
+						<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
+							<span class="text-sm text-slate-400">Distractions tracked</span>
+							<span class="text-sm font-semibold text-white">
+								{analytics.focus.distractions}
+							</span>
+						</div>
 					</div>
 				</div>
-			</div>
+			{:else}
+				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
+					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus stats</h2>
+					<div class="mt-4 text-center text-sm text-slate-400">Loading focus stats...</div>
+				</div>
+			{/if}
 		</section>
 
 		<!-- Focus Trends and Motivation Section - Side by side -->
@@ -348,12 +397,18 @@ dayjs.extend(relativeTime);
 					</div>
 				</div>
 				<div class="mt-3 sm:mt-4">
-					<WorkSummaryChart
-						title="Focus minutes"
-						labels={workSummary.summary.map((point) => dayjs(point.periodStart).format('MMM D'))}
-						data={workSummary.summary.map((point) => point.minutes)}
-						accentColor="#34d399"
-					/>
+					{#if workSummary}
+						<WorkSummaryChart
+							title="Focus minutes"
+							labels={workSummary.summary.map((point) => dayjs(point.periodStart).format('MMM D'))}
+							data={workSummary.summary.map((point) => point.minutes)}
+							accentColor="#34d399"
+						/>
+					{:else}
+						<div class="flex h-48 items-center justify-center text-sm text-slate-400">
+							Loading chart data...
+						</div>
+					{/if}
 				</div>
 			</div>
 
@@ -377,35 +432,41 @@ dayjs.extend(relativeTime);
 					</div>
 					<div class="flex-1 min-w-0">
 						<h2 class="text-sm font-semibold text-emerald-100 sm:text-base">Daily motivation</h2>
-						<blockquote class="mt-3">
-							<p class="text-sm leading-relaxed text-slate-200 sm:text-base">
-								"{quote?.text}"
-							</p>
-						</blockquote>
-						<cite class="mt-3 block not-italic">
-							<span class="text-xs font-medium text-emerald-300/80 sm:text-sm">
-								— {quote?.author ?? 'Unknown'}
-							</span>
-						</cite>
+						{#if quote}
+							<blockquote class="mt-3">
+								<p class="text-sm leading-relaxed text-slate-200 sm:text-base">
+									"{quote.text}"
+								</p>
+							</blockquote>
+							<cite class="mt-3 block not-italic">
+								<span class="text-xs font-medium text-emerald-300/80 sm:text-sm">
+									— {quote.author ?? 'Unknown'}
+								</span>
+							</cite>
+						{:else}
+							<div class="mt-3 text-sm text-slate-400">Loading quote...</div>
+						{/if}
 					</div>
 				</div>
 			</div>
 		</section>
 
 		<!-- Productivity Insights Section -->
-		<section>
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
-				<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Productivity insights</h2>
-				<ul class="mt-3 space-y-2 sm:mt-4 sm:space-y-2.5">
-					{#each analytics.suggestions as suggestion}
-						<li class="flex items-start gap-3 rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3 text-sm text-slate-300">
-							<span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span>
-							<span>{suggestion}</span>
-						</li>
-					{/each}
-				</ul>
-			</div>
-		</section>
+		{#if analytics}
+			<section>
+				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
+					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Productivity insights</h2>
+					<ul class="mt-3 space-y-2 sm:mt-4 sm:space-y-2.5">
+						{#each analytics.suggestions as suggestion}
+							<li class="flex items-start gap-3 rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3 text-sm text-slate-300">
+								<span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span>
+								<span>{suggestion}</span>
+							</li>
+						{/each}
+					</ul>
+				</div>
+			</section>
+		{/if}
 
 	</div>
 {:else}
