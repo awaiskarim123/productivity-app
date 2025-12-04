@@ -69,6 +69,22 @@ export default async function noteRoutes(app: FastifyInstance) {
     return { notes, total, limit, offset };
   });
 
+  // Fixed/literal routes must be defined before parameterized routes
+  app.get("/tags/all", async (request) => {
+    const notes = await app.prisma.note.findMany({
+      where: { userId: request.user.id },
+      select: { tags: true },
+    });
+
+    const tagSet = new Set<string>();
+    notes.forEach((note) => {
+      note.tags.forEach((tag) => tagSet.add(tag));
+    });
+
+    return { tags: Array.from(tagSet).sort() };
+  });
+
+  // Parameterized routes come after literal routes
   app.get("/:id", async (request, reply) => {
     const { id } = request.params as { id: string };
     const note = await app.prisma.note.findFirst({
@@ -126,20 +142,6 @@ export default async function noteRoutes(app: FastifyInstance) {
 
     await app.prisma.note.delete({ where: { id } });
     return reply.code(204).send();
-  });
-
-  app.get("/tags/all", async (request) => {
-    const notes = await app.prisma.note.findMany({
-      where: { userId: request.user.id },
-      select: { tags: true },
-    });
-
-    const tagSet = new Set<string>();
-    notes.forEach((note) => {
-      note.tags.forEach((tag) => tagSet.add(tag));
-    });
-
-    return { tags: Array.from(tagSet).sort() };
   });
 }
 
