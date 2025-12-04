@@ -12,7 +12,7 @@ CREATE TABLE "Task" (
     "dueDate" TIMESTAMP(3),
     "category" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "completedAt" TIMESTAMP(3),
 
     CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
@@ -31,7 +31,7 @@ CREATE TABLE "Habit" (
     "bestStreak" INTEGER NOT NULL DEFAULT 0,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Habit_pkey" PRIMARY KEY ("id")
 );
@@ -56,7 +56,7 @@ CREATE TABLE "Note" (
     "tags" TEXT[],
     "isPinned" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Note_pkey" PRIMARY KEY ("id")
 );
@@ -93,3 +93,30 @@ ALTER TABLE "HabitLog" ADD CONSTRAINT "HabitLog_habitId_fkey" FOREIGN KEY ("habi
 
 -- AddForeignKey
 ALTER TABLE "Note" ADD CONSTRAINT "Note_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Create trigger function to update updatedAt timestamp
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW."updatedAt" = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create triggers for Task table
+CREATE TRIGGER update_task_updated_at
+    BEFORE UPDATE ON "Task"
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Create triggers for Habit table
+CREATE TRIGGER update_habit_updated_at
+    BEFORE UPDATE ON "Habit"
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Create triggers for Note table
+CREATE TRIGGER update_note_updated_at
+    BEFORE UPDATE ON "Note"
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
