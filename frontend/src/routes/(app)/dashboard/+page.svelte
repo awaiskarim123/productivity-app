@@ -3,16 +3,13 @@
 	import WorkSummaryChart from '$lib/components/WorkSummaryChart.svelte';
 	import {
 		endFocusSession,
-		endWorkSession,
 		fetchActiveFocusSession,
 		fetchAnalyticsOverview,
 		fetchFocusStats,
 		fetchMotivationQuote,
 		fetchProfile,
-		fetchWorkSessions,
 		fetchWorkSummary,
 		startFocusSession,
-		startWorkSession,
 		updateProfile
 	} from '$lib/api';
 	import { authStore } from '$lib/stores/auth';
@@ -23,8 +20,7 @@
 		Quote,
 		TimeSummary,
 		User,
-		WorkSession,
-		WorkSummaryPoint
+		WorkSummaryPoint as WorkSummary
 	} from '$lib/types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -39,54 +35,82 @@ dayjs.extend(relativeTime);
 	let summary: TimeSummary | null = null;
 	let analytics: AnalyticsOverview | null = null;
 	let focusStats: FocusStats | null = null;
-	let workSessions: WorkSession[] = [];
-	let workSummary: WorkSummaryPoint | null = null;
+	let workSummary: WorkSummary | null = null;
 	let quote: Quote | null = null;
 	let activeFocusSession: FocusSession | null = null;
 	let selectedSummaryPeriod: 'daily' | 'weekly' | 'monthly' = 'daily';
-	let activeWorkSession: WorkSession | null = null;
 
 	async function loadDashboard() {
 		loading = true;
 		errorMessage = null;
+		
+		// Load critical data first
+		try {
+			const profileResponse = await fetchProfile();
+			profile = profileResponse.profile;
+			summary = profileResponse.summary;
+			
+			if (profile) {
+				authStore.setUser(profile);
+			}
+			
+			// Show dashboard as soon as we have profile data
+			loading = false;
+		} catch (error) {
+			console.error('Failed to load profile:', error);
+			errorMessage = error instanceof Error ? error.message : 'Failed to load dashboard';
+			loading = false;
+			return;
+		}
+
+		// Load remaining data in parallel (non-blocking)
 		try {
 			const [
-				profileResponse,
 				analyticsResponse,
 				focusResponse,
-				sessionsResponse,
 				summaryResponse,
 				quoteResponse,
 				activeFocusResponse
-			] = await Promise.all([
-				fetchProfile(),
+			] = await Promise.allSettled([
 				fetchAnalyticsOverview(),
 				fetchFocusStats(),
-				fetchWorkSessions({ limit: 10 }),
 				fetchWorkSummary(selectedSummaryPeriod),
 				fetchMotivationQuote(),
 				fetchActiveFocusSession()
 			]);
 
-			profile = profileResponse.profile;
-			summary = profileResponse.summary;
-			analytics = analyticsResponse;
-			focusStats = focusResponse;
-			workSessions = sessionsResponse.sessions;
-			workSummary = summaryResponse;
-			quote = quoteResponse.quote;
-			activeFocusSession = activeFocusResponse.activeSession;
+			if (analyticsResponse.status === 'fulfilled') {
+				analytics = analyticsResponse.value;
+			} else {
+				console.error('Failed to load analytics:', analyticsResponse.reason);
+			}
 
-			activeWorkSession = workSessions.find((session) => session.endedAt === null) ?? null;
+			if (focusResponse.status === 'fulfilled') {
+				focusStats = focusResponse.value;
+			} else {
+				console.error('Failed to load focus stats:', focusResponse.reason);
+			}
 
-			if (profile) {
-				authStore.setUser(profile);
+			if (summaryResponse.status === 'fulfilled') {
+				workSummary = summaryResponse.value;
+			} else {
+				console.error('Failed to load work summary:', summaryResponse.reason);
+			}
+
+			if (quoteResponse.status === 'fulfilled') {
+				quote = quoteResponse.value.quote;
+			} else {
+				console.error('Failed to load quote:', quoteResponse.reason);
+			}
+
+			if (activeFocusResponse.status === 'fulfilled') {
+				activeFocusSession = activeFocusResponse.value.activeSession;
+			} else {
+				console.error('Failed to load active focus session:', activeFocusResponse.reason);
 			}
 		} catch (error) {
-			console.error(error);
-			errorMessage = error instanceof Error ? error.message : 'Failed to load dashboard';
-		} finally {
-			loading = false;
+			console.error('Error loading additional data:', error);
+			// Don't set errorMessage here since we already have profile data
 		}
 	}
 
@@ -103,43 +127,6 @@ dayjs.extend(relativeTime);
 		}
 	}
 
-	function formatMinutes(minutes: number) {
-		const hours = Math.floor(minutes / 60);
-		const remaining = minutes % 60;
-		if (hours === 0) return `${minutes}m`;
-		return `${hours}h ${remaining}m`;
-	}
-
-	async function handleStartWork() {
-		try {
-			const response = await startWorkSession({});
-			activeWorkSession = response.session;
-			workSessions = [response.session, ...workSessions];
-		} catch (error) {
-			console.error('Unable to start work session', error);
-		}
-	}
-
-	async function handleEndWork() {
-		if (!activeWorkSession) return;
-		try {
-			const response = await endWorkSession({ sessionId: activeWorkSession.id });
-			activeWorkSession = null;
-			workSessions = workSessions.map((session) =>
-				session.id === response.session.id ? response.session : session
-			);
-			if (summary) {
-				summary = response.summary;
-			}
-			if (profile) {
-				profile = { ...profile, focusStreak: response.focusStreak };
-				authStore.setUser(profile);
-			}
-			await Promise.all([refreshSummary(selectedSummaryPeriod), refreshAnalytics()]);
-		} catch (error) {
-			console.error('Unable to end work session', error);
-		}
-	}
 
 	async function refreshAnalytics() {
 		try {
@@ -184,6 +171,13 @@ dayjs.extend(relativeTime);
 		});
 		activeFocusSession = null;
 		await refreshAnalytics();
+	}
+
+	function formatMinutes(minutes: number) {
+		const hours = Math.floor(minutes / 60);
+		const remaining = minutes % 60;
+		if (hours === 0) return `${minutes}m`;
+		return `${hours}h ${remaining}m`;
 	}
 
 	const summaryPeriods: Array<{ label: string; value: 'daily' | 'weekly' | 'monthly' }> = [
@@ -248,7 +242,7 @@ dayjs.extend(relativeTime);
 			Try again
 		</button>
 	</div>
-{:else if profile && summary && analytics && focusStats && workSummary}
+{:else if profile && summary}
 	<div class="space-y-2 sm:space-y-3 lg:space-y-4">
 		<section class="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4 lg:gap-3">
 			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3">
@@ -342,6 +336,7 @@ dayjs.extend(relativeTime);
 				onEndSession={handleFocusEnd}
 			/>
 
+			{#if focusStats && analytics}
 			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
 				<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus stats</h2>
 				<div class="mt-2.5 space-y-2 sm:mt-3 sm:space-y-2.5">
@@ -371,6 +366,12 @@ dayjs.extend(relativeTime);
 					</div>
 				</div>
 			</div>
+			{:else}
+				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
+					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus stats</h2>
+					<div class="mt-4 text-center text-sm text-slate-400">Loading focus stats...</div>
+				</div>
+			{/if}
 		</section>
 
 		<!-- Focus Trends and Motivation Section - Side by side -->
@@ -396,12 +397,18 @@ dayjs.extend(relativeTime);
 					</div>
 				</div>
 				<div class="mt-3 sm:mt-4">
+					{#if workSummary}
 					<WorkSummaryChart
 						title="Focus minutes"
 						labels={workSummary.summary.map((point) => dayjs(point.periodStart).format('MMM D'))}
 						data={workSummary.summary.map((point) => point.minutes)}
 						accentColor="#34d399"
 					/>
+					{:else}
+						<div class="flex h-48 items-center justify-center text-sm text-slate-400">
+							Loading chart data...
+						</div>
+					{/if}
 				</div>
 			</div>
 
@@ -425,90 +432,28 @@ dayjs.extend(relativeTime);
 					</div>
 					<div class="flex-1 min-w-0">
 						<h2 class="text-sm font-semibold text-emerald-100 sm:text-base">Daily motivation</h2>
+						{#if quote}
 						<blockquote class="mt-3">
 							<p class="text-sm leading-relaxed text-slate-200 sm:text-base">
-								"{quote?.text}"
+									"{quote.text}"
 							</p>
 						</blockquote>
 						<cite class="mt-3 block not-italic">
 							<span class="text-xs font-medium text-emerald-300/80 sm:text-sm">
-								— {quote?.author ?? 'Unknown'}
+									— {quote.author ?? 'Unknown'}
 							</span>
 						</cite>
+						{:else}
+							<div class="mt-3 text-sm text-slate-400">Loading quote...</div>
+						{/if}
 					</div>
 				</div>
 			</div>
 		</section>
 
-		<!-- Work Sessions and Insights Section -->
-		<section class="grid gap-2 sm:gap-3 lg:grid-cols-2 lg:gap-3">
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
-				<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-					<div>
-						<h2 class="text-base font-semibold text-slate-100 sm:text-lg">
-							{activeWorkSession ? 'Active session' : 'Work sessions'}
-						</h2>
-						<p class="mt-1 text-xs text-slate-400 sm:text-sm">
-							Track deep work from start to finish
-						</p>
-					</div>
-					<div class="flex gap-2 sm:flex-shrink-0">
-						{#if activeWorkSession}
-							<button
-								type="button"
-								class="rounded-xl bg-rose-500/90 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-400"
-								onclick={handleEndWork}
-							>
-								End session
-							</button>
-						{:else}
-							<button
-								type="button"
-								class="rounded-xl bg-emerald-500/90 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-400"
-								onclick={handleStartWork}
-							>
-								Start work
-							</button>
-						{/if}
-					</div>
-				</div>
-
-				<ul class="mt-3 space-y-2 sm:mt-4 sm:space-y-2">
-					{#if workSessions.length === 0}
-						<li class="rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-6 text-sm text-slate-400">
-							No sessions logged yet. Start one to see your progress here.
-						</li>
-					{:else}
-						{#each workSessions.slice(0, 8) as session}
-							<li class="rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-4">
-								<div class="flex flex-wrap items-center justify-between gap-3">
-									<div>
-										<p class="text-sm font-semibold text-slate-100">
-											{dayjs(session.startedAt).format('MMM D, HH:mm')}
-										</p>
-										<p class="text-xs text-slate-400">
-											{session.notes ?? 'Focused work'}
-										</p>
-									</div>
-									<div class="text-right">
-										<p class="text-sm font-semibold text-white">
-											{session.durationMinutes != null
-												? formatMinutes(session.durationMinutes)
-												: 'In progress'}
-										</p>
-										<p class="text-xs text-slate-500">
-											{session.endedAt
-												? `Ended ${dayjs(session.endedAt).fromNow()}`
-												: 'Active now'}
-										</p>
-									</div>
-								</div>
-							</li>
-						{/each}
-					{/if}
-				</ul>
-			</div>
-
+		<!-- Productivity Insights Section -->
+		{#if analytics}
+			<section>
 			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
 				<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Productivity insights</h2>
 				<ul class="mt-3 space-y-2 sm:mt-4 sm:space-y-2.5">
@@ -521,6 +466,8 @@ dayjs.extend(relativeTime);
 				</ul>
 			</div>
 		</section>
+		{/if}
+
 	</div>
 {:else}
 	<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-6 py-5 text-slate-300">

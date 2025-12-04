@@ -28,6 +28,9 @@ model User {
   workSessions     WorkSession[]
   focusSessions    FocusSession[]
   refreshTokens    RefreshToken[]
+  tasks            Task[]
+  habits           Habit[]
+  notes            Note[]
 }
 
 model WorkSession {
@@ -87,4 +90,75 @@ model Quote {
 enum FocusSessionMode {
   FOCUS
   BREAK
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  completed   Boolean   @default(false)
+  priority    TaskPriority @default(MEDIUM)
+  dueDate     DateTime?
+  category    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  completedAt DateTime?
+
+  @@index([userId, completed])
+  @@index([userId, dueDate])
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Habit {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  color       String    @default("#34d399")
+  icon        String?
+  targetDays  Int       @default(7)
+  streak      Int       @default(0)
+  bestStreak  Int       @default(0)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  logs        HabitLog[]
+
+  @@index([userId, isActive])
+}
+
+model HabitLog {
+  id        String   @id @default(cuid())
+  habitId   String
+  habit     Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  date      DateTime @default(now())
+  notes     String?
+  createdAt DateTime @default(now())
+
+  @@unique([habitId, date])
+  @@index([habitId, date])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  content   String
+  tags      String[]
+  isPinned  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([userId, isPinned])
 }
