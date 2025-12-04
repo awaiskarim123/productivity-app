@@ -1,5 +1,8 @@
 import type { FastifyInstance } from "fastify";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 import {
   createHabitSchema,
   updateHabitSchema,
@@ -7,6 +10,11 @@ import {
   habitsQuerySchema,
 } from "../../schemas/habit.schema";
 
+/**
+ * Calculate habit streak with proper timezone handling and date boundaries.
+ * A streak is consecutive days with at least one log entry.
+ * The current streak starts from today or yesterday if logged today.
+ */
 async function calculateHabitStreak(
   prisma: any,
   habitId: string,
@@ -21,48 +29,63 @@ async function calculateHabitStreak(
     return { streak: 0, bestStreak: 0 };
   }
 
+  // Use UTC to avoid timezone issues - normalize all dates to start of day in UTC
+  const now = dayjs.utc();
+  const today = now.startOf("day");
+  
+  // Track unique dates (normalized to UTC start of day)
+  const loggedDates = new Set<string>();
+  logs.forEach((log: { date: Date }) => {
+    const dateKey = dayjs.utc(log.date).startOf("day").toISOString();
+    loggedDates.add(dateKey);
+  });
+
+  // Calculate current streak (consecutive days from today backwards)
   let currentStreak = 0;
-  let bestStreak = 0;
-  let tempStreak = 0;
-  const today = dayjs().startOf("day");
-  let expectedDate = today;
+  let checkDate = today;
+  
+  while (true) {
+    const dateKey = checkDate.toISOString();
+    if (loggedDates.has(dateKey)) {
+      currentStreak++;
+      checkDate = checkDate.subtract(1, "day");
+    } else {
+      // If today has no log, check yesterday
+      if (currentStreak === 0 && checkDate.isSame(today, "day")) {
+        checkDate = checkDate.subtract(1, "day");
+        continue;
+      }
+      break;
+    }
+  }
 
-  for (const log of logs) {
-    const logDate = dayjs(log.date).startOf("day");
-    const daysDiff = expectedDate.diff(logDate, "day");
+  // Calculate best streak (longest consecutive sequence)
+  const sortedDates = Array.from(loggedDates)
+    .map((d) => dayjs.utc(d))
+    .sort((a, b) => a.valueOf() - b.valueOf());
 
-    if (daysDiff === 0) {
-      tempStreak += 1;
-      expectedDate = expectedDate.subtract(1, "day");
-    } else if (daysDiff === 1 && currentStreak === 0) {
-      currentStreak = tempStreak + 1;
-      tempStreak = currentStreak;
-      expectedDate = logDate.subtract(1, "day");
+  let bestStreak = sortedDates.length > 0 ? 1 : 0;
+  let tempStreak = 1;
+  
+  for (let i = 1; i < sortedDates.length; i++) {
+    const prev = sortedDates[i - 1];
+    const curr = sortedDates[i];
+    if (!prev || !curr) continue;
+    
+    const daysDiff = curr.diff(prev, "day");
+    if (daysDiff === 1) {
+      tempStreak++;
     } else {
       if (tempStreak > bestStreak) {
         bestStreak = tempStreak;
       }
-      if (currentStreak === 0 && daysDiff <= targetDays) {
-        tempStreak = 1;
-        expectedDate = logDate.subtract(1, "day");
-      } else {
-        break;
-      }
+      tempStreak = 1;
     }
   }
-
-  if (currentStreak === 0 && tempStreak > 0) {
-    const firstLogDate = dayjs(logs[0].date).startOf("day");
-    if (today.diff(firstLogDate, "day") <= 1) {
-      currentStreak = tempStreak;
-    }
-  }
-
+  
+  // Check final streak
   if (tempStreak > bestStreak) {
     bestStreak = tempStreak;
-  }
-  if (currentStreak > bestStreak) {
-    bestStreak = currentStreak;
   }
 
   return { streak: currentStreak, bestStreak };
@@ -195,22 +218,38 @@ export default async function habitRoutes(app: FastifyInstance) {
       return reply.code(404).send({ message: "Habit not found" });
     }
 
-    const logDate = result.data.date ? dayjs(result.data.date).toDate() : new Date();
-    const dateStart = dayjs(logDate).startOf("day").toDate();
+    // Normalize date to start of day in UTC to ensure consistency
+    const logDate = result.data.date ? dayjs.utc(result.data.date) : dayjs.utc();
+    const dateStart = logDate.startOf("day").toDate();
 
-    const existingLog = await app.prisma.habitLog.findUnique({
-      where: {
-        habitId_date: {
-          habitId: id,
-          date: dateStart,
+    // Check for existing log with proper error handling for unique constraint
+    try {
+      const existingLog = await app.prisma.habitLog.findUnique({
+        where: {
+          habitId_date: {
+            habitId: id,
+            date: dateStart,
+          },
         },
-      },
-    });
+      });
 
-    if (existingLog) {
-      return reply.code(400).send({ message: "Habit already logged for this date" });
+      if (existingLog) {
+        return reply.code(409).send({ 
+          message: "Habit already logged for this date",
+          existingLog 
+        });
+      }
+    } catch (error: any) {
+      // Handle unique constraint violation from database
+      if (error.code === "P2002") {
+        return reply.code(409).send({ 
+          message: "Habit already logged for this date" 
+        });
+      }
+      throw error;
     }
 
+    // Create log with normalized date
     const log = await app.prisma.habitLog.create({
       data: {
         habitId: id,
@@ -283,7 +322,8 @@ export default async function habitRoutes(app: FastifyInstance) {
       return reply.code(404).send({ message: "Habit not found" });
     }
 
-    const now = dayjs();
+    // Use UTC for consistent date boundaries
+    const now = dayjs.utc();
     const startOfWeek = now.startOf("week");
     const startOfMonth = now.startOf("month");
     const startOfYear = now.startOf("year");

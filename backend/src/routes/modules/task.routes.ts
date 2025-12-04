@@ -1,10 +1,13 @@
 import type { FastifyInstance } from "fastify";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import {
   createTaskSchema,
   updateTaskSchema,
   tasksQuerySchema,
 } from "../../schemas/task.schema";
+
+dayjs.extend(utc);
 
 export default async function taskRoutes(app: FastifyInstance) {
   app.addHook("preHandler", app.authenticate);
@@ -21,7 +24,7 @@ export default async function taskRoutes(app: FastifyInstance) {
         title: result.data.title,
         description: result.data.description ?? null,
         priority: result.data.priority ?? "MEDIUM",
-        dueDate: result.data.dueDate ? dayjs(result.data.dueDate).toDate() : null,
+        dueDate: result.data.dueDate ? dayjs.utc(result.data.dueDate).startOf("day").toDate() : null,
         category: result.data.category ?? null,
       },
     });
@@ -104,7 +107,7 @@ export default async function taskRoutes(app: FastifyInstance) {
     if (result.data.priority !== undefined) updateData.priority = result.data.priority;
     if (result.data.category !== undefined) updateData.category = result.data.category;
     if (result.data.dueDate !== undefined) {
-      updateData.dueDate = result.data.dueDate ? dayjs(result.data.dueDate).toDate() : null;
+      updateData.dueDate = result.data.dueDate ? dayjs.utc(result.data.dueDate).startOf("day").toDate() : null;
     }
     if (result.data.completed !== undefined) {
       updateData.completed = result.data.completed;
@@ -135,7 +138,7 @@ export default async function taskRoutes(app: FastifyInstance) {
 
   app.get("/stats/summary", async (request) => {
     const userId = request.user.id;
-    const now = dayjs();
+    const now = dayjs.utc();
 
     const [total, completed, overdue, today, thisWeek] = await Promise.all([
       app.prisma.task.count({ where: { userId, completed: false } }),
