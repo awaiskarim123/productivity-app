@@ -337,35 +337,35 @@ dayjs.extend(relativeTime);
 			/>
 
 			{#if focusStats && analytics}
-				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
-					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus stats</h2>
-					<div class="mt-2.5 space-y-2 sm:mt-3 sm:space-y-2.5">
-						<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
-							<span class="text-sm text-slate-400">Past {focusStats.rangeDays} days</span>
-							<span class="text-sm font-semibold text-white">
-								{formatMinutes(focusStats.totalFocusMinutes)}
-							</span>
-						</div>
-						<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
-							<span class="text-sm text-slate-400">Sessions completed</span>
-							<span class="text-sm font-semibold text-white">
-								{focusStats.completedSessions}/{focusStats.daily.length}
-							</span>
-						</div>
-						<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
-							<span class="text-sm text-slate-400">Average focus session</span>
-							<span class="text-sm font-semibold text-white">
-								{analytics.focus.averageFocusMinutes.toFixed(1)} min
-							</span>
-						</div>
-						<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
-							<span class="text-sm text-slate-400">Distractions tracked</span>
-							<span class="text-sm font-semibold text-white">
-								{analytics.focus.distractions}
-							</span>
-						</div>
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
+				<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus stats</h2>
+				<div class="mt-2.5 space-y-2 sm:mt-3 sm:space-y-2.5">
+					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
+						<span class="text-sm text-slate-400">Past {focusStats.rangeDays} days</span>
+						<span class="text-sm font-semibold text-white">
+							{formatMinutes(focusStats.totalFocusMinutes)}
+						</span>
+					</div>
+					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
+						<span class="text-sm text-slate-400">Sessions completed</span>
+						<span class="text-sm font-semibold text-white">
+							{focusStats.completedSessions}/{focusStats.daily.length}
+						</span>
+					</div>
+					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
+						<span class="text-sm text-slate-400">Average focus session</span>
+						<span class="text-sm font-semibold text-white">
+							{analytics.focus.averageFocusMinutes.toFixed(1)} min
+						</span>
+					</div>
+					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
+						<span class="text-sm text-slate-400">Distractions tracked</span>
+						<span class="text-sm font-semibold text-white">
+							{analytics.focus.distractions}
+						</span>
 					</div>
 				</div>
+			</div>
 			{:else}
 				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
 					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus stats</h2>
@@ -398,12 +398,12 @@ dayjs.extend(relativeTime);
 				</div>
 				<div class="mt-3 sm:mt-4">
 					{#if workSummary}
-						<WorkSummaryChart
-							title="Focus minutes"
-							labels={workSummary.summary.map((point) => dayjs(point.periodStart).format('MMM D'))}
-							data={workSummary.summary.map((point) => point.minutes)}
-							accentColor="#34d399"
-						/>
+					<WorkSummaryChart
+						title="Focus minutes"
+						labels={workSummary.summary.map((point) => dayjs(point.periodStart).format('MMM D'))}
+						data={workSummary.summary.map((point) => point.minutes)}
+						accentColor="#34d399"
+					/>
 					{:else}
 						<div class="flex h-48 items-center justify-center text-sm text-slate-400">
 							Loading chart data...
@@ -433,16 +433,16 @@ dayjs.extend(relativeTime);
 					<div class="flex-1 min-w-0">
 						<h2 class="text-sm font-semibold text-emerald-100 sm:text-base">Daily motivation</h2>
 						{#if quote}
-							<blockquote class="mt-3">
-								<p class="text-sm leading-relaxed text-slate-200 sm:text-base">
+						<blockquote class="mt-3">
+							<p class="text-sm leading-relaxed text-slate-200 sm:text-base">
 									"{quote.text}"
-								</p>
-							</blockquote>
-							<cite class="mt-3 block not-italic">
-								<span class="text-xs font-medium text-emerald-300/80 sm:text-sm">
+							</p>
+						</blockquote>
+						<cite class="mt-3 block not-italic">
+							<span class="text-xs font-medium text-emerald-300/80 sm:text-sm">
 									— {quote.author ?? 'Unknown'}
-								</span>
-							</cite>
+							</span>
+						</cite>
 						{:else}
 							<div class="mt-3 text-sm text-slate-400">Loading quote...</div>
 						{/if}
@@ -454,18 +454,18 @@ dayjs.extend(relativeTime);
 		<!-- Productivity Insights Section -->
 		{#if analytics}
 			<section>
-				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
-					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Productivity insights</h2>
-					<ul class="mt-3 space-y-2 sm:mt-4 sm:space-y-2.5">
-						{#each analytics.suggestions as suggestion}
-							<li class="flex items-start gap-3 rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3 text-sm text-slate-300">
-								<span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span>
-								<span>{suggestion}</span>
-							</li>
-						{/each}
-					</ul>
-				</div>
-			</section>
+			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
+				<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Productivity insights</h2>
+				<ul class="mt-3 space-y-2 sm:mt-4 sm:space-y-2.5">
+					{#each analytics.suggestions as suggestion}
+						<li class="flex items-start gap-3 rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3 text-sm text-slate-300">
+							<span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span>
+							<span>{suggestion}</span>
+						</li>
+					{/each}
+				</ul>
+			</div>
+		</section>
 		{/if}
 
 	</div>

@@ -17,7 +17,10 @@ export const updateNoteSchema = z.object({
 export const notesQuerySchema = z.object({
   search: z.string().max(200).optional(),
   tag: z.string().max(50).optional(),
-  isPinned: z.string().transform((val) => val === "true").optional(),
+  isPinned: z
+    .string()
+    .optional()
+    .transform((val) => (val === undefined ? undefined : val === "true")),
   limit: z.coerce.number().int().positive().max(100).default(50),
   offset: z.coerce.number().int().nonnegative().default(0),
 });
