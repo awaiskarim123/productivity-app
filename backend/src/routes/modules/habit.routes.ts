@@ -221,25 +221,37 @@ export default async function habitRoutes(app: FastifyInstance) {
     const logDate = result.data.date ? dayjs.utc(result.data.date) : dayjs.utc();
     const dateStart = logDate.startOf("day").toDate();
 
-    // Check for existing log with proper error handling for unique constraint
+    // Optional: Check for existing log for early validation (non-blocking, race condition still possible)
+    const existingLog = await app.prisma.habitLog.findUnique({
+      where: {
+        habitId_date: {
+          habitId: id,
+          date: dateStart,
+        },
+      },
+    });
+
+    if (existingLog) {
+      return reply.code(409).send({ 
+        message: "Habit already logged for this date",
+        existingLog 
+      });
+    }
+
+    // Create log with normalized date - wrap in try-catch to handle unique constraint violation
+    // This handles the race condition where another request inserts between findUnique and create
+    let log;
     try {
-      const existingLog = await app.prisma.habitLog.findUnique({
-        where: {
-          habitId_date: {
-            habitId: id,
-            date: dateStart,
-          },
+      log = await app.prisma.habitLog.create({
+        data: {
+          habitId: id,
+          date: dateStart,
+          notes: result.data.notes ?? null,
         },
       });
-
-      if (existingLog) {
-        return reply.code(409).send({ 
-          message: "Habit already logged for this date",
-          existingLog 
-        });
-      }
     } catch (error: any) {
-      // Handle unique constraint violation from database
+      // Handle unique constraint violation from database (P2002)
+      // This catches race conditions where another request created the log between our check and create
       if (error.code === "P2002") {
         return reply.code(409).send({ 
           message: "Habit already logged for this date" 
@@ -247,15 +259,6 @@ export default async function habitRoutes(app: FastifyInstance) {
       }
       throw error;
     }
-
-    // Create log with normalized date
-    const log = await app.prisma.habitLog.create({
-      data: {
-        habitId: id,
-        date: dateStart,
-        notes: result.data.notes ?? null,
-      },
-    });
 
     const { streak, bestStreak } = await calculateHabitStreak(
       app.prisma,
