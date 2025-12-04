@@ -20,7 +20,7 @@
 		Quote,
 		TimeSummary,
 		User,
-		WorkSummaryPoint
+		WorkSummaryPoint as WorkSummary
 	} from '$lib/types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -35,7 +35,7 @@ dayjs.extend(relativeTime);
 	let summary: TimeSummary | null = null;
 	let analytics: AnalyticsOverview | null = null;
 	let focusStats: FocusStats | null = null;
-	let workSummary: WorkSummaryPoint | null = null;
+	let workSummary: WorkSummary | null = null;
 	let quote: Quote | null = null;
 	let activeFocusSession: FocusSession | null = null;
 	let selectedSummaryPeriod: 'daily' | 'weekly' | 'monthly' = 'daily';
