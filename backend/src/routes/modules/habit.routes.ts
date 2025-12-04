@@ -18,7 +18,6 @@ import {
 async function calculateHabitStreak(
   prisma: any,
   habitId: string,
-  targetDays: number,
 ): Promise<{ streak: number; bestStreak: number }> {
   const logs = await prisma.habitLog.findMany({
     where: { habitId },
@@ -261,7 +260,6 @@ export default async function habitRoutes(app: FastifyInstance) {
     const { streak, bestStreak } = await calculateHabitStreak(
       app.prisma,
       id,
-      habit.targetDays,
     );
 
     const updatedHabit = await app.prisma.habit.update({
@@ -298,7 +296,6 @@ export default async function habitRoutes(app: FastifyInstance) {
     const { streak, bestStreak } = await calculateHabitStreak(
       app.prisma,
       id,
-      habit.targetDays,
     );
 
     // Preserve historical best streak - only update if new calculation is higher
