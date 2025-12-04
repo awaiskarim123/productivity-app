@@ -41,6 +41,7 @@ export default async function taskRoutes(app: FastifyInstance) {
     const { completed, priority, category, limit, offset } = result.data;
     const where: any = {
       userId: request.user.id,
+      deletedAt: null, // Only show non-deleted tasks
     };
 
     if (completed !== undefined) {
@@ -76,6 +77,7 @@ export default async function taskRoutes(app: FastifyInstance) {
       where: {
         id,
         userId: request.user.id,
+        deletedAt: null, // Only return non-deleted tasks
       },
     });
 
@@ -95,7 +97,7 @@ export default async function taskRoutes(app: FastifyInstance) {
 
     // Read existing task to check ownership and get current completed state
     const existingTask = await app.prisma.task.findFirst({
-      where: { id, userId: request.user.id },
+      where: { id, userId: request.user.id, deletedAt: null },
     });
 
     if (!existingTask) {
@@ -122,9 +124,9 @@ export default async function taskRoutes(app: FastifyInstance) {
     }
 
     try {
-      // Use updateMany with userId to ensure authorization and avoid race conditions
+      // Use updateMany with userId and deletedAt to ensure authorization and avoid race conditions
       const updateResult = await app.prisma.task.updateMany({
-        where: { id, userId: request.user.id },
+        where: { id, userId: request.user.id, deletedAt: null },
         data: updateData,
       });
 
@@ -133,8 +135,8 @@ export default async function taskRoutes(app: FastifyInstance) {
       }
 
       // Fetch the updated task to return
-      const task = await app.prisma.task.findUnique({
-        where: { id },
+      const task = await app.prisma.task.findFirst({
+        where: { id, deletedAt: null },
       });
 
       if (!task) {
@@ -154,12 +156,13 @@ export default async function taskRoutes(app: FastifyInstance) {
   app.delete("/:id", async (request, reply) => {
     const { id } = request.params as { id: string };
     
-    // Use deleteMany with userId to ensure authorization and avoid race conditions
-    const deleteResult = await app.prisma.task.deleteMany({
-      where: { id, userId: request.user.id },
+    // Soft delete: set deletedAt timestamp instead of actually deleting
+    const updateResult = await app.prisma.task.updateMany({
+      where: { id, userId: request.user.id, deletedAt: null },
+      data: { deletedAt: new Date() },
     });
 
-    if (deleteResult.count === 0) {
+    if (updateResult.count === 0) {
       return reply.code(404).send({ message: "Task not found" });
     }
 
@@ -173,12 +176,13 @@ export default async function taskRoutes(app: FastifyInstance) {
     // adjust startOf("day") boundaries to user's timezone for accurate "today" and "overdue" calculations.
 
     const [total, completed, overdue, today, thisWeek] = await Promise.all([
-      app.prisma.task.count({ where: { userId, completed: false } }),
-      app.prisma.task.count({ where: { userId, completed: true } }),
+      app.prisma.task.count({ where: { userId, completed: false, deletedAt: null } }),
+      app.prisma.task.count({ where: { userId, completed: true, deletedAt: null } }),
       app.prisma.task.count({
         where: {
           userId,
           completed: false,
+          deletedAt: null,
           // Overdue means before today (not including today) - ensures no overlap with "today" bucket
           dueDate: { lt: now.startOf("day").toDate() },
         },
@@ -187,6 +191,7 @@ export default async function taskRoutes(app: FastifyInstance) {
         where: {
           userId,
           completed: false,
+          deletedAt: null,
           dueDate: {
             gte: now.startOf("day").toDate(),
             lte: now.endOf("day").toDate(),
@@ -197,6 +202,7 @@ export default async function taskRoutes(app: FastifyInstance) {
         where: {
           userId,
           completed: false,
+          deletedAt: null,
           dueDate: {
             gte: now.startOf("week").toDate(),
             lte: now.endOf("week").toDate(),

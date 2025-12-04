@@ -93,6 +93,7 @@ export interface Task {
 	createdAt: string;
 	updatedAt: string;
 	completedAt: string | null;
+	deletedAt: string | null;
 }
 
 export interface TaskStats {
@@ -116,6 +117,7 @@ export interface Habit {
 	isActive: boolean;
 	createdAt: string;
 	updatedAt: string;
+	deletedAt: string | null;
 	logs?: HabitLog[];
 }
 
