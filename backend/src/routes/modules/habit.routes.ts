@@ -301,11 +301,14 @@ export default async function habitRoutes(app: FastifyInstance) {
       habit.targetDays,
     );
 
+    // Preserve historical best streak - only update if new calculation is higher
+    const newBestStreak = Math.max(habit.bestStreak, bestStreak);
+
     const updatedHabit = await app.prisma.habit.update({
       where: { id },
       data: {
         streak,
-        bestStreak,
+        bestStreak: newBestStreak,
       },
     });
 
