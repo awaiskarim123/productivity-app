@@ -119,7 +119,10 @@ export default async function habitRoutes(app: FastifyInstance) {
       return reply.code(400).send({ message: "Invalid query", errors: result.error.flatten() });
     }
 
-    const where: any = { userId: request.user.id };
+    const where: any = { 
+      userId: request.user.id,
+      deletedAt: null, // Only show non-deleted habits
+    };
     if (result.data.isActive !== undefined) {
       where.isActive = result.data.isActive;
     }
@@ -141,7 +144,7 @@ export default async function habitRoutes(app: FastifyInstance) {
   app.get("/:id", async (request, reply) => {
     const { id } = request.params as { id: string };
     const habit = await app.prisma.habit.findFirst({
-      where: { id, userId: request.user.id },
+      where: { id, userId: request.user.id, deletedAt: null },
       include: {
         logs: {
           orderBy: { date: "desc" },
@@ -165,7 +168,7 @@ export default async function habitRoutes(app: FastifyInstance) {
     }
 
     const existingHabit = await app.prisma.habit.findFirst({
-      where: { id, userId: request.user.id },
+      where: { id, userId: request.user.id, deletedAt: null },
     });
 
     if (!existingHabit) {
@@ -190,15 +193,17 @@ export default async function habitRoutes(app: FastifyInstance) {
 
   app.delete("/:id", async (request, reply) => {
     const { id } = request.params as { id: string };
-    const habit = await app.prisma.habit.findFirst({
-      where: { id, userId: request.user.id },
+    
+    // Soft delete: set deletedAt timestamp instead of actually deleting
+    const updateResult = await app.prisma.habit.updateMany({
+      where: { id, userId: request.user.id, deletedAt: null },
+      data: { deletedAt: new Date() },
     });
 
-    if (!habit) {
+    if (updateResult.count === 0) {
       return reply.code(404).send({ message: "Habit not found" });
     }
 
-    await app.prisma.habit.delete({ where: { id } });
     return reply.code(204).send();
   });
 
@@ -210,7 +215,7 @@ export default async function habitRoutes(app: FastifyInstance) {
     }
 
     const habit = await app.prisma.habit.findFirst({
-      where: { id, userId: request.user.id },
+      where: { id, userId: request.user.id, deletedAt: null },
     });
 
     if (!habit) {
@@ -279,7 +284,7 @@ export default async function habitRoutes(app: FastifyInstance) {
   app.delete("/:id/log/:logId", async (request, reply) => {
     const { id, logId } = request.params as { id: string; logId: string };
     const habit = await app.prisma.habit.findFirst({
-      where: { id, userId: request.user.id },
+      where: { id, userId: request.user.id, deletedAt: null },
     });
 
     if (!habit) {
@@ -318,7 +323,7 @@ export default async function habitRoutes(app: FastifyInstance) {
   app.get("/:id/stats", async (request, reply) => {
     const { id } = request.params as { id: string };
     const habit = await app.prisma.habit.findFirst({
-      where: { id, userId: request.user.id },
+      where: { id, userId: request.user.id, deletedAt: null },
     });
 
     if (!habit) {
