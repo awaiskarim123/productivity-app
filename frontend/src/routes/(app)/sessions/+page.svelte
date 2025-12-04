@@ -99,7 +99,7 @@
 				profile = { ...profile, focusStreak: response.focusStreak };
 				authStore.setUser(profile);
 			}
-			await Promise.all([refreshSummary(selectedSummaryPeriod), loadSessions()]);
+			await loadSessions();
 		} catch (error) {
 			console.error('Unable to end work session', error);
 			errorMessage = error instanceof Error ? error.message : 'Failed to end session';
