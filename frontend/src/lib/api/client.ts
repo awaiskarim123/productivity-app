@@ -11,11 +11,33 @@ type ApiRequestOptions = Omit<RequestInit, 'body' | 'method'> & {
 };
 
 async function parseResponse<T>(response: Response): Promise<T> {
+	// Check content-length first to avoid reading empty bodies
+	const contentLength = response.headers.get('content-length');
+	if (contentLength === '0') {
+		return undefined as T;
+	}
+
+	// Get the response text (can only read once)
+	const text = await response.text();
+	
+	// If empty text, return undefined
+	if (!text || text.trim() === '') {
+		return undefined as T;
+	}
+
+	// Try to parse as JSON if content-type suggests it
 	const contentType = response.headers.get('content-type');
 	if (contentType && contentType.includes('application/json')) {
-		return (await response.json()) as T;
+		try {
+			return JSON.parse(text) as T;
+		} catch (error) {
+			// If JSON parsing fails but we have text, return the text
+			// This handles cases where server sends non-JSON in JSON content-type
+			return text as unknown as T;
+		}
 	}
-	return (await response.text()) as unknown as T;
+	
+	return text as unknown as T;
 }
 
 export async function apiFetch<T = unknown>(path: string, options: ApiRequestOptions = {}): Promise<T> {
@@ -112,6 +134,16 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 		// Handle 204 No Content responses (common for DELETE requests)
 		if (response.status === 204) {
 			return undefined as T;
+		}
+
+		// For DELETE requests with 2xx status, check if response is empty before parsing
+		if (method === 'DELETE' && response.status >= 200 && response.status < 300) {
+			const contentLength = response.headers.get('content-length');
+			// If content-length is 0, response is definitely empty
+			if (contentLength === '0') {
+				return undefined as T;
+			}
+			// If content-length is null/not set, it might be empty - let parseResponse handle it
 		}
 
 		return parseResponse<T>(response);
