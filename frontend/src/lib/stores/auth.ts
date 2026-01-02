@@ -66,7 +66,7 @@ async function requestAuth(endpoint: string, payload: Record<string, unknown>) {
 				url,
 				error: error.message
 			});
-			throw new Error(`Unable to connect to API. Please ensure the backend server is running at ${API_BASE_URL}`);
+			throw new Error('Unable to connect to the server. Please check your connection and ensure the backend is running.');
 		}
 		throw error;
 	}

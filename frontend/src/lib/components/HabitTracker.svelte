@@ -31,7 +31,13 @@
 			const response = await fetchHabits({ isActive: true });
 			habits = response.habits.slice(0, limit);
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Failed to load habits';
+			const errorMessage = err instanceof Error ? err.message : 'Failed to load habits';
+			// Only show error if it's not a connection issue (connection errors are handled globally)
+			if (!errorMessage.includes('Unable to connect')) {
+				error = errorMessage;
+			} else {
+				error = 'Connection error. Please check if the server is running.';
+			}
 		} finally {
 			loading = false;
 		}
