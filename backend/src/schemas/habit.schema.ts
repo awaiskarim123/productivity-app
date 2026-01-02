@@ -26,3 +26,16 @@ export const habitsQuerySchema = z.object({
   isActive: z.string().transform((val) => val === "true").optional(),
 });
 
+export const habitLogsQuerySchema = z.object({
+  from: z.coerce.date().optional(),
+  to: z.coerce.date().optional(),
+  limit: z.coerce
+    .number()
+    .int()
+    .min(1)
+    .max(100)
+    .optional()
+    .transform((value) => value ?? 50),
+  offset: z.coerce.number().int().min(0).optional().transform((value) => value ?? 0),
+});
+

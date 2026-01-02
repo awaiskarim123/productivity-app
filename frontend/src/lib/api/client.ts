@@ -24,14 +24,26 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 	const state = get(authStore);
 
 	let body: BodyInit | undefined = undefined;
-	if (options.body instanceof FormData) {
-		body = options.body;
-	} else if (typeof options.body === 'string') {
-		headers.set('Content-Type', 'application/json');
-		body = options.body;
-	} else if (options.body) {
-		headers.set('Content-Type', 'application/json');
-		body = JSON.stringify(options.body);
+	// Only set body and Content-Type for methods that support it
+	if (method !== 'GET' && method !== 'DELETE') {
+		if (options.body instanceof FormData) {
+			body = options.body;
+		} else if (typeof options.body === 'string') {
+			headers.set('Content-Type', 'application/json');
+			body = options.body;
+		} else if (options.body) {
+			headers.set('Content-Type', 'application/json');
+			body = JSON.stringify(options.body);
+		}
+	} else if (options.body && method === 'DELETE') {
+		// Some DELETE requests might have a body (though rare)
+		if (typeof options.body === 'string') {
+			headers.set('Content-Type', 'application/json');
+			body = options.body;
+		} else if (options.body) {
+			headers.set('Content-Type', 'application/json');
+			body = JSON.stringify(options.body);
+		}
 	}
 
 	if (auth && state.accessToken) {
@@ -40,31 +52,54 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 
 	const url = `${API_BASE_URL}${path}`;
 	
+	// Build fetch options explicitly, excluding body and method from spread
+	const fetchOptions: RequestInit = {
+		method,
+		headers,
+		body,
+		credentials: options.credentials || 'include',
+		cache: options.cache,
+		mode: options.mode,
+		redirect: options.redirect,
+		referrer: options.referrer,
+		referrerPolicy: options.referrerPolicy,
+		signal: options.signal
+	};
+
 	try {
-		let response = await fetch(url, {
-			...options,
-			method,
-			headers,
-			body
-		});
+		let response = await fetch(url, fetchOptions);
 
 		if (response.status === 401 && auth && state.refreshToken) {
 			const refreshed = await authStore.refresh();
 			if (refreshed) {
 				const refreshedState = get(authStore);
 				headers.set('Authorization', `Bearer ${refreshedState.accessToken}`);
-				response = await fetch(url, {
-					...options,
-					method,
-					headers,
-					body
-				});
+				// Update headers in fetchOptions
+				fetchOptions.headers = headers;
+				response = await fetch(url, fetchOptions);
+			} else {
+				// Refresh failed, user needs to log in again
+				// Don't throw error here, let it fall through to show 401 error
 			}
 		}
 
 		if (!response.ok) {
 			const errorBody = await response.json().catch(() => ({}));
-			const errorMessage = errorBody.message ?? `Request failed with status ${response.status}`;
+			let errorMessage = errorBody.message ?? `Request failed with status ${response.status}`;
+			
+			// Make error messages more user-friendly
+			if (response.status === 401) {
+				errorMessage = 'Please log in to continue';
+			} else if (response.status === 403) {
+				errorMessage = 'You do not have permission to perform this action';
+			} else if (response.status === 404) {
+				errorMessage = 'Resource not found';
+			} else if (response.status === 409) {
+				errorMessage = errorBody.message || 'This action conflicts with existing data';
+			} else if (response.status >= 500) {
+				errorMessage = 'Server error. Please try again later';
+			}
+			
 			console.error(`API Error [${method} ${path}]:`, {
 				status: response.status,
 				statusText: response.statusText,
@@ -74,6 +109,11 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 			throw new Error(errorMessage);
 		}
 
+		// Handle 204 No Content responses (common for DELETE requests)
+		if (response.status === 204) {
+			return undefined as T;
+		}
+
 		return parseResponse<T>(response);
 	} catch (error) {
 		if (error instanceof TypeError && error.message.includes('fetch')) {
@@ -81,8 +121,10 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 				url,
 				error: error.message
 			});
-			throw new Error(`Unable to connect to API. Please ensure the backend server is running at ${API_BASE_URL}`);
+			// More user-friendly error message
+			throw new Error('Unable to connect to the server. Please check your connection and ensure the backend is running.');
 		}
+		// Re-throw other errors as-is
 		throw error;
 	}
 }

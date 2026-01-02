@@ -36,6 +36,7 @@ export default async function noteRoutes(app: FastifyInstance) {
     const { search, tag, isPinned, limit, offset } = result.data;
     const where: any = {
       userId: request.user.id,
+      deletedAt: null, // Only show non-deleted notes
     };
 
     if (search) {
@@ -72,7 +73,7 @@ export default async function noteRoutes(app: FastifyInstance) {
   // Fixed/literal routes must be defined before parameterized routes
   app.get("/tags/all", async (request) => {
     const notes = await app.prisma.note.findMany({
-      where: { userId: request.user.id },
+      where: { userId: request.user.id, deletedAt: null },
       select: { tags: true },
     });
 
@@ -91,6 +92,7 @@ export default async function noteRoutes(app: FastifyInstance) {
       where: {
         id,
         userId: request.user.id,
+        deletedAt: null, // Only return non-deleted notes
       },
     });
 
@@ -109,7 +111,7 @@ export default async function noteRoutes(app: FastifyInstance) {
     }
 
     const existingNote = await app.prisma.note.findFirst({
-      where: { id, userId: request.user.id },
+      where: { id, userId: request.user.id, deletedAt: null },
     });
 
     if (!existingNote) {
@@ -132,15 +134,17 @@ export default async function noteRoutes(app: FastifyInstance) {
 
   app.delete("/:id", async (request, reply) => {
     const { id } = request.params as { id: string };
-    const note = await app.prisma.note.findFirst({
-      where: { id, userId: request.user.id },
+    
+    // Soft delete: set deletedAt timestamp instead of actually deleting
+    const updateResult = await app.prisma.note.updateMany({
+      where: { id, userId: request.user.id, deletedAt: null },
+      data: { deletedAt: new Date() },
     });
 
-    if (!note) {
+    if (updateResult.count === 0) {
       return reply.code(404).send({ message: "Note not found" });
     }
 
-    await app.prisma.note.delete({ where: { id } });
     return reply.code(204).send();
   });
 }

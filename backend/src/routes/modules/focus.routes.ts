@@ -5,6 +5,8 @@ import {
   startFocusSchema,
   endFocusSchema,
   focusStatsQuerySchema,
+  focusSessionsQuerySchema,
+  updateFocusSessionSchema,
 } from "../../schemas/focus.schema";
 
 export default async function focusRoutes(app: FastifyInstance) {
@@ -15,6 +17,7 @@ export default async function focusRoutes(app: FastifyInstance) {
       where: {
         userId: request.user.id,
         endedAt: null,
+        deletedAt: null, // Only show non-deleted sessions
       },
       orderBy: { startedAt: "desc" },
     });
@@ -32,6 +35,7 @@ export default async function focusRoutes(app: FastifyInstance) {
       where: {
         userId: request.user.id,
         endedAt: null,
+        deletedAt: null,
       },
     });
 
@@ -58,11 +62,11 @@ export default async function focusRoutes(app: FastifyInstance) {
       return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
     }
 
-    const session = await app.prisma.focusSession.findUnique({
-      where: { id: result.data.sessionId },
+    const session = await app.prisma.focusSession.findFirst({
+      where: { id: result.data.sessionId, userId: request.user.id, deletedAt: null },
     });
 
-    if (!session || session.userId !== request.user.id) {
+    if (!session) {
       return reply.code(404).send({ message: "Session not found" });
     }
 
@@ -92,6 +96,42 @@ export default async function focusRoutes(app: FastifyInstance) {
     return { session: updated };
   });
 
+  app.get("/sessions", async (request, reply) => {
+    const result = focusSessionsQuerySchema.safeParse(request.query ?? {});
+    if (!result.success) {
+      return reply.code(400).send({ message: "Invalid query", errors: result.error.flatten() });
+    }
+
+    const { from, to, mode, limit, offset } = result.data;
+    const userId = request.user.id;
+
+    const where: any = {
+      userId,
+      deletedAt: null, // Only show non-deleted sessions
+      ...(from || to
+        ? {
+            startedAt: {
+              ...(from ? { gte: from } : {}),
+              ...(to ? { lte: to } : {}),
+            },
+          }
+        : {}),
+      ...(mode ? { mode } : {}),
+    };
+
+    const [sessions, total] = await Promise.all([
+      app.prisma.focusSession.findMany({
+        where,
+        orderBy: { startedAt: "desc" },
+        take: limit,
+        skip: offset,
+      }),
+      app.prisma.focusSession.count({ where }),
+    ]);
+
+    return { sessions, total, limit, offset };
+  });
+
   app.get("/stats", async (request, reply) => {
     const result = focusStatsQuerySchema.safeParse(request.query ?? {});
     if (!result.success) {
@@ -105,6 +145,7 @@ export default async function focusRoutes(app: FastifyInstance) {
         userId: request.user.id,
         startedAt: { gte: start.toDate() },
         durationMinutes: { not: null },
+        deletedAt: null, // Only include non-deleted sessions
       },
       select: {
         startedAt: true,
@@ -156,6 +197,67 @@ export default async function focusRoutes(app: FastifyInstance) {
         ...data,
       })),
     };
+  });
+
+  app.get("/:id", async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const session = await app.prisma.focusSession.findFirst({
+      where: {
+        id,
+        userId: request.user.id,
+        deletedAt: null, // Only return non-deleted sessions
+      },
+    });
+
+    if (!session) {
+      return reply.code(404).send({ message: "Focus session not found" });
+    }
+
+    return { session };
+  });
+
+  app.patch("/:id", async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const result = updateFocusSessionSchema.safeParse(request.body ?? {});
+    if (!result.success) {
+      return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
+    }
+
+    const existingSession = await app.prisma.focusSession.findFirst({
+      where: { id, userId: request.user.id, deletedAt: null },
+    });
+
+    if (!existingSession) {
+      return reply.code(404).send({ message: "Focus session not found" });
+    }
+
+    const updateData: any = {};
+    if (result.data.notes !== undefined) updateData.notes = result.data.notes;
+    if (result.data.distractions !== undefined) updateData.distractions = result.data.distractions;
+    if (result.data.completed !== undefined) updateData.completed = result.data.completed;
+
+    const session = await app.prisma.focusSession.update({
+      where: { id },
+      data: updateData,
+    });
+
+    return { session };
+  });
+
+  app.delete("/:id", async (request, reply) => {
+    const { id } = request.params as { id: string };
+    
+    // Soft delete: set deletedAt timestamp instead of actually deleting
+    const updateResult = await app.prisma.focusSession.updateMany({
+      where: { id, userId: request.user.id, deletedAt: null },
+      data: { deletedAt: new Date() },
+    });
+
+    if (updateResult.count === 0) {
+      return reply.code(404).send({ message: "Focus session not found" });
+    }
+
+    return reply.code(204).send();
   });
 }
 

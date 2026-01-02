@@ -20,3 +20,23 @@ export const focusStatsQuerySchema = z.object({
   rangeDays: z.coerce.number().int().min(1).max(60).default(14),
 });
 
+export const focusSessionsQuerySchema = z.object({
+  from: z.coerce.date().optional(),
+  to: z.coerce.date().optional(),
+  mode: z.nativeEnum(FocusSessionMode).optional(),
+  limit: z.coerce
+    .number()
+    .int()
+    .min(1)
+    .max(100)
+    .optional()
+    .transform((value) => value ?? 50),
+  offset: z.coerce.number().int().min(0).optional().transform((value) => value ?? 0),
+});
+
+export const updateFocusSessionSchema = z.object({
+  notes: z.string().max(500).optional().nullable(),
+  distractions: z.coerce.number().int().min(0).max(99).optional(),
+  completed: z.boolean().optional(),
+});
+

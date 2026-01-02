@@ -24,6 +24,10 @@ export async function updateProfile(payload: Partial<Pick<User, 'name' | 'dailyG
 	return apiFetch<{ profile: User }>('/profile', { method: 'PATCH', body: payload });
 }
 
+export async function changePassword(payload: { currentPassword: string; newPassword: string }) {
+	return apiFetch<{ message: string }>('/profile/password', { method: 'PATCH', body: payload });
+}
+
 export async function startWorkSession(payload: { notes?: string; startedAt?: string }) {
 	return apiFetch<{ session: WorkSession }>('/work/start', { method: 'POST', body: payload });
 }
@@ -46,6 +50,22 @@ export async function fetchWorkSessions(params: { from?: string; to?: string; li
 
 	const suffix = query.toString() ? `?${query.toString()}` : '';
 	return apiFetch<{ sessions: WorkSession[] }>(`/work/sessions${suffix}`, { method: 'GET' });
+}
+
+export async function fetchWorkSession(id: string) {
+	return apiFetch<{ session: WorkSession }>(`/work/${id}`, { method: 'GET' });
+}
+
+export async function updateWorkSession(id: string, payload: {
+	notes?: string;
+	startedAt?: string;
+	endedAt?: string | null;
+}) {
+	return apiFetch<{ session: WorkSession }>(`/work/${id}`, { method: 'PATCH', body: payload });
+}
+
+export async function deleteWorkSession(id: string) {
+	return apiFetch(`/work/${id}`, { method: 'DELETE' });
 }
 
 export async function fetchWorkSummary(period: 'daily' | 'weekly' | 'monthly') {
@@ -73,6 +93,43 @@ export async function endFocusSession(payload: {
 	notes?: string;
 }) {
 	return apiFetch<{ session: FocusSession }>('/focus/end', { method: 'POST', body: payload });
+}
+
+export async function fetchFocusSessions(params: {
+	from?: string;
+	to?: string;
+	mode?: 'FOCUS' | 'BREAK';
+	limit?: number;
+	offset?: number;
+} = {}) {
+	const query = new URLSearchParams();
+	if (params.from) query.set('from', params.from);
+	if (params.to) query.set('to', params.to);
+	if (params.mode) query.set('mode', params.mode);
+	if (params.limit) query.set('limit', params.limit.toString());
+	if (params.offset) query.set('offset', params.offset.toString());
+
+	const suffix = query.toString() ? `?${query.toString()}` : '';
+	return apiFetch<{ sessions: FocusSession[]; total: number; limit: number; offset: number }>(
+		`/focus/sessions${suffix}`,
+		{ method: 'GET' }
+	);
+}
+
+export async function fetchFocusSession(id: string) {
+	return apiFetch<{ session: FocusSession }>(`/focus/${id}`, { method: 'GET' });
+}
+
+export async function updateFocusSession(id: string, payload: {
+	notes?: string | null;
+	distractions?: number;
+	completed?: boolean;
+}) {
+	return apiFetch<{ session: FocusSession }>(`/focus/${id}`, { method: 'PATCH', body: payload });
+}
+
+export async function deleteFocusSession(id: string) {
+	return apiFetch(`/focus/${id}`, { method: 'DELETE' });
 }
 
 export async function fetchFocusStats(rangeDays = 14) {
@@ -183,6 +240,25 @@ export async function logHabit(id: string, payload: { date?: string; notes?: str
 
 export async function deleteHabitLog(habitId: string, logId: string) {
 	return apiFetch<{ habit: Habit }>(`/habits/${habitId}/log/${logId}`, { method: 'DELETE' });
+}
+
+export async function fetchHabitLogs(id: string, params: {
+	from?: string;
+	to?: string;
+	limit?: number;
+	offset?: number;
+} = {}) {
+	const query = new URLSearchParams();
+	if (params.from) query.set('from', params.from);
+	if (params.to) query.set('to', params.to);
+	if (params.limit) query.set('limit', params.limit.toString());
+	if (params.offset) query.set('offset', params.offset.toString());
+
+	const suffix = query.toString() ? `?${query.toString()}` : '';
+	return apiFetch<{ logs: HabitLog[]; total: number; limit: number; offset: number }>(
+		`/habits/${id}/logs${suffix}`,
+		{ method: 'GET' }
+	);
 }
 
 export async function fetchHabitStats(id: string) {

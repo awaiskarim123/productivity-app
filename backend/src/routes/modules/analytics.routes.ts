@@ -67,6 +67,7 @@ export default async function analyticsRoutes(app: FastifyInstance) {
           startedAt: {
             gte: dayjs().startOf("day").subtract(6, "day").toDate(),
           },
+          deletedAt: null, // Only include non-deleted sessions
         },
         select: {
           startedAt: true,
@@ -80,6 +81,7 @@ export default async function analyticsRoutes(app: FastifyInstance) {
           startedAt: {
             gte: dayjs().startOf("day").subtract(29, "day").toDate(),
           },
+          deletedAt: null, // Only include non-deleted sessions
         },
         select: {
           startedAt: true,

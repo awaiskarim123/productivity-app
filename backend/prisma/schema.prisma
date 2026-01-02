@@ -42,8 +42,10 @@ model WorkSession {
   durationMinutes Int?
   notes           String?
   createdAt       DateTime  @default(now())
+  deletedAt       DateTime?
 
   @@index([userId, startedAt])
+  @@index([userId, deletedAt])
 }
 
 model FocusSession {
@@ -59,8 +61,10 @@ model FocusSession {
   distractions    Int               @default(0)
   notes           String?
   createdAt       DateTime          @default(now())
+  deletedAt       DateTime?
 
   @@index([userId, startedAt])
+  @@index([userId, deletedAt])
 }
 
 model RefreshToken {
@@ -162,7 +166,9 @@ model Note {
   isPinned  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 
   @@index([userId, createdAt])
   @@index([userId, isPinned])
+  @@index([userId, deletedAt])
 }

@@ -8,6 +8,7 @@ import {
   updateHabitSchema,
   logHabitSchema,
   habitsQuerySchema,
+  habitLogsQuerySchema,
 } from "../../schemas/habit.schema";
 
 /**
@@ -141,72 +142,7 @@ export default async function habitRoutes(app: FastifyInstance) {
     return { habits };
   });
 
-  app.get("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
-    const habit = await app.prisma.habit.findFirst({
-      where: { id, userId: request.user.id, deletedAt: null },
-      include: {
-        logs: {
-          orderBy: { date: "desc" },
-          take: 100,
-        },
-      },
-    });
-
-    if (!habit) {
-      return reply.code(404).send({ message: "Habit not found" });
-    }
-
-    return { habit };
-  });
-
-  app.patch("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
-    const result = updateHabitSchema.safeParse(request.body ?? {});
-    if (!result.success) {
-      return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
-    }
-
-    const existingHabit = await app.prisma.habit.findFirst({
-      where: { id, userId: request.user.id, deletedAt: null },
-    });
-
-    if (!existingHabit) {
-      return reply.code(404).send({ message: "Habit not found" });
-    }
-
-    const updateData: any = {};
-    if (result.data.name !== undefined) updateData.name = result.data.name;
-    if (result.data.description !== undefined) updateData.description = result.data.description;
-    if (result.data.color !== undefined) updateData.color = result.data.color;
-    if (result.data.icon !== undefined) updateData.icon = result.data.icon;
-    if (result.data.targetDays !== undefined) updateData.targetDays = result.data.targetDays;
-    if (result.data.isActive !== undefined) updateData.isActive = result.data.isActive;
-
-    const habit = await app.prisma.habit.update({
-      where: { id },
-      data: updateData,
-    });
-
-    return { habit };
-  });
-
-  app.delete("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
-    
-    // Soft delete: set deletedAt timestamp instead of actually deleting
-    const updateResult = await app.prisma.habit.updateMany({
-      where: { id, userId: request.user.id, deletedAt: null },
-      data: { deletedAt: new Date() },
-    });
-
-    if (updateResult.count === 0) {
-      return reply.code(404).send({ message: "Habit not found" });
-    }
-
-    return reply.code(204).send();
-  });
-
+  // Specific routes must come before generic /:id route
   app.post("/:id/log", async (request, reply) => {
     const { id } = request.params as { id: string };
     const result = logHabitSchema.safeParse(request.body ?? {});
@@ -320,6 +256,47 @@ export default async function habitRoutes(app: FastifyInstance) {
     return { habit: updatedHabit };
   });
 
+  app.get("/:id/logs", async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const result = habitLogsQuerySchema.safeParse(request.query ?? {});
+    if (!result.success) {
+      return reply.code(400).send({ message: "Invalid query", errors: result.error.flatten() });
+    }
+
+    const habit = await app.prisma.habit.findFirst({
+      where: { id, userId: request.user.id, deletedAt: null },
+    });
+
+    if (!habit) {
+      return reply.code(404).send({ message: "Habit not found" });
+    }
+
+    const { from, to, limit, offset } = result.data;
+    const where: any = {
+      habitId: id,
+      ...(from || to
+        ? {
+            date: {
+              ...(from ? { gte: from } : {}),
+              ...(to ? { lte: to } : {}),
+            },
+          }
+        : {}),
+    };
+
+    const [logs, total] = await Promise.all([
+      app.prisma.habitLog.findMany({
+        where,
+        orderBy: { date: "desc" },
+        take: limit,
+        skip: offset,
+      }),
+      app.prisma.habitLog.count({ where }),
+    ]);
+
+    return { logs, total, limit, offset };
+  });
+
   app.get("/:id/stats", async (request, reply) => {
     const { id } = request.params as { id: string };
     const habit = await app.prisma.habit.findFirst({
@@ -366,6 +343,72 @@ export default async function habitRoutes(app: FastifyInstance) {
       streak: habit.streak,
       bestStreak: habit.bestStreak,
     };
+  });
+
+  app.get("/:id", async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const habit = await app.prisma.habit.findFirst({
+      where: { id, userId: request.user.id, deletedAt: null },
+      include: {
+        logs: {
+          orderBy: { date: "desc" },
+          take: 100,
+        },
+      },
+    });
+
+    if (!habit) {
+      return reply.code(404).send({ message: "Habit not found" });
+    }
+
+    return { habit };
+  });
+
+  app.patch("/:id", async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const result = updateHabitSchema.safeParse(request.body ?? {});
+    if (!result.success) {
+      return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
+    }
+
+    const existingHabit = await app.prisma.habit.findFirst({
+      where: { id, userId: request.user.id, deletedAt: null },
+    });
+
+    if (!existingHabit) {
+      return reply.code(404).send({ message: "Habit not found" });
+    }
+
+    const updateData: any = {};
+    if (result.data.name !== undefined) updateData.name = result.data.name;
+    if (result.data.description !== undefined) updateData.description = result.data.description;
+    if (result.data.color !== undefined) updateData.color = result.data.color;
+    if (result.data.icon !== undefined) updateData.icon = result.data.icon;
+    if (result.data.targetDays !== undefined) updateData.targetDays = result.data.targetDays;
+    if (result.data.isActive !== undefined) updateData.isActive = result.data.isActive;
+
+    const habit = await app.prisma.habit.update({
+      where: { id },
+      data: updateData,
+    });
+
+    return { habit };
+  });
+
+  app.delete("/:id", async (request, reply) => {
+    const { id } = request.params as { id: string };
+    
+    // Soft delete: set deletedAt timestamp instead of actually deleting
+    const updateResult = await app.prisma.habit.updateMany({
+      where: { id, userId: request.user.id, deletedAt: null },
+      data: { deletedAt: new Date() },
+    });
+
+    if (updateResult.count === 0) {
+      return reply.code(404).send({ message: "Habit not found" });
+    }
+
+    return reply.code(204).send();
   });
 }
 
