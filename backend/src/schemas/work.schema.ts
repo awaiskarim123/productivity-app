@@ -27,3 +27,9 @@ export const workSessionsQuerySchema = z.object({
     .transform((value) => value ?? 50),
 });
 
+export const updateWorkSessionSchema = z.object({
+  notes: z.string().max(500).optional(),
+  startedAt: z.coerce.date().optional(),
+  endedAt: z.coerce.date().optional().nullable(),
+});
+

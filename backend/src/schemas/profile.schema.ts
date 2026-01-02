@@ -9,3 +9,8 @@ export const updateProfileSchema = z
     message: "At least one field is required",
   });
 
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(8),
+  newPassword: z.string().min(8),
+});
+
