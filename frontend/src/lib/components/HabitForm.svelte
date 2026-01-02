@@ -136,7 +136,7 @@
 
 		<div>
 			<label for="targetDays" class="block text-sm font-medium text-slate-200 mb-2">
-				Target Days per Week
+				Target Days
 			</label>
 			<input
 				id="targetDays"
@@ -146,6 +146,9 @@
 				max="365"
 				class="w-full rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-slate-100 shadow-inner focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
 			/>
+			<p class="mt-1 text-xs text-slate-400">
+				Number of days to complete this habit (1-365)
+			</p>
 		</div>
 	</div>
 

@@ -92,6 +92,11 @@ export default async function profileRoutes(app: FastifyInstance) {
       return reply.code(401).send({ message: "Current password is incorrect" });
     }
 
+    // Reject if new password is the same as current password
+    if (currentPassword === newPassword) {
+      return reply.code(400).send({ message: "New password must be different from current password" });
+    }
+
     const newPasswordHash = await hashPassword(newPassword);
     await app.prisma.user.update({
       where: { id: userId },

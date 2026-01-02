@@ -168,15 +168,30 @@ export default async function workRoutes(app: FastifyInstance) {
 
     const updateData: any = {};
     if (result.data.notes !== undefined) updateData.notes = result.data.notes;
-    if (result.data.startedAt !== undefined) updateData.startedAt = result.data.startedAt;
-    if (result.data.endedAt !== undefined) {
+    
+    // Track if we need to recalculate duration
+    const startedAtChanged = result.data.startedAt !== undefined;
+    const endedAtChanged = result.data.endedAt !== undefined;
+    
+    if (startedAtChanged) {
+      updateData.startedAt = result.data.startedAt;
+    }
+    
+    if (endedAtChanged) {
       updateData.endedAt = result.data.endedAt;
-      // Recalculate duration if endedAt is being updated
-      if (result.data.endedAt) {
-        const startTime = result.data.startedAt ? dayjs(result.data.startedAt) : dayjs(existingSession.startedAt);
-        const endTime = dayjs(result.data.endedAt);
+    }
+    
+    // Recalculate durationMinutes whenever startedAt or endedAt changes
+    if (startedAtChanged || endedAtChanged) {
+      const startTime = dayjs(result.data.startedAt ?? existingSession.startedAt);
+      const endTime = result.data.endedAt !== undefined 
+        ? (result.data.endedAt ? dayjs(result.data.endedAt) : null)
+        : (existingSession.endedAt ? dayjs(existingSession.endedAt) : null);
+      
+      if (endTime) {
         updateData.durationMinutes = Math.max(1, Math.round(endTime.diff(startTime, "minute", true)));
       } else {
+        // If endedAt is null or being set to null, clear duration
         updateData.durationMinutes = null;
       }
     }
