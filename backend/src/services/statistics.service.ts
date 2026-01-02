@@ -17,6 +17,7 @@ export async function getWorkDurationInRange(
       durationMinutes: {
         not: null,
       },
+      deletedAt: null, // Only include non-deleted sessions
     },
     _sum: {
       durationMinutes: true,
@@ -74,7 +75,7 @@ export async function getTimeSummary(
     getWorkDurationInRange(prisma, userId, weekStart.toDate(), weekStart.add(1, "week").toDate()),
     getWorkDurationInRange(prisma, userId, monthStart.toDate(), monthStart.add(1, "month").toDate()),
     prisma.workSession.aggregate({
-      where: { userId, durationMinutes: { not: null } },
+      where: { userId, durationMinutes: { not: null }, deletedAt: null },
       _sum: { durationMinutes: true },
     }),
   ]);

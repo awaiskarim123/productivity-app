@@ -17,6 +17,7 @@ export default async function focusRoutes(app: FastifyInstance) {
       where: {
         userId: request.user.id,
         endedAt: null,
+        deletedAt: null, // Only show non-deleted sessions
       },
       orderBy: { startedAt: "desc" },
     });
@@ -34,6 +35,7 @@ export default async function focusRoutes(app: FastifyInstance) {
       where: {
         userId: request.user.id,
         endedAt: null,
+        deletedAt: null,
       },
     });
 
@@ -60,11 +62,11 @@ export default async function focusRoutes(app: FastifyInstance) {
       return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
     }
 
-    const session = await app.prisma.focusSession.findUnique({
-      where: { id: result.data.sessionId },
+    const session = await app.prisma.focusSession.findFirst({
+      where: { id: result.data.sessionId, userId: request.user.id, deletedAt: null },
     });
 
-    if (!session || session.userId !== request.user.id) {
+    if (!session) {
       return reply.code(404).send({ message: "Session not found" });
     }
 
@@ -105,6 +107,7 @@ export default async function focusRoutes(app: FastifyInstance) {
 
     const where: any = {
       userId,
+      deletedAt: null, // Only show non-deleted sessions
       ...(from || to
         ? {
             startedAt: {
@@ -142,6 +145,7 @@ export default async function focusRoutes(app: FastifyInstance) {
         userId: request.user.id,
         startedAt: { gte: start.toDate() },
         durationMinutes: { not: null },
+        deletedAt: null, // Only include non-deleted sessions
       },
       select: {
         startedAt: true,
@@ -201,6 +205,7 @@ export default async function focusRoutes(app: FastifyInstance) {
       where: {
         id,
         userId: request.user.id,
+        deletedAt: null, // Only return non-deleted sessions
       },
     });
 
@@ -219,7 +224,7 @@ export default async function focusRoutes(app: FastifyInstance) {
     }
 
     const existingSession = await app.prisma.focusSession.findFirst({
-      where: { id, userId: request.user.id },
+      where: { id, userId: request.user.id, deletedAt: null },
     });
 
     if (!existingSession) {
@@ -241,15 +246,17 @@ export default async function focusRoutes(app: FastifyInstance) {
 
   app.delete("/:id", async (request, reply) => {
     const { id } = request.params as { id: string };
-    const session = await app.prisma.focusSession.findFirst({
-      where: { id, userId: request.user.id },
+    
+    // Soft delete: set deletedAt timestamp instead of actually deleting
+    const updateResult = await app.prisma.focusSession.updateMany({
+      where: { id, userId: request.user.id, deletedAt: null },
+      data: { deletedAt: new Date() },
     });
 
-    if (!session) {
+    if (updateResult.count === 0) {
       return reply.code(404).send({ message: "Focus session not found" });
     }
 
-    await app.prisma.focusSession.delete({ where: { id } });
     return reply.code(204).send();
   });
 }

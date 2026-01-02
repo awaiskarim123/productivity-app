@@ -32,7 +32,7 @@ export default async function workRoutes(app: FastifyInstance) {
 
     const userId = request.user.id;
     const activeSession = await app.prisma.workSession.findFirst({
-      where: { userId, endedAt: null },
+      where: { userId, endedAt: null, deletedAt: null },
     });
 
     if (activeSession) {
@@ -57,12 +57,12 @@ export default async function workRoutes(app: FastifyInstance) {
     }
 
     const { sessionId, endedAt, notes } = result.data;
-    const session = await app.prisma.workSession.findUnique({
-      where: { id: sessionId },
+    const session = await app.prisma.workSession.findFirst({
+      where: { id: sessionId, userId: request.user.id, deletedAt: null },
       include: { user: true },
     });
 
-    if (!session || session.userId !== request.user.id) {
+    if (!session) {
       return reply.code(404).send({ message: "Session not found" });
     }
 
@@ -117,6 +117,7 @@ export default async function workRoutes(app: FastifyInstance) {
     const sessions = await app.prisma.workSession.findMany({
       where: {
         userId,
+        deletedAt: null, // Only show non-deleted sessions
         ...(from || to
           ? {
               startedAt: {
@@ -139,6 +140,7 @@ export default async function workRoutes(app: FastifyInstance) {
       where: {
         id,
         userId: request.user.id,
+        deletedAt: null, // Only return non-deleted sessions
       },
     });
 
@@ -157,7 +159,7 @@ export default async function workRoutes(app: FastifyInstance) {
     }
 
     const existingSession = await app.prisma.workSession.findFirst({
-      where: { id, userId: request.user.id },
+      where: { id, userId: request.user.id, deletedAt: null },
     });
 
     if (!existingSession) {
@@ -189,15 +191,17 @@ export default async function workRoutes(app: FastifyInstance) {
 
   app.delete("/:id", async (request, reply) => {
     const { id } = request.params as { id: string };
-    const session = await app.prisma.workSession.findFirst({
-      where: { id, userId: request.user.id },
+    
+    // Soft delete: set deletedAt timestamp instead of actually deleting
+    const updateResult = await app.prisma.workSession.updateMany({
+      where: { id, userId: request.user.id, deletedAt: null },
+      data: { deletedAt: new Date() },
     });
 
-    if (!session) {
+    if (updateResult.count === 0) {
       return reply.code(404).send({ message: "Work session not found" });
     }
 
-    await app.prisma.workSession.delete({ where: { id } });
     return reply.code(204).send();
   });
 
@@ -223,6 +227,7 @@ export default async function workRoutes(app: FastifyInstance) {
         userId: request.user.id,
         durationMinutes: { not: null },
         startedAt: { gte: rangeStart.toDate() },
+        deletedAt: null, // Only include non-deleted sessions
       },
       select: {
         startedAt: true,
