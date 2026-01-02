@@ -75,13 +75,14 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 	const url = `${API_BASE_URL}${path}`;
 	
 	// Build fetch options explicitly, excluding body and method from spread
+	// For DELETE requests without a body, explicitly set body to undefined to avoid issues
 	const fetchOptions: RequestInit = {
 		method,
 		headers,
-		body,
+		body: method === 'DELETE' && !body ? undefined : body,
 		credentials: options.credentials || 'include',
 		cache: options.cache,
-		mode: options.mode,
+		mode: options.mode || 'cors',
 		redirect: options.redirect,
 		referrer: options.referrer,
 		referrerPolicy: options.referrerPolicy,
@@ -89,7 +90,22 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 	};
 
 	try {
-		let response = await fetch(url, fetchOptions);
+		let response: Response;
+		
+		try {
+			response = await fetch(url, fetchOptions);
+		} catch (fetchError) {
+			// Log the actual error for debugging
+			console.error(`Fetch Error [${method} ${path}]:`, {
+				url,
+				error: fetchError,
+				errorType: fetchError instanceof TypeError ? 'TypeError' : 'Unknown',
+				errorMessage: fetchError instanceof Error ? fetchError.message : String(fetchError),
+				errorStack: fetchError instanceof Error ? fetchError.stack : undefined
+			});
+			// Re-throw to be caught by outer catch block
+			throw fetchError;
+		}
 
 		if (response.status === 401 && auth && state.refreshToken) {
 			const refreshed = await authStore.refresh();
@@ -148,13 +164,28 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 
 		return parseResponse<T>(response);
 	} catch (error) {
-		if (error instanceof TypeError && error.message.includes('fetch')) {
-			console.error(`Network Error [${method} ${path}]:`, {
-				url,
-				error: error.message
-			});
-			// More user-friendly error message
-			throw new Error('Unable to connect to the server. Please check your connection and ensure the backend is running.');
+		// Handle network errors (CORS, connection refused, etc.)
+		if (error instanceof TypeError) {
+			const errorMessage = error.message.toLowerCase();
+			// Check for various network error types
+			if (
+				errorMessage.includes('fetch') ||
+				errorMessage.includes('network') ||
+				errorMessage.includes('failed') ||
+				errorMessage.includes('cors') ||
+				errorMessage.includes('refused')
+			) {
+				console.error(`Network Error [${method} ${path}]:`, {
+					url,
+					error: error.message,
+					errorName: error.name,
+					method,
+					hasBody: !!body,
+					headers: Object.fromEntries(headers.entries())
+				});
+				// More user-friendly error message
+				throw new Error('Unable to connect to the server. Please check your connection and ensure the backend is running.');
+			}
 		}
 		// Re-throw other errors as-is
 		throw error;
