@@ -214,7 +214,8 @@
 							<button
 								type="button"
 								onclick={() => handleDeleteHabit(habit.id)}
-								class="opacity-0 transition group-hover:opacity-100"
+								class="opacity-100 md:opacity-0 transition md:group-hover:opacity-100"
+								aria-label="Delete habit"
 							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
