@@ -20,9 +20,6 @@ CREATE TABLE "WeeklyInsight" (
 );
 
 -- CreateIndex
-CREATE INDEX "WeeklyInsight_userId_weekStart_idx" ON "WeeklyInsight"("userId", "weekStart");
-
--- CreateIndex
 CREATE UNIQUE INDEX "WeeklyInsight_userId_weekStart_key" ON "WeeklyInsight"("userId", "weekStart");
 
 -- AddForeignKey
