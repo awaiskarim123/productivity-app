@@ -149,3 +149,47 @@ export interface Note {
 	updatedAt: string;
 }
 
+export interface WeeklyInsight {
+	weekStart: string;
+	weekEnd: string;
+	peakHours: number[];
+	lowProductivityDays: string[];
+	weekOverWeekTrend: 'improving' | 'declining' | 'stable';
+	averageDailyMinutes: number;
+	totalSessions: number;
+	completedFocusSessions: number;
+	habitCorrelations?: Array<{
+		habitId: string;
+		habitName: string;
+		impact: 'positive' | 'neutral' | 'negative';
+		correlationScore: number;
+	}>;
+	insights: Array<{
+		type: string;
+		title: string;
+		description: string;
+		confidence: 'low' | 'medium' | 'high';
+	}>;
+	recommendations: Array<{
+		type: string;
+		title: string;
+		description: string;
+		confidence: 'low' | 'medium' | 'high';
+	}>;
+}
+
+export interface RecommendationsResponse {
+	recommendations: Array<{
+		type: string;
+		title: string;
+		description: string;
+		confidence: 'low' | 'medium' | 'high';
+	}>;
+	habitCorrelations: Array<{
+		habitId: string;
+		habitName: string;
+		impact: 'positive' | 'neutral' | 'negative';
+		correlationScore: number;
+	}>;
+}
+
