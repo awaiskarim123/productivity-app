@@ -48,14 +48,14 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 	let body: BodyInit | undefined = undefined;
 	// Only set body and Content-Type for methods that support it
 	if (method !== 'GET' && method !== 'DELETE') {
-		if (options.body instanceof FormData) {
-			body = options.body;
-		} else if (typeof options.body === 'string') {
-			headers.set('Content-Type', 'application/json');
-			body = options.body;
-		} else if (options.body) {
-			headers.set('Content-Type', 'application/json');
-			body = JSON.stringify(options.body);
+	if (options.body instanceof FormData) {
+		body = options.body;
+	} else if (typeof options.body === 'string') {
+		headers.set('Content-Type', 'application/json');
+		body = options.body;
+	} else if (options.body) {
+		headers.set('Content-Type', 'application/json');
+		body = JSON.stringify(options.body);
 		}
 	} else if (options.body && method === 'DELETE') {
 		// Some DELETE requests might have a body (though rare)
@@ -77,8 +77,8 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 	// Build fetch options explicitly, excluding body and method from spread
 	// For DELETE requests without a body, explicitly set body to undefined to avoid issues
 	const fetchOptions: RequestInit = {
-		method,
-		headers,
+			method,
+			headers,
 		body: method === 'DELETE' && !body ? undefined : body,
 		credentials: options.credentials || 'include',
 		cache: options.cache,
@@ -175,17 +175,17 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 				errorMessage.includes('cors') ||
 				errorMessage.includes('refused')
 			) {
-				console.error(`Network Error [${method} ${path}]:`, {
-					url,
+			console.error(`Network Error [${method} ${path}]:`, {
+				url,
 					error: error.message,
 					errorName: error.name,
 					method,
 					hasBody: !!body,
 					headers: Object.fromEntries(headers.entries())
-				});
+			});
 				// More user-friendly error message
 				throw new Error('Unable to connect to the server. Please check your connection and ensure the backend is running.');
-			}
+		}
 		}
 		// Re-throw other errors as-is
 		throw error;
