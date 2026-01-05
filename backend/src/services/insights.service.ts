@@ -108,9 +108,12 @@ export async function generateWeeklyInsights(
   const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
   workSessions.forEach((session) => {
-    const dayName = dayNames[dayjs(session.startedAt).day()];
-    const current = dayProductivity.get(dayName) ?? 0;
-    dayProductivity.set(dayName, current + (session.durationMinutes ?? 0));
+    const dayIdx = dayjs(session.startedAt).day();
+    const dayName = dayNames[dayIdx !== undefined ? dayIdx : 0];
+    if (typeof dayName === "string") {
+      const current = dayProductivity.get(dayName) ?? 0;
+      dayProductivity.set(dayName, current + (session.durationMinutes ?? 0));
+    }
   });
 
   const averageDailyMinutes =
