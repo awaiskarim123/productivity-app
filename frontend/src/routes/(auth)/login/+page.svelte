@@ -37,7 +37,7 @@
 				type="email"
 				bind:value={email}
 				required
-				class="w-full rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-slate-100 shadow-inner placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
+				class="w-full rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-slate-100 shadow-inner placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 [&:-webkit-autofill]:!bg-slate-900/80 [&:-webkit-autofill]:!text-slate-100 [&:-webkit-autofill]:!shadow-[0_0_0_1000px_rgb(15_23_42_/_0.8)_inset] [&:-webkit-autofill:hover]:!bg-slate-900/80 [&:-webkit-autofill:focus]:!bg-slate-900/80 [&:-webkit-autofill:active]:!bg-slate-900/80"
 				placeholder="you@example.com"
 				autocomplete="email"
 			/>
@@ -50,7 +50,7 @@
 				bind:value={password}
 				minlength={8}
 				required
-				class="w-full rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-slate-100 shadow-inner placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
+				class="w-full rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-slate-100 shadow-inner placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 [&:-webkit-autofill]:!bg-slate-900/80 [&:-webkit-autofill]:!text-slate-100 [&:-webkit-autofill]:!shadow-[0_0_0_1000px_rgb(15_23_42_/_0.8)_inset] [&:-webkit-autofill:hover]:!bg-slate-900/80 [&:-webkit-autofill:focus]:!bg-slate-900/80 [&:-webkit-autofill:active]:!bg-slate-900/80"
 				placeholder="••••••••"
 				autocomplete="current-password"
 			/>
