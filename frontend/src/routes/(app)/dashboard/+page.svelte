@@ -1,6 +1,9 @@
 <script lang="ts">
 	import FocusTimer from '$lib/components/FocusTimer.svelte';
 	import WorkSummaryChart from '$lib/components/WorkSummaryChart.svelte';
+	import WeeklyInsights from '$lib/components/WeeklyInsights.svelte';
+	import RecommendationsPanel from '$lib/components/RecommendationsPanel.svelte';
+	import HabitImpactVisualization from '$lib/components/HabitImpactVisualization.svelte';
 	import {
 		endFocusSession,
 		fetchActiveFocusSession,
@@ -449,6 +452,17 @@ dayjs.extend(relativeTime);
 					</div>
 				</div>
 			</div>
+		</section>
+
+		<!-- Weekly Insights & Recommendations Section -->
+		<section class="grid gap-2 sm:gap-3 lg:grid-cols-2 lg:gap-3">
+			<WeeklyInsights />
+			<RecommendationsPanel />
+		</section>
+
+		<!-- Habit Impact Section -->
+		<section>
+			<HabitImpactVisualization />
 		</section>
 
 		<!-- Productivity Insights Section -->

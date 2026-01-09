@@ -13,7 +13,9 @@ import type {
 	Habit,
 	HabitLog,
 	HabitStats,
-	Note
+	Note,
+	WeeklyInsight,
+	RecommendationsResponse
 } from '../types';
 
 export async function fetchProfile(): Promise<{ profile: User; summary: TimeSummary }> {
@@ -312,5 +314,15 @@ export async function deleteNote(id: string) {
 
 export async function fetchAllTags() {
 	return apiFetch<{ tags: string[] }>('/notes/tags/all', { method: 'GET' });
+}
+
+// Weekly Insights API
+export async function fetchWeeklyInsights(weekStart?: string) {
+	const query = weekStart ? `?weekStart=${weekStart}` : '';
+	return apiFetch<WeeklyInsight>(`/analytics/weekly-insights${query}`, { method: 'GET' });
+}
+
+export async function fetchRecommendations() {
+	return apiFetch<RecommendationsResponse>('/analytics/recommendations', { method: 'GET' });
 }
 

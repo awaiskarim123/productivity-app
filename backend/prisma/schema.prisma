@@ -15,22 +15,23 @@ datasource db {
 }
 
 model User {
-  id               String          @id @default(cuid())
-  email            String          @unique
+  id               String    @id @default(cuid())
+  email            String    @unique
   passwordHash     String
   name             String?
-  dailyGoalMinutes Int             @default(300)
-  focusStreak      Int             @default(0)
+  dailyGoalMinutes Int       @default(300)
+  focusStreak      Int       @default(0)
   lastLoginAt      DateTime?
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
-  workSessions     WorkSession[]
-  focusSessions    FocusSession[]
-  refreshTokens    RefreshToken[]
-  tasks            Task[]
-  habits           Habit[]
-  notes            Note[]
+  workSessions   WorkSession[]
+  focusSessions  FocusSession[]
+  refreshTokens  RefreshToken[]
+  tasks          Task[]
+  habits         Habit[]
+  notes          Note[]
+  weeklyInsights WeeklyInsight[]
 }
 
 model WorkSession {
@@ -49,18 +50,18 @@ model WorkSession {
 }
 
 model FocusSession {
-  id              String            @id @default(cuid())
+  id              String           @id @default(cuid())
   userId          String
-  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  mode            FocusSessionMode  @default(FOCUS)
-  startedAt       DateTime          @default(now())
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mode            FocusSessionMode @default(FOCUS)
+  startedAt       DateTime         @default(now())
   endedAt         DateTime?
   targetMinutes   Int
   durationMinutes Int?
-  completed       Boolean           @default(false)
-  distractions    Int               @default(0)
+  completed       Boolean          @default(false)
+  distractions    Int              @default(0)
   notes           String?
-  createdAt       DateTime          @default(now())
+  createdAt       DateTime         @default(now())
   deletedAt       DateTime?
 
   @@index([userId, startedAt])
@@ -68,15 +69,15 @@ model FocusSession {
 }
 
 model RefreshToken {
-  id         String   @id @default(cuid())
-  userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tokenHash  String   @unique
-  expiresAt  DateTime
-  revokedAt  DateTime?
-  userAgent  String?
-  ipAddress  String?
-  createdAt  DateTime @default(now())
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  userAgent String?
+  ipAddress String?
+  createdAt DateTime  @default(now())
 
   @@index([userId])
   @@index([tokenHash])
@@ -97,17 +98,17 @@ enum FocusSessionMode {
 }
 
 model Task {
-  id          String    @id @default(cuid())
+  id          String       @id @default(cuid())
   userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   title       String
   description String?
-  completed   Boolean   @default(false)
+  completed   Boolean      @default(false)
   priority    TaskPriority @default(MEDIUM)
   dueDate     DateTime?
   category    String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   completedAt DateTime?
   deletedAt   DateTime?
 
@@ -124,19 +125,19 @@ enum TaskPriority {
 }
 
 model Habit {
-  id          String    @id @default(cuid())
+  id          String     @id @default(cuid())
   userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   name        String
   description String?
-  color       String    @default("#34d399")
+  color       String     @default("#34d399")
   icon        String?
-  targetDays  Int       @default(7)
-  streak      Int       @default(0)
-  bestStreak  Int       @default(0)
-  isActive    Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  targetDays  Int        @default(7)
+  streak      Int        @default(0)
+  bestStreak  Int        @default(0)
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   deletedAt   DateTime?
   logs        HabitLog[]
 
@@ -157,18 +158,39 @@ model HabitLog {
 }
 
 model Note {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   title     String
   content   String
   tags      String[]
-  isPinned  Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isPinned  Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
   @@index([userId, createdAt])
   @@index([userId, isPinned])
   @@index([userId, deletedAt])
+}
+
+model WeeklyInsight {
+  id                     String   @id @default(cuid())
+  userId                 String
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weekStart              DateTime
+  weekEnd                DateTime
+  peakHours              Int[] // Array of hours (0-23) where productivity is highest
+  lowProductivityDays    String[] // Array of day names (e.g., ["Monday", "Friday"])
+  weekOverWeekTrend      String // "improving", "declining", "stable"
+  averageDailyMinutes    Int
+  totalSessions          Int
+  completedFocusSessions Int
+  habitCorrelations      Json? // Store habit impact data as JSON
+  insights               Json // Store all insights as JSON
+  recommendations        Json // Store recommendations as JSON
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  @@unique([userId, weekStart])
 }

@@ -12,3 +12,6 @@ export { default as NoteForm } from './components/NoteForm.svelte';
 export { default as ProfileSettingsForm } from './components/ProfileSettingsForm.svelte';
 export { default as WorkSessionForm } from './components/WorkSessionForm.svelte';
 export { default as FocusSessionForm } from './components/FocusSessionForm.svelte';
+export { default as WeeklyInsights } from './components/WeeklyInsights.svelte';
+export { default as RecommendationsPanel } from './components/RecommendationsPanel.svelte';
+export { default as HabitImpactVisualization } from './components/HabitImpactVisualization.svelte';

@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import dayjs from "dayjs";
 import { FocusSessionMode } from "../../generated/prisma/enums";
 import { getTimeSummary } from "../../services/statistics.service";
+import { getOrGenerateWeeklyInsights } from "../../services/insights.service";
 
 function buildBuckets(
   start: dayjs.Dayjs,
@@ -152,6 +153,43 @@ export default async function analyticsRoutes(app: FastifyInstance) {
         minutes,
       })),
       suggestions,
+    };
+  });
+
+  app.get("/weekly-insights", async (request, reply) => {
+    const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
+
+    if (!user) {
+      return reply.code(404).send({ message: "User not found" });
+    }
+
+    const query = request.query as { weekStart?: string } | undefined;
+    const weekStart = query?.weekStart
+      ? dayjs(query.weekStart).startOf("week").toDate()
+      : dayjs().startOf("week").toDate();
+
+    const insights = await getOrGenerateWeeklyInsights(app.prisma, user.id, weekStart);
+
+    return {
+      weekStart: weekStart.toISOString(),
+      weekEnd: dayjs(weekStart).endOf("week").toISOString(),
+      ...insights,
+    };
+  });
+
+  app.get("/recommendations", async (request, reply) => {
+    const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
+
+    if (!user) {
+      return reply.code(404).send({ message: "User not found" });
+    }
+
+    const weekStart = dayjs().startOf("week").toDate();
+    const insights = await getOrGenerateWeeklyInsights(app.prisma, user.id, weekStart);
+
+    return {
+      recommendations: insights.recommendations,
+      habitCorrelations: insights.habitCorrelations || [],
     };
   });
 }
