@@ -40,7 +40,7 @@
 				bind:value={name}
 				placeholder="Your name"
 				autocomplete="name"
-				class="w-full rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-slate-100 shadow-inner placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 [&:-webkit-autofill]:!bg-slate-900/80 [&:-webkit-autofill]:!text-slate-100 [&:-webkit-autofill]:!shadow-[0_0_0_1000px_rgb(15_23_42_/_0.8)_inset] [&:-webkit-autofill:hover]:!bg-slate-900/80 [&:-webkit-autofill:focus]:!bg-slate-900/80 [&:-webkit-autofill:active]:!bg-slate-900/80"
+				class="w-full rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 !text-slate-100 shadow-inner placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 focus:!text-slate-100 [&:-webkit-autofill]:!bg-slate-900/80 [&:-webkit-autofill]:!text-slate-100 [&:-webkit-autofill]:!shadow-[0_0_0_1000px_rgb(15_23_42_/_0.8)_inset] [&:-webkit-autofill:hover]:!bg-slate-900/80 [&:-webkit-autofill:focus]:!bg-slate-900/80 [&:-webkit-autofill:active]:!bg-slate-900/80"
 			/>
 		</label>
 
@@ -52,7 +52,7 @@
 				required
 				placeholder="you@example.com"
 				autocomplete="email"
-				class="w-full rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-slate-100 shadow-inner placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 [&:-webkit-autofill]:!bg-slate-900/80 [&:-webkit-autofill]:!text-slate-100 [&:-webkit-autofill]:!shadow-[0_0_0_1000px_rgb(15_23_42_/_0.8)_inset] [&:-webkit-autofill:hover]:!bg-slate-900/80 [&:-webkit-autofill:focus]:!bg-slate-900/80 [&:-webkit-autofill:active]:!bg-slate-900/80"
+				class="w-full rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 !text-slate-100 shadow-inner placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 focus:!text-slate-100 [&:-webkit-autofill]:!bg-slate-900/80 [&:-webkit-autofill]:!text-slate-100 [&:-webkit-autofill]:!shadow-[0_0_0_1000px_rgb(15_23_42_/_0.8)_inset] [&:-webkit-autofill:hover]:!bg-slate-900/80 [&:-webkit-autofill:focus]:!bg-slate-900/80 [&:-webkit-autofill:active]:!bg-slate-900/80"
 			/>
 		</label>
 
@@ -65,7 +65,7 @@
 				minlength={8}
 				placeholder="Minimum 8 characters"
 				autocomplete="new-password"
-				class="w-full rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-slate-100 shadow-inner placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 [&:-webkit-autofill]:!bg-slate-900/80 [&:-webkit-autofill]:!text-slate-100 [&:-webkit-autofill]:!shadow-[0_0_0_1000px_rgb(15_23_42_/_0.8)_inset] [&:-webkit-autofill:hover]:!bg-slate-900/80 [&:-webkit-autofill:focus]:!bg-slate-900/80 [&:-webkit-autofill:active]:!bg-slate-900/80"
+				class="w-full rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 !text-slate-100 shadow-inner placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 focus:!text-slate-100 [&:-webkit-autofill]:!bg-slate-900/80 [&:-webkit-autofill]:!text-slate-100 [&:-webkit-autofill]:!shadow-[0_0_0_1000px_rgb(15_23_42_/_0.8)_inset] [&:-webkit-autofill:hover]:!bg-slate-900/80 [&:-webkit-autofill:focus]:!bg-slate-900/80 [&:-webkit-autofill:active]:!bg-slate-900/80"
 			/>
 		</label>
 
@@ -78,7 +78,7 @@
 				step={15}
 				bind:value={dailyGoalMinutes}
 				placeholder="300"
-				class="w-full rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-slate-100 shadow-inner placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
+				class="w-full rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 !text-slate-100 shadow-inner placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 focus:!text-slate-100"
 			/>
 		</label>
 
