@@ -26,9 +26,9 @@
 		<p class="mt-2 text-xs text-slate-400 sm:text-sm">Set goals, track work, and stay motivated</p>
 	</div>
 
-	<form class="grid gap-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-xl backdrop-blur sm:gap-6 sm:p-6 md:p-8 md:grid-cols-2" on:submit={handleSubmit}>
+	<form class="space-y-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-xl backdrop-blur sm:space-y-6 sm:p-6 md:p-8" on:submit={handleSubmit}>
 		{#if errorMessage}
-			<div class="md:col-span-2 rounded-lg border border-rose-500/50 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+			<div class="rounded-lg border border-rose-500/50 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
 				{errorMessage}
 			</div>
 		{/if}
@@ -80,7 +80,7 @@
 
 		<button
 			type="submit"
-			class="md:col-span-2 flex items-center justify-center gap-2 rounded-xl bg-emerald-500/90 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+			class="flex items-center justify-center gap-2 rounded-xl bg-emerald-500/90 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
 			disabled={$authStore.loading}
 		>
 			{#if $authStore.loading}
