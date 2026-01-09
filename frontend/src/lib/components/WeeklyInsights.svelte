@@ -2,7 +2,6 @@
 	import { fetchWeeklyInsights } from '$lib/api';
 	import type { WeeklyInsight } from '$lib/types';
 	import { onMount } from 'svelte';
-	import dayjs from 'dayjs';
 
 	let loading = true;
 	let error: string | null = null;
