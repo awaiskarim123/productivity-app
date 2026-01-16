@@ -148,7 +148,7 @@
 				id="type"
 				bind:value={type}
 				required
-				class="input-field"
+				class="w-full rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-3 text-slate-100 shadow-inner transition-all duration-200 cursor-pointer hover:border-slate-600 focus:border-emerald-500 focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
 				on:change={() => {
 					// Update end date based on type when changed
 					if (!goal) {

@@ -102,7 +102,7 @@
 			<select
 				bind:value={filterType}
 				on:change={loadGoals}
-				class="rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-2 text-sm text-slate-200 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+				class="rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-2 text-sm text-slate-200 cursor-pointer transition hover:border-slate-600 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
 			>
 				<option value="ALL">All Types</option>
 				<option value="DAILY">Daily</option>
@@ -114,7 +114,7 @@
 			<select
 				bind:value={filterActive}
 				on:change={loadGoals}
-				class="rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-2 text-sm text-slate-200 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+				class="rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-2 text-sm text-slate-200 cursor-pointer transition hover:border-slate-600 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
 			>
 				<option value={null}>All Status</option>
 				<option value={true}>Active</option>
