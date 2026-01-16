@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const goalTypeSchema = z.enum(["QUARTERLY", "MONTHLY"]);
+export const goalTypeSchema = z.enum(["DAILY", "WEEKLY", "MONTHLY", "QUARTERLY", "YEARLY"]);
 
 export const goalHealthStatusSchema = z.enum(["ON_TRACK", "AT_RISK", "OFF_TRACK"]);
 

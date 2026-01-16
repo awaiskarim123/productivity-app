@@ -334,7 +334,7 @@ export async function fetchRecommendations() {
 export async function createGoal(payload: {
 	title: string;
 	description?: string;
-	type: 'QUARTERLY' | 'MONTHLY';
+	type: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
 	startDate: string;
 	endDate: string;
 	targetValue?: number;
@@ -349,7 +349,7 @@ export async function createGoal(payload: {
 }
 
 export async function fetchGoals(params: {
-	type?: 'QUARTERLY' | 'MONTHLY';
+	type?: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
 	isActive?: boolean;
 	limit?: number;
 	offset?: number;

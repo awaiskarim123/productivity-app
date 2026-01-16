@@ -9,9 +9,26 @@
 
 	let title = goal?.title || '';
 	let description = goal?.description || '';
-	let type: 'QUARTERLY' | 'MONTHLY' = goal?.type || 'QUARTERLY';
+	let type: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY' = goal?.type || 'MONTHLY';
 	let startDate = goal?.startDate ? dayjs(goal.startDate).format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD');
-	let endDate = goal?.endDate ? dayjs(goal.endDate).format('YYYY-MM-DD') : dayjs().add(3, 'month').format('YYYY-MM-DD');
+	let endDate = goal?.endDate ? dayjs(goal.endDate).format('YYYY-MM-DD') : (() => {
+		// Set default end date based on type
+		const today = dayjs();
+		switch (type) {
+			case 'DAILY':
+				return today.add(1, 'day').format('YYYY-MM-DD');
+			case 'WEEKLY':
+				return today.add(1, 'week').format('YYYY-MM-DD');
+			case 'MONTHLY':
+				return today.add(1, 'month').format('YYYY-MM-DD');
+			case 'QUARTERLY':
+				return today.add(3, 'month').format('YYYY-MM-DD');
+			case 'YEARLY':
+				return today.add(1, 'year').format('YYYY-MM-DD');
+			default:
+				return today.add(1, 'month').format('YYYY-MM-DD');
+		}
+	})();
 	let targetValue = goal?.targetValue || 100;
 	let keyResults: Array<{ title: string; description: string; targetValue: number; weight: number }> = 
 		goal?.keyResults?.map(kr => ({
@@ -132,9 +149,35 @@
 				bind:value={type}
 				required
 				class="input-field"
+				on:change={() => {
+					// Update end date based on type when changed
+					if (!goal) {
+						const today = dayjs();
+						switch (type) {
+							case 'DAILY':
+								endDate = today.add(1, 'day').format('YYYY-MM-DD');
+								break;
+							case 'WEEKLY':
+								endDate = today.add(1, 'week').format('YYYY-MM-DD');
+								break;
+							case 'MONTHLY':
+								endDate = today.add(1, 'month').format('YYYY-MM-DD');
+								break;
+							case 'QUARTERLY':
+								endDate = today.add(3, 'month').format('YYYY-MM-DD');
+								break;
+							case 'YEARLY':
+								endDate = today.add(1, 'year').format('YYYY-MM-DD');
+								break;
+						}
+					}
+				}}
 			>
-				<option value="QUARTERLY">Quarterly</option>
+				<option value="DAILY">Daily</option>
+				<option value="WEEKLY">Weekly</option>
 				<option value="MONTHLY">Monthly</option>
+				<option value="QUARTERLY">Quarterly</option>
+				<option value="YEARLY">Yearly</option>
 			</select>
 		</div>
 

@@ -21,8 +21,11 @@ exports.TaskPriority = {
     URGENT: 'URGENT'
 };
 exports.GoalType = {
+    DAILY: 'DAILY',
+    WEEKLY: 'WEEKLY',
+    MONTHLY: 'MONTHLY',
     QUARTERLY: 'QUARTERLY',
-    MONTHLY: 'MONTHLY'
+    YEARLY: 'YEARLY'
 };
 exports.GoalHealthStatus = {
     ON_TRACK: 'ON_TRACK',

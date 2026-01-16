@@ -11,8 +11,11 @@ export declare const TaskPriority: {
 };
 export type TaskPriority = (typeof TaskPriority)[keyof typeof TaskPriority];
 export declare const GoalType: {
-    readonly QUARTERLY: "QUARTERLY";
+    readonly DAILY: "DAILY";
+    readonly WEEKLY: "WEEKLY";
     readonly MONTHLY: "MONTHLY";
+    readonly QUARTERLY: "QUARTERLY";
+    readonly YEARLY: "YEARLY";
 };
 export type GoalType = (typeof GoalType)[keyof typeof GoalType];
 export declare const GoalHealthStatus: {

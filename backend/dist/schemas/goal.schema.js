@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.linkToGoalSchema = exports.goalsQuerySchema = exports.updateKeyResultSchema = exports.createKeyResultSchema = exports.updateGoalSchema = exports.createGoalSchema = exports.goalHealthStatusSchema = exports.goalTypeSchema = void 0;
 const zod_1 = require("zod");
-exports.goalTypeSchema = zod_1.z.enum(["QUARTERLY", "MONTHLY"]);
+exports.goalTypeSchema = zod_1.z.enum(["DAILY", "WEEKLY", "MONTHLY", "QUARTERLY", "YEARLY"]);
 exports.goalHealthStatusSchema = zod_1.z.enum(["ON_TRACK", "AT_RISK", "OFF_TRACK"]);
 exports.createGoalSchema = zod_1.z.object({
     title: zod_1.z.string().min(1, "Title is required").max(200, "Title must be less than 200 characters"),

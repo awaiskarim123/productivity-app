@@ -206,8 +206,11 @@ model WeeklyInsight {
 }
 
 enum GoalType {
-  QUARTERLY
+  DAILY
+  WEEKLY
   MONTHLY
+  QUARTERLY
+  YEARLY
 }
 
 enum GoalHealthStatus {

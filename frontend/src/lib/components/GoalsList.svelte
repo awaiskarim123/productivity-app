@@ -10,7 +10,7 @@
 	let goals: Goal[] = [];
 	let loading = true;
 	let error: string | null = null;
-	let filterType: 'QUARTERLY' | 'MONTHLY' | 'ALL' = 'ALL';
+	let filterType: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY' | 'ALL' = 'ALL';
 	let filterActive: boolean | null = null;
 
 	onMount(async () => {
@@ -105,8 +105,11 @@
 				class="rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-2 text-sm text-slate-200 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
 			>
 				<option value="ALL">All Types</option>
-				<option value="QUARTERLY">Quarterly</option>
+				<option value="DAILY">Daily</option>
+				<option value="WEEKLY">Weekly</option>
 				<option value="MONTHLY">Monthly</option>
+				<option value="QUARTERLY">Quarterly</option>
+				<option value="YEARLY">Yearly</option>
 			</select>
 			<select
 				bind:value={filterActive}

@@ -1,7 +1,10 @@
 import { z } from "zod";
 export declare const goalTypeSchema: z.ZodEnum<{
-    QUARTERLY: "QUARTERLY";
+    DAILY: "DAILY";
+    WEEKLY: "WEEKLY";
     MONTHLY: "MONTHLY";
+    QUARTERLY: "QUARTERLY";
+    YEARLY: "YEARLY";
 }>;
 export declare const goalHealthStatusSchema: z.ZodEnum<{
     ON_TRACK: "ON_TRACK";
@@ -12,8 +15,11 @@ export declare const createGoalSchema: z.ZodObject<{
     title: z.ZodString;
     description: z.ZodOptional<z.ZodString>;
     type: z.ZodEnum<{
-        QUARTERLY: "QUARTERLY";
+        DAILY: "DAILY";
+        WEEKLY: "WEEKLY";
         MONTHLY: "MONTHLY";
+        QUARTERLY: "QUARTERLY";
+        YEARLY: "YEARLY";
     }>;
     startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
     endDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
@@ -48,8 +54,11 @@ export declare const updateKeyResultSchema: z.ZodObject<{
 }, z.core.$strip>;
 export declare const goalsQuerySchema: z.ZodObject<{
     type: z.ZodOptional<z.ZodEnum<{
-        QUARTERLY: "QUARTERLY";
+        DAILY: "DAILY";
+        WEEKLY: "WEEKLY";
         MONTHLY: "MONTHLY";
+        QUARTERLY: "QUARTERLY";
+        YEARLY: "YEARLY";
     }>>;
     isActive: z.ZodOptional<z.ZodPipe<z.ZodString, z.ZodTransform<boolean, string>>>;
     limit: z.ZodDefault<z.ZodCoercedNumber<unknown>>;

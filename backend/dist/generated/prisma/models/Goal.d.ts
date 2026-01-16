@@ -367,7 +367,7 @@ export type GoalCreateInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     deletedAt?: Date | string | null;
-    user: Prisma.UserCreateNestedOneWithoutGoalsInput | undefined;
+    user: Prisma.UserCreateNestedOneWithoutGoalsInput;
     keyResults?: Prisma.KeyResultCreateNestedManyWithoutGoalInput;
     tasks?: Prisma.TaskCreateNestedManyWithoutGoalInput;
     habits?: Prisma.HabitCreateNestedManyWithoutGoalInput;
@@ -375,7 +375,7 @@ export type GoalCreateInput = {
 };
 export type GoalUncheckedCreateInput = {
     id?: string;
-    userId: string | undefined;
+    userId: string;
     title: string;
     description?: string | null;
     type: $Enums.GoalType;

@@ -211,7 +211,7 @@ export interface Goal {
 	userId: string;
 	title: string;
 	description: string | null;
-	type: 'QUARTERLY' | 'MONTHLY';
+	type: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
 	startDate: string;
 	endDate: string;
 	targetValue: number;

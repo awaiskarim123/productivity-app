@@ -293,11 +293,11 @@ export type KeyResultCreateInput = {
     weight?: number;
     createdAt?: Date | string;
     updatedAt?: Date | string;
-    goal: Prisma.GoalCreateNestedOneWithoutKeyResultsInput | undefined;
+    goal: Prisma.GoalCreateNestedOneWithoutKeyResultsInput;
 };
 export type KeyResultUncheckedCreateInput = {
     id?: string;
-    goalId: string | undefined;
+    goalId: string;
     title: string;
     description?: string | null;
     targetValue: number;
@@ -317,11 +317,11 @@ export type KeyResultUpdateInput = {
     weight?: Prisma.FloatFieldUpdateOperationsInput | number;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-    goal?: Prisma.GoalUpdateOneRequiredWithoutKeyResultsNestedInput | undefined;
+    goal?: Prisma.GoalUpdateOneRequiredWithoutKeyResultsNestedInput;
 };
 export type KeyResultUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
-    goalId?: Prisma.StringFieldUpdateOperationsInput | string | undefined;
+    goalId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     targetValue?: Prisma.FloatFieldUpdateOperationsInput | number;
