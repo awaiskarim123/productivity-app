@@ -17,6 +17,8 @@ function buildApp() {
     app.register(cors_1.default, {
         origin: true,
         credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
     });
     app.register(prisma_1.default);
     app.register(auth_1.default);

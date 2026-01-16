@@ -7,6 +7,7 @@ exports.default = analyticsRoutes;
 const dayjs_1 = __importDefault(require("dayjs"));
 const enums_1 = require("../../generated/prisma/enums");
 const statistics_service_1 = require("../../services/statistics.service");
+const insights_service_1 = require("../../services/insights.service");
 function buildBuckets(start, count, unit) {
     const buckets = new Map();
     for (let i = 0; i < count; i += 1) {
@@ -50,6 +51,7 @@ async function analyticsRoutes(app) {
                     startedAt: {
                         gte: (0, dayjs_1.default)().startOf("day").subtract(6, "day").toDate(),
                     },
+                    deletedAt: null, // Only include non-deleted sessions
                 },
                 select: {
                     startedAt: true,
@@ -63,6 +65,7 @@ async function analyticsRoutes(app) {
                     startedAt: {
                         gte: (0, dayjs_1.default)().startOf("day").subtract(29, "day").toDate(),
                     },
+                    deletedAt: null, // Only include non-deleted sessions
                 },
                 select: {
                     startedAt: true,
@@ -124,6 +127,34 @@ async function analyticsRoutes(app) {
                 minutes,
             })),
             suggestions,
+        };
+    });
+    app.get("/weekly-insights", async (request, reply) => {
+        const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
+        if (!user) {
+            return reply.code(404).send({ message: "User not found" });
+        }
+        const query = request.query;
+        const weekStart = query?.weekStart
+            ? (0, dayjs_1.default)(query.weekStart).startOf("week").toDate()
+            : (0, dayjs_1.default)().startOf("week").toDate();
+        const insights = await (0, insights_service_1.getOrGenerateWeeklyInsights)(app.prisma, user.id, weekStart);
+        return {
+            weekStart: weekStart.toISOString(),
+            weekEnd: (0, dayjs_1.default)(weekStart).endOf("week").toISOString(),
+            ...insights,
+        };
+    });
+    app.get("/recommendations", async (request, reply) => {
+        const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
+        if (!user) {
+            return reply.code(404).send({ message: "User not found" });
+        }
+        const weekStart = (0, dayjs_1.default)().startOf("week").toDate();
+        const insights = await (0, insights_service_1.getOrGenerateWeeklyInsights)(app.prisma, user.id, weekStart);
+        return {
+            recommendations: insights.recommendations,
+            habitCorrelations: insights.habitCorrelations || [],
         };
     });
 }

@@ -27,7 +27,7 @@ async function workRoutes(app) {
         }
         const userId = request.user.id;
         const activeSession = await app.prisma.workSession.findFirst({
-            where: { userId, endedAt: null },
+            where: { userId, endedAt: null, deletedAt: null },
         });
         if (activeSession) {
             return reply.code(400).send({ message: "An active work session already exists" });
@@ -47,11 +47,11 @@ async function workRoutes(app) {
             return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
         }
         const { sessionId, endedAt, notes } = result.data;
-        const session = await app.prisma.workSession.findUnique({
-            where: { id: sessionId },
+        const session = await app.prisma.workSession.findFirst({
+            where: { id: sessionId, userId: request.user.id, deletedAt: null },
             include: { user: true },
         });
-        if (!session || session.userId !== request.user.id) {
+        if (!session) {
             return reply.code(404).send({ message: "Session not found" });
         }
         if (session.endedAt) {
@@ -89,6 +89,7 @@ async function workRoutes(app) {
         const sessions = await app.prisma.workSession.findMany({
             where: {
                 userId,
+                deletedAt: null, // Only show non-deleted sessions
                 ...(from || to
                     ? {
                         startedAt: {
@@ -102,6 +103,76 @@ async function workRoutes(app) {
             take: limit,
         });
         return { sessions };
+    });
+    app.get("/:id", async (request, reply) => {
+        const { id } = request.params;
+        const session = await app.prisma.workSession.findFirst({
+            where: {
+                id,
+                userId: request.user.id,
+                deletedAt: null, // Only return non-deleted sessions
+            },
+        });
+        if (!session) {
+            return reply.code(404).send({ message: "Work session not found" });
+        }
+        return { session };
+    });
+    app.patch("/:id", async (request, reply) => {
+        const { id } = request.params;
+        const result = work_schema_1.updateWorkSessionSchema.safeParse(request.body ?? {});
+        if (!result.success) {
+            return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
+        }
+        const existingSession = await app.prisma.workSession.findFirst({
+            where: { id, userId: request.user.id, deletedAt: null },
+        });
+        if (!existingSession) {
+            return reply.code(404).send({ message: "Work session not found" });
+        }
+        const updateData = {};
+        if (result.data.notes !== undefined)
+            updateData.notes = result.data.notes;
+        // Track if we need to recalculate duration
+        const startedAtChanged = result.data.startedAt !== undefined;
+        const endedAtChanged = result.data.endedAt !== undefined;
+        if (startedAtChanged) {
+            updateData.startedAt = result.data.startedAt;
+        }
+        if (endedAtChanged) {
+            updateData.endedAt = result.data.endedAt;
+        }
+        // Recalculate durationMinutes whenever startedAt or endedAt changes
+        if (startedAtChanged || endedAtChanged) {
+            const startTime = (0, dayjs_1.default)(result.data.startedAt ?? existingSession.startedAt);
+            const endTime = result.data.endedAt !== undefined
+                ? (result.data.endedAt ? (0, dayjs_1.default)(result.data.endedAt) : null)
+                : (existingSession.endedAt ? (0, dayjs_1.default)(existingSession.endedAt) : null);
+            if (endTime) {
+                updateData.durationMinutes = Math.max(1, Math.round(endTime.diff(startTime, "minute", true)));
+            }
+            else {
+                // If endedAt is null or being set to null, clear duration
+                updateData.durationMinutes = null;
+            }
+        }
+        const session = await app.prisma.workSession.update({
+            where: { id },
+            data: updateData,
+        });
+        return { session };
+    });
+    app.delete("/:id", async (request, reply) => {
+        const { id } = request.params;
+        // Soft delete: set deletedAt timestamp instead of actually deleting
+        const updateResult = await app.prisma.workSession.updateMany({
+            where: { id, userId: request.user.id, deletedAt: null },
+            data: { deletedAt: new Date() },
+        });
+        if (updateResult.count === 0) {
+            return reply.code(404).send({ message: "Work session not found" });
+        }
+        return reply.code(204).send();
     });
     app.get("/summary", async (request, reply) => {
         const result = work_schema_1.workSummaryQuerySchema.safeParse(request.query ?? {});
@@ -122,6 +193,7 @@ async function workRoutes(app) {
                 userId: request.user.id,
                 durationMinutes: { not: null },
                 startedAt: { gte: rangeStart.toDate() },
+                deletedAt: null, // Only include non-deleted sessions
             },
             select: {
                 startedAt: true,

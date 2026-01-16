@@ -15,3 +15,7 @@ export { default as FocusSessionForm } from './components/FocusSessionForm.svelt
 export { default as WeeklyInsights } from './components/WeeklyInsights.svelte';
 export { default as RecommendationsPanel } from './components/RecommendationsPanel.svelte';
 export { default as HabitImpactVisualization } from './components/HabitImpactVisualization.svelte';
+export { default as GoalsList } from './components/GoalsList.svelte';
+export { default as GoalForm } from './components/GoalForm.svelte';
+export { default as GoalTimeline } from './components/GoalTimeline.svelte';
+export { default as ContributionAnalysis } from './components/ContributionAnalysis.svelte';

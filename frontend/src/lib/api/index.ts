@@ -15,7 +15,11 @@ import type {
 	HabitStats,
 	Note,
 	WeeklyInsight,
-	RecommendationsResponse
+	RecommendationsResponse,
+	Goal,
+	KeyResult,
+	GoalContributions,
+	GoalTimeline
 } from '../types';
 
 export async function fetchProfile(): Promise<{ profile: User; summary: TimeSummary }> {
@@ -326,3 +330,114 @@ export async function fetchRecommendations() {
 	return apiFetch<RecommendationsResponse>('/analytics/recommendations', { method: 'GET' });
 }
 
+// Goals API
+export async function createGoal(payload: {
+	title: string;
+	description?: string;
+	type: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
+	startDate: string;
+	endDate: string;
+	targetValue?: number;
+	keyResults?: Array<{
+		title: string;
+		description?: string;
+		targetValue: number;
+		weight?: number;
+	}>;
+}) {
+	return apiFetch<{ goal: Goal }>('/goals', { method: 'POST', body: payload });
+}
+
+export async function fetchGoals(params: {
+	type?: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
+	isActive?: boolean;
+	limit?: number;
+	offset?: number;
+} = {}) {
+	const query = new URLSearchParams();
+	if (params.type) query.set('type', params.type);
+	if (params.isActive !== undefined) query.set('isActive', params.isActive.toString());
+	if (params.limit) query.set('limit', params.limit.toString());
+	if (params.offset) query.set('offset', params.offset.toString());
+
+	const suffix = query.toString() ? `?${query.toString()}` : '';
+	return apiFetch<{ goals: Goal[]; total: number; limit: number; offset: number }>(`/goals${suffix}`, { method: 'GET' });
+}
+
+export async function fetchGoal(id: string) {
+	return apiFetch<{ goal: Goal }>(`/goals/${id}`, { method: 'GET' });
+}
+
+export async function updateGoal(id: string, payload: {
+	title?: string;
+	description?: string;
+	startDate?: string;
+	endDate?: string;
+	targetValue?: number;
+	isActive?: boolean;
+}) {
+	return apiFetch<{ goal: Goal }>(`/goals/${id}`, { method: 'PATCH', body: payload });
+}
+
+export async function deleteGoal(id: string) {
+	return apiFetch(`/goals/${id}`, { method: 'DELETE' });
+}
+
+export async function createKeyResult(goalId: string, payload: {
+	title: string;
+	description?: string;
+	targetValue: number;
+	weight?: number;
+}) {
+	return apiFetch<{ keyResult: KeyResult }>(`/goals/${goalId}/key-results`, { method: 'POST', body: payload });
+}
+
+export async function updateKeyResult(id: string, payload: {
+	title?: string;
+	description?: string;
+	targetValue?: number;
+	currentValue?: number;
+	weight?: number;
+}) {
+	return apiFetch<{ keyResult: KeyResult }>(`/goals/key-results/${id}`, { method: 'PATCH', body: payload });
+}
+
+export async function deleteKeyResult(id: string) {
+	return apiFetch(`/goals/key-results/${id}`, { method: 'DELETE' });
+}
+
+export async function linkTaskToGoal(goalId: string, taskId: string) {
+	return apiFetch<{ message: string }>(`/goals/${goalId}/link/task/${taskId}`, { method: 'POST' });
+}
+
+export async function linkHabitToGoal(goalId: string, habitId: string) {
+	return apiFetch<{ message: string }>(`/goals/${goalId}/link/habit/${habitId}`, { method: 'POST' });
+}
+
+export async function linkFocusSessionToGoal(goalId: string, sessionId: string) {
+	return apiFetch<{ message: string }>(`/goals/${goalId}/link/focus-session/${sessionId}`, { method: 'POST' });
+}
+
+export async function unlinkTaskFromGoal(goalId: string, taskId: string) {
+	return apiFetch<{ message: string }>(`/goals/${goalId}/unlink/task/${taskId}`, { method: 'DELETE' });
+}
+
+export async function unlinkHabitFromGoal(goalId: string, habitId: string) {
+	return apiFetch<{ message: string }>(`/goals/${goalId}/unlink/habit/${habitId}`, { method: 'DELETE' });
+}
+
+export async function unlinkFocusSessionFromGoal(goalId: string, sessionId: string) {
+	return apiFetch<{ message: string }>(`/goals/${goalId}/unlink/focus-session/${sessionId}`, { method: 'DELETE' });
+}
+
+export async function fetchGoalContributions(id: string) {
+	return apiFetch<{ contributions: GoalContributions }>(`/goals/${id}/contributions`, { method: 'GET' });
+}
+
+export async function fetchGoalTimeline(id: string) {
+	return apiFetch<{ timeline: GoalTimeline }>(`/goals/${id}/timeline`, { method: 'GET' });
+}
+
+export async function recalculateGoalProgress(id: string) {
+	return apiFetch<{ goal: Goal }>(`/goals/${id}/recalculate`, { method: 'POST' });
+}

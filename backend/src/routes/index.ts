@@ -8,6 +8,7 @@ import motivationRoutes from "./modules/motivation.routes";
 import taskRoutes from "./modules/task.routes";
 import habitRoutes from "./modules/habit.routes";
 import noteRoutes from "./modules/note.routes";
+import goalRoutes from "./modules/goal.routes";
 
 export default async function registerRoutes(app: FastifyInstance) {
   app.get("/health", async () => ({ status: "ok" }));
@@ -21,5 +22,6 @@ export default async function registerRoutes(app: FastifyInstance) {
   app.register(taskRoutes, { prefix: "/tasks" });
   app.register(habitRoutes, { prefix: "/habits" });
   app.register(noteRoutes, { prefix: "/notes" });
+  app.register(goalRoutes, { prefix: "/goals" });
 }
 

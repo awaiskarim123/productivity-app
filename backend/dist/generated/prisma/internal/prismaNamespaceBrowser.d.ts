@@ -46,6 +46,13 @@ export declare const ModelName: {
     readonly FocusSession: "FocusSession";
     readonly RefreshToken: "RefreshToken";
     readonly Quote: "Quote";
+    readonly Task: "Task";
+    readonly Habit: "Habit";
+    readonly HabitLog: "HabitLog";
+    readonly Note: "Note";
+    readonly WeeklyInsight: "WeeklyInsight";
+    readonly Goal: "Goal";
+    readonly KeyResult: "KeyResult";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export declare const TransactionIsolationLevel: {
@@ -75,6 +82,7 @@ export declare const WorkSessionScalarFieldEnum: {
     readonly durationMinutes: "durationMinutes";
     readonly notes: "notes";
     readonly createdAt: "createdAt";
+    readonly deletedAt: "deletedAt";
 };
 export type WorkSessionScalarFieldEnum = (typeof WorkSessionScalarFieldEnum)[keyof typeof WorkSessionScalarFieldEnum];
 export declare const FocusSessionScalarFieldEnum: {
@@ -89,6 +97,8 @@ export declare const FocusSessionScalarFieldEnum: {
     readonly distractions: "distractions";
     readonly notes: "notes";
     readonly createdAt: "createdAt";
+    readonly deletedAt: "deletedAt";
+    readonly goalId: "goalId";
 };
 export type FocusSessionScalarFieldEnum = (typeof FocusSessionScalarFieldEnum)[keyof typeof FocusSessionScalarFieldEnum];
 export declare const RefreshTokenScalarFieldEnum: {
@@ -111,11 +121,137 @@ export declare const QuoteScalarFieldEnum: {
     readonly createdAt: "createdAt";
 };
 export type QuoteScalarFieldEnum = (typeof QuoteScalarFieldEnum)[keyof typeof QuoteScalarFieldEnum];
+export declare const TaskScalarFieldEnum: {
+    readonly id: "id";
+    readonly userId: "userId";
+    readonly title: "title";
+    readonly description: "description";
+    readonly completed: "completed";
+    readonly priority: "priority";
+    readonly dueDate: "dueDate";
+    readonly category: "category";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+    readonly completedAt: "completedAt";
+    readonly deletedAt: "deletedAt";
+    readonly goalId: "goalId";
+};
+export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum];
+export declare const HabitScalarFieldEnum: {
+    readonly id: "id";
+    readonly userId: "userId";
+    readonly name: "name";
+    readonly description: "description";
+    readonly color: "color";
+    readonly icon: "icon";
+    readonly targetDays: "targetDays";
+    readonly streak: "streak";
+    readonly bestStreak: "bestStreak";
+    readonly isActive: "isActive";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+    readonly deletedAt: "deletedAt";
+    readonly goalId: "goalId";
+};
+export type HabitScalarFieldEnum = (typeof HabitScalarFieldEnum)[keyof typeof HabitScalarFieldEnum];
+export declare const HabitLogScalarFieldEnum: {
+    readonly id: "id";
+    readonly habitId: "habitId";
+    readonly date: "date";
+    readonly notes: "notes";
+    readonly createdAt: "createdAt";
+};
+export type HabitLogScalarFieldEnum = (typeof HabitLogScalarFieldEnum)[keyof typeof HabitLogScalarFieldEnum];
+export declare const NoteScalarFieldEnum: {
+    readonly id: "id";
+    readonly userId: "userId";
+    readonly title: "title";
+    readonly content: "content";
+    readonly tags: "tags";
+    readonly isPinned: "isPinned";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+    readonly deletedAt: "deletedAt";
+};
+export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum];
+export declare const WeeklyInsightScalarFieldEnum: {
+    readonly id: "id";
+    readonly userId: "userId";
+    readonly weekStart: "weekStart";
+    readonly weekEnd: "weekEnd";
+    readonly peakHours: "peakHours";
+    readonly lowProductivityDays: "lowProductivityDays";
+    readonly weekOverWeekTrend: "weekOverWeekTrend";
+    readonly averageDailyMinutes: "averageDailyMinutes";
+    readonly totalSessions: "totalSessions";
+    readonly completedFocusSessions: "completedFocusSessions";
+    readonly habitCorrelations: "habitCorrelations";
+    readonly insights: "insights";
+    readonly recommendations: "recommendations";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type WeeklyInsightScalarFieldEnum = (typeof WeeklyInsightScalarFieldEnum)[keyof typeof WeeklyInsightScalarFieldEnum];
+export declare const GoalScalarFieldEnum: {
+    readonly id: "id";
+    readonly userId: "userId";
+    readonly title: "title";
+    readonly description: "description";
+    readonly type: "type";
+    readonly startDate: "startDate";
+    readonly endDate: "endDate";
+    readonly targetValue: "targetValue";
+    readonly currentValue: "currentValue";
+    readonly progressPercent: "progressPercent";
+    readonly healthStatus: "healthStatus";
+    readonly isActive: "isActive";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+    readonly deletedAt: "deletedAt";
+};
+export type GoalScalarFieldEnum = (typeof GoalScalarFieldEnum)[keyof typeof GoalScalarFieldEnum];
+export declare const KeyResultScalarFieldEnum: {
+    readonly id: "id";
+    readonly goalId: "goalId";
+    readonly title: "title";
+    readonly description: "description";
+    readonly targetValue: "targetValue";
+    readonly currentValue: "currentValue";
+    readonly progressPercent: "progressPercent";
+    readonly weight: "weight";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type KeyResultScalarFieldEnum = (typeof KeyResultScalarFieldEnum)[keyof typeof KeyResultScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";
 };
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder];
+export declare const NullableJsonNullValueInput: {
+    readonly DbNull: {
+        "__#private@#private": any;
+        _getNamespace(): string;
+        _getName(): string;
+        toString(): string;
+    };
+    readonly JsonNull: {
+        "__#private@#private": any;
+        _getNamespace(): string;
+        _getName(): string;
+        toString(): string;
+    };
+};
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput];
+export declare const JsonNullValueInput: {
+    readonly JsonNull: {
+        "__#private@#private": any;
+        _getNamespace(): string;
+        _getName(): string;
+        toString(): string;
+    };
+};
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput];
 export declare const QueryMode: {
     readonly default: "default";
     readonly insensitive: "insensitive";
@@ -126,4 +262,25 @@ export declare const NullsOrder: {
     readonly last: "last";
 };
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder];
+export declare const JsonNullValueFilter: {
+    readonly DbNull: {
+        "__#private@#private": any;
+        _getNamespace(): string;
+        _getName(): string;
+        toString(): string;
+    };
+    readonly JsonNull: {
+        "__#private@#private": any;
+        _getNamespace(): string;
+        _getName(): string;
+        toString(): string;
+    };
+    readonly AnyNull: {
+        "__#private@#private": any;
+        _getNamespace(): string;
+        _getName(): string;
+        toString(): string;
+    };
+};
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter];
 //# sourceMappingURL=prismaNamespaceBrowser.d.ts.map

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.focusStatsQuerySchema = exports.endFocusSchema = exports.startFocusSchema = void 0;
+exports.updateFocusSessionSchema = exports.focusSessionsQuerySchema = exports.focusStatsQuerySchema = exports.endFocusSchema = exports.startFocusSchema = void 0;
 const zod_1 = require("zod");
 const enums_1 = require("../generated/prisma/enums");
 exports.startFocusSchema = zod_1.z.object({
@@ -18,5 +18,23 @@ exports.endFocusSchema = zod_1.z.object({
 });
 exports.focusStatsQuerySchema = zod_1.z.object({
     rangeDays: zod_1.z.coerce.number().int().min(1).max(60).default(14),
+});
+exports.focusSessionsQuerySchema = zod_1.z.object({
+    from: zod_1.z.coerce.date().optional(),
+    to: zod_1.z.coerce.date().optional(),
+    mode: zod_1.z.nativeEnum(enums_1.FocusSessionMode).optional(),
+    limit: zod_1.z.coerce
+        .number()
+        .int()
+        .min(1)
+        .max(100)
+        .optional()
+        .transform((value) => value ?? 50),
+    offset: zod_1.z.coerce.number().int().min(0).optional().transform((value) => value ?? 0),
+});
+exports.updateFocusSessionSchema = zod_1.z.object({
+    notes: zod_1.z.string().max(500).optional().nullable(),
+    distractions: zod_1.z.coerce.number().int().min(0).max(99).optional(),
+    completed: zod_1.z.boolean().optional(),
 });
 //# sourceMappingURL=focus.schema.js.map

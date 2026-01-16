@@ -32,6 +32,7 @@ model User {
   habits         Habit[]
   notes          Note[]
   weeklyInsights WeeklyInsight[]
+  goals          Goal[]
 }
 
 model WorkSession {
@@ -63,9 +64,12 @@ model FocusSession {
   notes           String?
   createdAt       DateTime         @default(now())
   deletedAt       DateTime?
+  goalId          String?
+  goal            Goal?            @relation(fields: [goalId], references: [id], onDelete: SetNull)
 
   @@index([userId, startedAt])
   @@index([userId, deletedAt])
+  @@index([goalId])
 }
 
 model RefreshToken {
@@ -111,10 +115,13 @@ model Task {
   updatedAt   DateTime     @updatedAt
   completedAt DateTime?
   deletedAt   DateTime?
+  goalId      String?
+  goal        Goal?        @relation(fields: [goalId], references: [id], onDelete: SetNull)
 
   @@index([userId, completed])
   @@index([userId, dueDate])
   @@index([userId, deletedAt])
+  @@index([goalId])
 }
 
 enum TaskPriority {
@@ -140,9 +147,12 @@ model Habit {
   updatedAt   DateTime   @updatedAt
   deletedAt   DateTime?
   logs        HabitLog[]
+  goalId      String?
+  goal        Goal?      @relation(fields: [goalId], references: [id], onDelete: SetNull)
 
   @@index([userId, isActive])
   @@index([userId, deletedAt])
+  @@index([goalId])
 }
 
 model HabitLog {
@@ -193,4 +203,64 @@ model WeeklyInsight {
   updatedAt              DateTime @updatedAt
 
   @@unique([userId, weekStart])
+}
+
+enum GoalType {
+  DAILY
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+enum GoalHealthStatus {
+  ON_TRACK
+  AT_RISK
+  OFF_TRACK
+}
+
+model Goal {
+  id              String           @id @default(cuid())
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title           String
+  description     String?
+  type            GoalType
+  startDate       DateTime
+  endDate         DateTime
+  targetValue     Float            @default(100)
+  currentValue    Float            @default(0)
+  progressPercent Float            @default(0)
+  healthStatus    GoalHealthStatus @default(ON_TRACK)
+  isActive        Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  deletedAt       DateTime?
+
+  // Relations
+  keyResults      KeyResult[]
+  tasks           Task[]
+  habits          Habit[]
+  focusSessions   FocusSession[]
+
+  @@index([userId, isActive])
+  @@index([userId, startDate])
+  @@index([userId, endDate])
+  @@index([userId, deletedAt])
+}
+
+model KeyResult {
+  id              String           @id @default(cuid())
+  goalId          String
+  goal            Goal             @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  title           String
+  description     String?
+  targetValue     Float
+  currentValue    Float            @default(0)
+  progressPercent Float            @default(0)
+  weight          Float            @default(1.0) // Weight for calculating goal progress
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([goalId])
 }

@@ -48,7 +48,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.defineExtension = exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.QuoteScalarFieldEnum = exports.RefreshTokenScalarFieldEnum = exports.FocusSessionScalarFieldEnum = exports.WorkSessionScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
+exports.defineExtension = exports.JsonNullValueFilter = exports.NullsOrder = exports.QueryMode = exports.JsonNullValueInput = exports.NullableJsonNullValueInput = exports.SortOrder = exports.KeyResultScalarFieldEnum = exports.GoalScalarFieldEnum = exports.WeeklyInsightScalarFieldEnum = exports.NoteScalarFieldEnum = exports.HabitLogScalarFieldEnum = exports.HabitScalarFieldEnum = exports.TaskScalarFieldEnum = exports.QuoteScalarFieldEnum = exports.RefreshTokenScalarFieldEnum = exports.FocusSessionScalarFieldEnum = exports.WorkSessionScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/library"));
 /**
  * Prisma Errors
@@ -107,7 +107,14 @@ exports.ModelName = {
     WorkSession: 'WorkSession',
     FocusSession: 'FocusSession',
     RefreshToken: 'RefreshToken',
-    Quote: 'Quote'
+    Quote: 'Quote',
+    Task: 'Task',
+    Habit: 'Habit',
+    HabitLog: 'HabitLog',
+    Note: 'Note',
+    WeeklyInsight: 'WeeklyInsight',
+    Goal: 'Goal',
+    KeyResult: 'KeyResult'
 };
 /**
  * Enums
@@ -136,7 +143,8 @@ exports.WorkSessionScalarFieldEnum = {
     endedAt: 'endedAt',
     durationMinutes: 'durationMinutes',
     notes: 'notes',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    deletedAt: 'deletedAt'
 };
 exports.FocusSessionScalarFieldEnum = {
     id: 'id',
@@ -149,7 +157,9 @@ exports.FocusSessionScalarFieldEnum = {
     completed: 'completed',
     distractions: 'distractions',
     notes: 'notes',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    deletedAt: 'deletedAt',
+    goalId: 'goalId'
 };
 exports.RefreshTokenScalarFieldEnum = {
     id: 'id',
@@ -169,9 +179,111 @@ exports.QuoteScalarFieldEnum = {
     isActive: 'isActive',
     createdAt: 'createdAt'
 };
+exports.TaskScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    title: 'title',
+    description: 'description',
+    completed: 'completed',
+    priority: 'priority',
+    dueDate: 'dueDate',
+    category: 'category',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    completedAt: 'completedAt',
+    deletedAt: 'deletedAt',
+    goalId: 'goalId'
+};
+exports.HabitScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    name: 'name',
+    description: 'description',
+    color: 'color',
+    icon: 'icon',
+    targetDays: 'targetDays',
+    streak: 'streak',
+    bestStreak: 'bestStreak',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt',
+    goalId: 'goalId'
+};
+exports.HabitLogScalarFieldEnum = {
+    id: 'id',
+    habitId: 'habitId',
+    date: 'date',
+    notes: 'notes',
+    createdAt: 'createdAt'
+};
+exports.NoteScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    title: 'title',
+    content: 'content',
+    tags: 'tags',
+    isPinned: 'isPinned',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
+};
+exports.WeeklyInsightScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    weekStart: 'weekStart',
+    weekEnd: 'weekEnd',
+    peakHours: 'peakHours',
+    lowProductivityDays: 'lowProductivityDays',
+    weekOverWeekTrend: 'weekOverWeekTrend',
+    averageDailyMinutes: 'averageDailyMinutes',
+    totalSessions: 'totalSessions',
+    completedFocusSessions: 'completedFocusSessions',
+    habitCorrelations: 'habitCorrelations',
+    insights: 'insights',
+    recommendations: 'recommendations',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.GoalScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    title: 'title',
+    description: 'description',
+    type: 'type',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    targetValue: 'targetValue',
+    currentValue: 'currentValue',
+    progressPercent: 'progressPercent',
+    healthStatus: 'healthStatus',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
+};
+exports.KeyResultScalarFieldEnum = {
+    id: 'id',
+    goalId: 'goalId',
+    title: 'title',
+    description: 'description',
+    targetValue: 'targetValue',
+    currentValue: 'currentValue',
+    progressPercent: 'progressPercent',
+    weight: 'weight',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
 exports.SortOrder = {
     asc: 'asc',
     desc: 'desc'
+};
+exports.NullableJsonNullValueInput = {
+    DbNull: exports.DbNull,
+    JsonNull: exports.JsonNull
+};
+exports.JsonNullValueInput = {
+    JsonNull: exports.JsonNull
 };
 exports.QueryMode = {
     default: 'default',
@@ -180,6 +292,11 @@ exports.QueryMode = {
 exports.NullsOrder = {
     first: 'first',
     last: 'last'
+};
+exports.JsonNullValueFilter = {
+    DbNull: exports.DbNull,
+    JsonNull: exports.JsonNull,
+    AnyNull: exports.AnyNull
 };
 exports.defineExtension = runtime.Extensions.defineExtension;
 //# sourceMappingURL=prismaNamespace.js.map
