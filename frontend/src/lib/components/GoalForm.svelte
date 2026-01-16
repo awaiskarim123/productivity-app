@@ -148,7 +148,7 @@
 				id="type"
 				bind:value={type}
 				required
-				class="w-full rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-3 text-slate-100 shadow-inner transition-all duration-200 cursor-pointer hover:border-slate-600 focus:border-emerald-500 focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+				class="w-full rounded-2xl border border-slate-700 bg-slate-800/50 px-4 py-3 text-slate-100 shadow-inner transition-all duration-200 cursor-pointer hover:border-slate-600 focus:border-emerald-500 focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
 				on:change={() => {
 					// Update end date based on type when changed
 					if (!goal) {
@@ -342,5 +342,33 @@
 		@apply placeholder:text-slate-500;
 		@apply focus:border-emerald-500 focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30;
 		@apply hover:border-slate-600;
+	}
+
+	/* Custom select dropdown styling */
+	select {
+		appearance: none;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23a0aec0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+		background-position: right 0.75rem center;
+		background-repeat: no-repeat;
+		background-size: 1.25em 1.25em;
+		padding-right: 2.5rem;
+	}
+
+	select:focus {
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2310b981'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+	}
+
+	/* Style select options */
+	select option {
+		background-color: rgb(30 41 59);
+		color: rgb(241 245 249);
+		padding: 0.5rem;
+	}
+
+	select option:hover,
+	select option:checked,
+	select option:focus {
+		background-color: rgb(16 185 129 / 0.2);
+		color: rgb(16 185 129);
 	}
 </style>
