@@ -193,3 +193,99 @@ export interface RecommendationsResponse {
 	}>;
 }
 
+export interface KeyResult {
+	id: string;
+	goalId: string;
+	title: string;
+	description: string | null;
+	targetValue: number;
+	currentValue: number;
+	progressPercent: number;
+	weight: number;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface Goal {
+	id: string;
+	userId: string;
+	title: string;
+	description: string | null;
+	type: 'QUARTERLY' | 'MONTHLY';
+	startDate: string;
+	endDate: string;
+	targetValue: number;
+	currentValue: number;
+	progressPercent: number;
+	healthStatus: 'ON_TRACK' | 'AT_RISK' | 'OFF_TRACK';
+	isActive: boolean;
+	createdAt: string;
+	updatedAt: string;
+	deletedAt: string | null;
+	keyResults?: KeyResult[];
+	_count?: {
+		tasks: number;
+		habits: number;
+		focusSessions: number;
+	};
+}
+
+export interface GoalContributions {
+	tasks: {
+		total: number;
+		completed: number;
+		contribution: number;
+		items: Array<{
+			id: string;
+			title: string;
+			completed: boolean;
+			completedAt: string | null;
+			priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
+		}>;
+	};
+	habits: {
+		total: number;
+		logs: number;
+		contribution: number;
+		items: Array<{
+			id: string;
+			name: string;
+			logCount: number;
+		}>;
+	};
+	focusSessions: {
+		total: number;
+		totalMinutes: number;
+		contribution: number;
+		items: Array<{
+			id: string;
+			startedAt: string;
+			durationMinutes: number | null;
+			completed: boolean;
+		}>;
+	};
+	keyResults: Array<{
+		id: string;
+		title: string;
+		currentValue: number;
+		targetValue: number;
+		progressPercent: number;
+	}>;
+}
+
+export interface GoalTimeline {
+	goal: {
+		id: string;
+		title: string;
+		startDate: string;
+		endDate: string;
+		currentProgress: number;
+	};
+	timeline: Array<{
+		date: string;
+		progress: number;
+		tasksCompleted: number;
+		habitLogs: number;
+		focusMinutes: number;
+	}>;
+}
