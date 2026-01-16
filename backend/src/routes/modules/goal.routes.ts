@@ -36,8 +36,8 @@ export default async function goalRoutes(app: FastifyInstance) {
         userId: request.user.id,
         ...goalData,
         description: goalData.description ?? null,
-        startDate: startDate instanceof Date ? startDate : new Date(startDate),
-        endDate: endDate instanceof Date ? endDate : new Date(endDate),
+        startDate: startDate instanceof Date ? startDate : (typeof startDate === 'string' && startDate.match(/^\d{4}-\d{2}-\d{2}$/) ? new Date(startDate + 'T00:00:00Z') : new Date(startDate)),
+        endDate: endDate instanceof Date ? endDate : (typeof endDate === 'string' && endDate.match(/^\d{4}-\d{2}-\d{2}$/) ? new Date(endDate + 'T23:59:59Z') : new Date(endDate)),
         keyResults: {
           create: (keyResults || []).map(kr => ({
             ...kr,
@@ -53,7 +53,15 @@ export default async function goalRoutes(app: FastifyInstance) {
     // Calculate initial progress
     await updateGoalProgress(app.prisma, goal.id);
 
-    return reply.code(201).send({ goal });
+    // Re-fetch the goal to get updated progress values
+    const updatedGoal = await app.prisma.goal.findUnique({
+      where: { id: goal.id },
+      include: {
+        keyResults: true,
+      },
+    });
+
+    return reply.code(201).send({ goal: updatedGoal });
   });
 
   app.get("/", async (request, reply) => {
@@ -159,14 +167,18 @@ export default async function goalRoutes(app: FastifyInstance) {
       updateData.description = result.data.description ?? null;
     }
     if (result.data.startDate !== undefined) {
+      const startDate = result.data.startDate;
       updateData.startDate =
-        result.data.startDate instanceof Date
-          ? result.data.startDate
-          : new Date(result.data.startDate);
+        startDate instanceof Date
+          ? startDate
+          : (typeof startDate === 'string' && startDate.match(/^\d{4}-\d{2}-\d{2}$/) ? new Date(startDate + 'T00:00:00Z') : new Date(startDate));
     }
     if (result.data.endDate !== undefined) {
+      const endDate = result.data.endDate;
       updateData.endDate =
-        result.data.endDate instanceof Date ? result.data.endDate : new Date(result.data.endDate);
+        endDate instanceof Date
+          ? endDate
+          : (typeof endDate === 'string' && endDate.match(/^\d{4}-\d{2}-\d{2}$/) ? new Date(endDate + 'T23:59:59Z') : new Date(endDate));
     }
     if (result.data.targetValue !== undefined) {
       updateData.targetValue = result.data.targetValue;
@@ -175,18 +187,23 @@ export default async function goalRoutes(app: FastifyInstance) {
       updateData.isActive = result.data.isActive;
     }
 
-    const goal = await app.prisma.goal.update({
+    await app.prisma.goal.update({
       where: { id },
       data: updateData,
+    });
+
+    // Recalculate progress after update
+    await updateGoalProgress(app.prisma, id);
+
+    // Re-fetch the goal to get updated progress values
+    const updatedGoal = await app.prisma.goal.findUnique({
+      where: { id },
       include: {
         keyResults: true,
       },
     });
 
-    // Recalculate progress after update
-    await updateGoalProgress(app.prisma, goal.id);
-
-    return { goal };
+    return { goal: updatedGoal };
   });
 
   app.delete("/:id", async (request, reply) => {

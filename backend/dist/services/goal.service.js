@@ -22,13 +22,7 @@ async function calculateGoalProgress(prisma, goalId) {
             habits: {
                 where: { deletedAt: null },
                 include: {
-                    logs: {
-                        where: {
-                            date: {
-                                gte: new Date(), // Only count future logs? No, we want all logs within goal period
-                            },
-                        },
-                    },
+                    logs: true,
                 },
             },
             focusSessions: {
@@ -175,9 +169,6 @@ async function getGoalContributions(prisma, goalId) {
             },
             habits: {
                 where: { deletedAt: null },
-                include: {
-                    logs: true,
-                },
                 select: {
                     id: true,
                     name: true,
@@ -258,7 +249,11 @@ async function getGoalContributions(prisma, goalId) {
         focusSessions: {
             total: goal.focusSessions.length,
             totalMinutes: focusMinutes,
-            contribution: Math.min(100, (focusMinutes / ((0, dayjs_1.default)(endDate).diff(startDate, "day") * 60)) * 100),
+            contribution: (() => {
+                const totalDays = Math.max(1, (0, dayjs_1.default)(endDate).diff(startDate, "day") + 1); // Use inclusive days, minimum 1
+                const estimatedTargetMinutes = totalDays * 60;
+                return estimatedTargetMinutes > 0 ? Math.min(100, (focusMinutes / estimatedTargetMinutes) * 100) : 0;
+            })(),
             items: goal.focusSessions.map((s) => ({
                 id: s.id,
                 startedAt: s.startedAt,

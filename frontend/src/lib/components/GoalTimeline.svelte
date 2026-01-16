@@ -32,10 +32,18 @@
 	}
 
 	function getMaxValue() {
-		if (!timeline) return 100;
-		return Math.max(
-			...timeline.timeline.map((point) => Math.max(point.progress, point.tasksCompleted, point.habitLogs, point.focusMinutes / 10))
-		);
+		if (!timeline || !timeline.timeline || timeline.timeline.length === 0) {
+			return 100;
+		}
+		const values = timeline.timeline.map((point) => {
+			const progress = Number(point.progress) || 0;
+			const tasksCompleted = Number(point.tasksCompleted) || 0;
+			const habitLogs = Number(point.habitLogs) || 0;
+			const focusMinutes = (Number(point.focusMinutes) || 0) / 10;
+			return Math.max(progress, tasksCompleted, habitLogs, focusMinutes);
+		});
+		const maxValue = Math.max(...values);
+		return isFinite(maxValue) && maxValue > 0 ? maxValue : 100;
 	}
 </script>
 

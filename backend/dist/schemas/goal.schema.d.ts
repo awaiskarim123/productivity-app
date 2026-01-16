@@ -21,8 +21,8 @@ export declare const createGoalSchema: z.ZodObject<{
         QUARTERLY: "QUARTERLY";
         YEARLY: "YEARLY";
     }>;
-    startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
-    endDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+    startDate: z.ZodUnion<readonly [z.ZodString, z.ZodString, z.ZodDate]>;
+    endDate: z.ZodUnion<readonly [z.ZodString, z.ZodString, z.ZodDate]>;
     targetValue: z.ZodDefault<z.ZodNumber>;
     keyResults: z.ZodDefault<z.ZodOptional<z.ZodArray<z.ZodObject<{
         title: z.ZodString;
@@ -34,8 +34,8 @@ export declare const createGoalSchema: z.ZodObject<{
 export declare const updateGoalSchema: z.ZodObject<{
     title: z.ZodOptional<z.ZodString>;
     description: z.ZodOptional<z.ZodString>;
-    startDate: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodDate]>>;
-    endDate: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodDate]>>;
+    startDate: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodString, z.ZodDate]>>;
+    endDate: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodString, z.ZodDate]>>;
     targetValue: z.ZodOptional<z.ZodNumber>;
     isActive: z.ZodOptional<z.ZodBoolean>;
 }, z.core.$strip>;

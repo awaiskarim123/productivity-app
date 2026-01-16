@@ -8,8 +8,16 @@ export const createGoalSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title must be less than 200 characters"),
   description: z.string().max(1000, "Description must be less than 1000 characters").optional(),
   type: goalTypeSchema,
-  startDate: z.string().datetime().or(z.date()),
-  endDate: z.string().datetime().or(z.date()),
+  startDate: z.union([
+    z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
+    z.string().datetime(),
+    z.date()
+  ]),
+  endDate: z.union([
+    z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
+    z.string().datetime(),
+    z.date()
+  ]),
   targetValue: z.number().positive("Target value must be positive").default(100),
   keyResults: z
     .array(
@@ -37,8 +45,16 @@ export const createGoalSchema = z.object({
 export const updateGoalSchema = z.object({
   title: z.string().min(1).max(200).optional(),
   description: z.string().max(1000).optional(),
-  startDate: z.string().datetime().or(z.date()).optional(),
-  endDate: z.string().datetime().or(z.date()).optional(),
+  startDate: z.union([
+    z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
+    z.string().datetime(),
+    z.date()
+  ]).optional(),
+  endDate: z.union([
+    z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
+    z.string().datetime(),
+    z.date()
+  ]).optional(),
   targetValue: z.number().positive().optional(),
   isActive: z.boolean().optional(),
 }).refine(

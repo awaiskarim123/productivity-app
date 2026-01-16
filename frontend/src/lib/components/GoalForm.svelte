@@ -40,7 +40,41 @@
 	let isSubmitting = false;
 	let error: string | null = null;
 
-	const isEditMode = goal !== null;
+	$: isEditMode = goal !== null;
+
+	// Reset form fields when goal prop changes
+	$: if (goal) {
+		title = goal.title || '';
+		description = goal.description || '';
+		type = goal.type || 'MONTHLY';
+		startDate = goal.startDate ? dayjs(goal.startDate).format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD');
+		endDate = goal.endDate ? dayjs(goal.endDate).format('YYYY-MM-DD') : (() => {
+			const today = dayjs();
+			switch (type) {
+				case 'DAILY': return today.add(1, 'day').format('YYYY-MM-DD');
+				case 'WEEKLY': return today.add(1, 'week').format('YYYY-MM-DD');
+				case 'MONTHLY': return today.add(1, 'month').format('YYYY-MM-DD');
+				case 'QUARTERLY': return today.add(3, 'month').format('YYYY-MM-DD');
+				case 'YEARLY': return today.add(1, 'year').format('YYYY-MM-DD');
+				default: return today.add(1, 'month').format('YYYY-MM-DD');
+			}
+		})();
+		targetValue = goal.targetValue || 100;
+		keyResults = goal.keyResults?.map(kr => ({
+			title: kr.title,
+			description: kr.description || '',
+			targetValue: kr.targetValue,
+			weight: kr.weight
+		})) || [];
+	} else {
+		title = '';
+		description = '';
+		type = 'MONTHLY';
+		startDate = dayjs().format('YYYY-MM-DD');
+		endDate = dayjs().add(1, 'month').format('YYYY-MM-DD');
+		targetValue = 100;
+		keyResults = [];
+	}
 
 	function addKeyResult() {
 		keyResults = [...keyResults, { title: '', description: '', targetValue: 0, weight: 1.0 }];
@@ -256,7 +290,7 @@
 
 						<input
 							type="text"
-							bind:value={kr.title}
+							value={kr.title}
 							on:input={(e) => updateKeyResult(index, 'title', e.currentTarget.value)}
 							placeholder="Key result title"
 							maxlength="200"
@@ -264,7 +298,7 @@
 						/>
 
 						<textarea
-							bind:value={kr.description}
+							value={kr.description}
 							on:input={(e) => updateKeyResult(index, 'description', e.currentTarget.value)}
 							placeholder="Description (optional)"
 							rows="2"
@@ -279,7 +313,7 @@
 								</label>
 								<input
 									type="number"
-									bind:value={kr.targetValue}
+									value={kr.targetValue}
 									on:input={(e) => updateKeyResult(index, 'targetValue', parseFloat(e.currentTarget.value) || 0)}
 									min="0"
 									step="0.1"
@@ -292,7 +326,7 @@
 								</label>
 								<input
 									type="number"
-									bind:value={kr.weight}
+									value={kr.weight}
 									on:input={(e) => updateKeyResult(index, 'weight', Math.max(0, Math.min(1, parseFloat(e.currentTarget.value) || 1)))}
 									min="0"
 									max="1"
