@@ -20,4 +20,9 @@ export declare const workSessionsQuerySchema: z.ZodObject<{
     to: z.ZodOptional<z.ZodCoercedDate<unknown>>;
     limit: z.ZodPipe<z.ZodOptional<z.ZodCoercedNumber<unknown>>, z.ZodTransform<number, number | undefined>>;
 }, z.core.$strip>;
+export declare const updateWorkSessionSchema: z.ZodObject<{
+    notes: z.ZodOptional<z.ZodString>;
+    startedAt: z.ZodOptional<z.ZodCoercedDate<unknown>>;
+    endedAt: z.ZodNullable<z.ZodOptional<z.ZodCoercedDate<unknown>>>;
+}, z.core.$strip>;
 //# sourceMappingURL=work.schema.d.ts.map

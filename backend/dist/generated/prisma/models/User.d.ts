@@ -207,6 +207,11 @@ export type UserWhereInput = {
     workSessions?: Prisma.WorkSessionListRelationFilter;
     focusSessions?: Prisma.FocusSessionListRelationFilter;
     refreshTokens?: Prisma.RefreshTokenListRelationFilter;
+    tasks?: Prisma.TaskListRelationFilter;
+    habits?: Prisma.HabitListRelationFilter;
+    notes?: Prisma.NoteListRelationFilter;
+    weeklyInsights?: Prisma.WeeklyInsightListRelationFilter;
+    goals?: Prisma.GoalListRelationFilter;
 };
 export type UserOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -221,6 +226,11 @@ export type UserOrderByWithRelationInput = {
     workSessions?: Prisma.WorkSessionOrderByRelationAggregateInput;
     focusSessions?: Prisma.FocusSessionOrderByRelationAggregateInput;
     refreshTokens?: Prisma.RefreshTokenOrderByRelationAggregateInput;
+    tasks?: Prisma.TaskOrderByRelationAggregateInput;
+    habits?: Prisma.HabitOrderByRelationAggregateInput;
+    notes?: Prisma.NoteOrderByRelationAggregateInput;
+    weeklyInsights?: Prisma.WeeklyInsightOrderByRelationAggregateInput;
+    goals?: Prisma.GoalOrderByRelationAggregateInput;
 };
 export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -238,6 +248,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
     workSessions?: Prisma.WorkSessionListRelationFilter;
     focusSessions?: Prisma.FocusSessionListRelationFilter;
     refreshTokens?: Prisma.RefreshTokenListRelationFilter;
+    tasks?: Prisma.TaskListRelationFilter;
+    habits?: Prisma.HabitListRelationFilter;
+    notes?: Prisma.NoteListRelationFilter;
+    weeklyInsights?: Prisma.WeeklyInsightListRelationFilter;
+    goals?: Prisma.GoalListRelationFilter;
 }, "id" | "email">;
 export type UserOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -282,6 +297,11 @@ export type UserCreateInput = {
     workSessions?: Prisma.WorkSessionCreateNestedManyWithoutUserInput;
     focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput;
     refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateInput = {
     id?: string;
@@ -296,6 +316,11 @@ export type UserUncheckedCreateInput = {
     workSessions?: Prisma.WorkSessionUncheckedCreateNestedManyWithoutUserInput;
     focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput;
     refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -310,6 +335,11 @@ export type UserUpdateInput = {
     workSessions?: Prisma.WorkSessionUpdateManyWithoutUserNestedInput;
     focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput;
     refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -324,6 +354,11 @@ export type UserUncheckedUpdateInput = {
     workSessions?: Prisma.WorkSessionUncheckedUpdateManyWithoutUserNestedInput;
     focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput;
     refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserCreateManyInput = {
     id?: string;
@@ -458,6 +493,66 @@ export type UserUpdateOneRequiredWithoutRefreshTokensNestedInput = {
     connect?: Prisma.UserWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRefreshTokensInput, Prisma.UserUpdateWithoutRefreshTokensInput>, Prisma.UserUncheckedUpdateWithoutRefreshTokensInput>;
 };
+export type UserCreateNestedOneWithoutTasksInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutTasksInput, Prisma.UserUncheckedCreateWithoutTasksInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutTasksInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserUpdateOneRequiredWithoutTasksNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutTasksInput, Prisma.UserUncheckedCreateWithoutTasksInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutTasksInput;
+    upsert?: Prisma.UserUpsertWithoutTasksInput;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTasksInput, Prisma.UserUpdateWithoutTasksInput>, Prisma.UserUncheckedUpdateWithoutTasksInput>;
+};
+export type UserCreateNestedOneWithoutHabitsInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutHabitsInput, Prisma.UserUncheckedCreateWithoutHabitsInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutHabitsInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserUpdateOneRequiredWithoutHabitsNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutHabitsInput, Prisma.UserUncheckedCreateWithoutHabitsInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutHabitsInput;
+    upsert?: Prisma.UserUpsertWithoutHabitsInput;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutHabitsInput, Prisma.UserUpdateWithoutHabitsInput>, Prisma.UserUncheckedUpdateWithoutHabitsInput>;
+};
+export type UserCreateNestedOneWithoutNotesInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutNotesInput, Prisma.UserUncheckedCreateWithoutNotesInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotesInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserUpdateOneRequiredWithoutNotesNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutNotesInput, Prisma.UserUncheckedCreateWithoutNotesInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotesInput;
+    upsert?: Prisma.UserUpsertWithoutNotesInput;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotesInput, Prisma.UserUpdateWithoutNotesInput>, Prisma.UserUncheckedUpdateWithoutNotesInput>;
+};
+export type UserCreateNestedOneWithoutWeeklyInsightsInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutWeeklyInsightsInput, Prisma.UserUncheckedCreateWithoutWeeklyInsightsInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutWeeklyInsightsInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserUpdateOneRequiredWithoutWeeklyInsightsNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutWeeklyInsightsInput, Prisma.UserUncheckedCreateWithoutWeeklyInsightsInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutWeeklyInsightsInput;
+    upsert?: Prisma.UserUpsertWithoutWeeklyInsightsInput;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWeeklyInsightsInput, Prisma.UserUpdateWithoutWeeklyInsightsInput>, Prisma.UserUncheckedUpdateWithoutWeeklyInsightsInput>;
+};
+export type UserCreateNestedOneWithoutGoalsInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutGoalsInput, Prisma.UserUncheckedCreateWithoutGoalsInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutGoalsInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserUpdateOneRequiredWithoutGoalsNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutGoalsInput, Prisma.UserUncheckedCreateWithoutGoalsInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutGoalsInput;
+    upsert?: Prisma.UserUpsertWithoutGoalsInput;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGoalsInput, Prisma.UserUpdateWithoutGoalsInput>, Prisma.UserUncheckedUpdateWithoutGoalsInput>;
+};
 export type UserCreateWithoutWorkSessionsInput = {
     id?: string;
     email: string;
@@ -470,6 +565,11 @@ export type UserCreateWithoutWorkSessionsInput = {
     updatedAt?: Date | string;
     focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput;
     refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateWithoutWorkSessionsInput = {
     id?: string;
@@ -483,6 +583,11 @@ export type UserUncheckedCreateWithoutWorkSessionsInput = {
     updatedAt?: Date | string;
     focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput;
     refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserCreateOrConnectWithoutWorkSessionsInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -509,6 +614,11 @@ export type UserUpdateWithoutWorkSessionsInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput;
     refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateWithoutWorkSessionsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -522,6 +632,11 @@ export type UserUncheckedUpdateWithoutWorkSessionsInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput;
     refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserCreateWithoutFocusSessionsInput = {
     id?: string;
@@ -535,6 +650,11 @@ export type UserCreateWithoutFocusSessionsInput = {
     updatedAt?: Date | string;
     workSessions?: Prisma.WorkSessionCreateNestedManyWithoutUserInput;
     refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateWithoutFocusSessionsInput = {
     id?: string;
@@ -548,6 +668,11 @@ export type UserUncheckedCreateWithoutFocusSessionsInput = {
     updatedAt?: Date | string;
     workSessions?: Prisma.WorkSessionUncheckedCreateNestedManyWithoutUserInput;
     refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserCreateOrConnectWithoutFocusSessionsInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -574,6 +699,11 @@ export type UserUpdateWithoutFocusSessionsInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     workSessions?: Prisma.WorkSessionUpdateManyWithoutUserNestedInput;
     refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateWithoutFocusSessionsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -587,6 +717,11 @@ export type UserUncheckedUpdateWithoutFocusSessionsInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     workSessions?: Prisma.WorkSessionUncheckedUpdateManyWithoutUserNestedInput;
     refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserCreateWithoutRefreshTokensInput = {
     id?: string;
@@ -600,6 +735,11 @@ export type UserCreateWithoutRefreshTokensInput = {
     updatedAt?: Date | string;
     workSessions?: Prisma.WorkSessionCreateNestedManyWithoutUserInput;
     focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateWithoutRefreshTokensInput = {
     id?: string;
@@ -613,6 +753,11 @@ export type UserUncheckedCreateWithoutRefreshTokensInput = {
     updatedAt?: Date | string;
     workSessions?: Prisma.WorkSessionUncheckedCreateNestedManyWithoutUserInput;
     focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserCreateOrConnectWithoutRefreshTokensInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -639,6 +784,11 @@ export type UserUpdateWithoutRefreshTokensInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     workSessions?: Prisma.WorkSessionUpdateManyWithoutUserNestedInput;
     focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateWithoutRefreshTokensInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -652,6 +802,436 @@ export type UserUncheckedUpdateWithoutRefreshTokensInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     workSessions?: Prisma.WorkSessionUncheckedUpdateManyWithoutUserNestedInput;
     focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
+};
+export type UserCreateWithoutTasksInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name?: string | null;
+    dailyGoalMinutes?: number;
+    focusStreak?: number;
+    lastLoginAt?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    workSessions?: Prisma.WorkSessionCreateNestedManyWithoutUserInput;
+    focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput;
+    refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
+};
+export type UserUncheckedCreateWithoutTasksInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name?: string | null;
+    dailyGoalMinutes?: number;
+    focusStreak?: number;
+    lastLoginAt?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    workSessions?: Prisma.WorkSessionUncheckedCreateNestedManyWithoutUserInput;
+    focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput;
+    refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
+};
+export type UserCreateOrConnectWithoutTasksInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutTasksInput, Prisma.UserUncheckedCreateWithoutTasksInput>;
+};
+export type UserUpsertWithoutTasksInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutTasksInput, Prisma.UserUncheckedUpdateWithoutTasksInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutTasksInput, Prisma.UserUncheckedCreateWithoutTasksInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutTasksInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutTasksInput, Prisma.UserUncheckedUpdateWithoutTasksInput>;
+};
+export type UserUpdateWithoutTasksInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyGoalMinutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    focusStreak?: Prisma.IntFieldUpdateOperationsInput | number;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workSessions?: Prisma.WorkSessionUpdateManyWithoutUserNestedInput;
+    focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput;
+    refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
+};
+export type UserUncheckedUpdateWithoutTasksInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyGoalMinutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    focusStreak?: Prisma.IntFieldUpdateOperationsInput | number;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workSessions?: Prisma.WorkSessionUncheckedUpdateManyWithoutUserNestedInput;
+    focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput;
+    refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
+};
+export type UserCreateWithoutHabitsInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name?: string | null;
+    dailyGoalMinutes?: number;
+    focusStreak?: number;
+    lastLoginAt?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    workSessions?: Prisma.WorkSessionCreateNestedManyWithoutUserInput;
+    focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput;
+    refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
+};
+export type UserUncheckedCreateWithoutHabitsInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name?: string | null;
+    dailyGoalMinutes?: number;
+    focusStreak?: number;
+    lastLoginAt?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    workSessions?: Prisma.WorkSessionUncheckedCreateNestedManyWithoutUserInput;
+    focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput;
+    refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
+};
+export type UserCreateOrConnectWithoutHabitsInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutHabitsInput, Prisma.UserUncheckedCreateWithoutHabitsInput>;
+};
+export type UserUpsertWithoutHabitsInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutHabitsInput, Prisma.UserUncheckedUpdateWithoutHabitsInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutHabitsInput, Prisma.UserUncheckedCreateWithoutHabitsInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutHabitsInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutHabitsInput, Prisma.UserUncheckedUpdateWithoutHabitsInput>;
+};
+export type UserUpdateWithoutHabitsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyGoalMinutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    focusStreak?: Prisma.IntFieldUpdateOperationsInput | number;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workSessions?: Prisma.WorkSessionUpdateManyWithoutUserNestedInput;
+    focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput;
+    refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
+};
+export type UserUncheckedUpdateWithoutHabitsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyGoalMinutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    focusStreak?: Prisma.IntFieldUpdateOperationsInput | number;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workSessions?: Prisma.WorkSessionUncheckedUpdateManyWithoutUserNestedInput;
+    focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput;
+    refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
+};
+export type UserCreateWithoutNotesInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name?: string | null;
+    dailyGoalMinutes?: number;
+    focusStreak?: number;
+    lastLoginAt?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    workSessions?: Prisma.WorkSessionCreateNestedManyWithoutUserInput;
+    focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput;
+    refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
+};
+export type UserUncheckedCreateWithoutNotesInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name?: string | null;
+    dailyGoalMinutes?: number;
+    focusStreak?: number;
+    lastLoginAt?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    workSessions?: Prisma.WorkSessionUncheckedCreateNestedManyWithoutUserInput;
+    focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput;
+    refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
+};
+export type UserCreateOrConnectWithoutNotesInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutNotesInput, Prisma.UserUncheckedCreateWithoutNotesInput>;
+};
+export type UserUpsertWithoutNotesInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutNotesInput, Prisma.UserUncheckedUpdateWithoutNotesInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutNotesInput, Prisma.UserUncheckedCreateWithoutNotesInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutNotesInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutNotesInput, Prisma.UserUncheckedUpdateWithoutNotesInput>;
+};
+export type UserUpdateWithoutNotesInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyGoalMinutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    focusStreak?: Prisma.IntFieldUpdateOperationsInput | number;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workSessions?: Prisma.WorkSessionUpdateManyWithoutUserNestedInput;
+    focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput;
+    refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
+};
+export type UserUncheckedUpdateWithoutNotesInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyGoalMinutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    focusStreak?: Prisma.IntFieldUpdateOperationsInput | number;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workSessions?: Prisma.WorkSessionUncheckedUpdateManyWithoutUserNestedInput;
+    focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput;
+    refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
+};
+export type UserCreateWithoutWeeklyInsightsInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name?: string | null;
+    dailyGoalMinutes?: number;
+    focusStreak?: number;
+    lastLoginAt?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    workSessions?: Prisma.WorkSessionCreateNestedManyWithoutUserInput;
+    focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput;
+    refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
+};
+export type UserUncheckedCreateWithoutWeeklyInsightsInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name?: string | null;
+    dailyGoalMinutes?: number;
+    focusStreak?: number;
+    lastLoginAt?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    workSessions?: Prisma.WorkSessionUncheckedCreateNestedManyWithoutUserInput;
+    focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput;
+    refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
+};
+export type UserCreateOrConnectWithoutWeeklyInsightsInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutWeeklyInsightsInput, Prisma.UserUncheckedCreateWithoutWeeklyInsightsInput>;
+};
+export type UserUpsertWithoutWeeklyInsightsInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutWeeklyInsightsInput, Prisma.UserUncheckedUpdateWithoutWeeklyInsightsInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutWeeklyInsightsInput, Prisma.UserUncheckedCreateWithoutWeeklyInsightsInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutWeeklyInsightsInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutWeeklyInsightsInput, Prisma.UserUncheckedUpdateWithoutWeeklyInsightsInput>;
+};
+export type UserUpdateWithoutWeeklyInsightsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyGoalMinutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    focusStreak?: Prisma.IntFieldUpdateOperationsInput | number;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workSessions?: Prisma.WorkSessionUpdateManyWithoutUserNestedInput;
+    focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput;
+    refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
+};
+export type UserUncheckedUpdateWithoutWeeklyInsightsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyGoalMinutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    focusStreak?: Prisma.IntFieldUpdateOperationsInput | number;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workSessions?: Prisma.WorkSessionUncheckedUpdateManyWithoutUserNestedInput;
+    focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput;
+    refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
+};
+export type UserCreateWithoutGoalsInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name?: string | null;
+    dailyGoalMinutes?: number;
+    focusStreak?: number;
+    lastLoginAt?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    workSessions?: Prisma.WorkSessionCreateNestedManyWithoutUserInput;
+    focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput;
+    refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
+};
+export type UserUncheckedCreateWithoutGoalsInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name?: string | null;
+    dailyGoalMinutes?: number;
+    focusStreak?: number;
+    lastLoginAt?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    workSessions?: Prisma.WorkSessionUncheckedCreateNestedManyWithoutUserInput;
+    focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput;
+    refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
+};
+export type UserCreateOrConnectWithoutGoalsInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutGoalsInput, Prisma.UserUncheckedCreateWithoutGoalsInput>;
+};
+export type UserUpsertWithoutGoalsInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutGoalsInput, Prisma.UserUncheckedUpdateWithoutGoalsInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutGoalsInput, Prisma.UserUncheckedCreateWithoutGoalsInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutGoalsInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutGoalsInput, Prisma.UserUncheckedUpdateWithoutGoalsInput>;
+};
+export type UserUpdateWithoutGoalsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyGoalMinutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    focusStreak?: Prisma.IntFieldUpdateOperationsInput | number;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workSessions?: Prisma.WorkSessionUpdateManyWithoutUserNestedInput;
+    focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput;
+    refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
+};
+export type UserUncheckedUpdateWithoutGoalsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyGoalMinutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    focusStreak?: Prisma.IntFieldUpdateOperationsInput | number;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workSessions?: Prisma.WorkSessionUncheckedUpdateManyWithoutUserNestedInput;
+    focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput;
+    refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
 };
 /**
  * Count Type UserCountOutputType
@@ -660,11 +1240,21 @@ export type UserCountOutputType = {
     workSessions: number;
     focusSessions: number;
     refreshTokens: number;
+    tasks: number;
+    habits: number;
+    notes: number;
+    weeklyInsights: number;
+    goals: number;
 };
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     workSessions?: boolean | UserCountOutputTypeCountWorkSessionsArgs;
     focusSessions?: boolean | UserCountOutputTypeCountFocusSessionsArgs;
     refreshTokens?: boolean | UserCountOutputTypeCountRefreshTokensArgs;
+    tasks?: boolean | UserCountOutputTypeCountTasksArgs;
+    habits?: boolean | UserCountOutputTypeCountHabitsArgs;
+    notes?: boolean | UserCountOutputTypeCountNotesArgs;
+    weeklyInsights?: boolean | UserCountOutputTypeCountWeeklyInsightsArgs;
+    goals?: boolean | UserCountOutputTypeCountGoalsArgs;
 };
 /**
  * UserCountOutputType without action
@@ -693,6 +1283,36 @@ export type UserCountOutputTypeCountFocusSessionsArgs<ExtArgs extends runtime.Ty
 export type UserCountOutputTypeCountRefreshTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.RefreshTokenWhereInput;
 };
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.TaskWhereInput;
+};
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountHabitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.HabitWhereInput;
+};
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.NoteWhereInput;
+};
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountWeeklyInsightsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.WeeklyInsightWhereInput;
+};
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountGoalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.GoalWhereInput;
+};
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     email?: boolean;
@@ -706,6 +1326,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
     workSessions?: boolean | Prisma.User$workSessionsArgs<ExtArgs>;
     focusSessions?: boolean | Prisma.User$focusSessionsArgs<ExtArgs>;
     refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>;
+    tasks?: boolean | Prisma.User$tasksArgs<ExtArgs>;
+    habits?: boolean | Prisma.User$habitsArgs<ExtArgs>;
+    notes?: boolean | Prisma.User$notesArgs<ExtArgs>;
+    weeklyInsights?: boolean | Prisma.User$weeklyInsightsArgs<ExtArgs>;
+    goals?: boolean | Prisma.User$goalsArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["user"]>;
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -746,6 +1371,11 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     workSessions?: boolean | Prisma.User$workSessionsArgs<ExtArgs>;
     focusSessions?: boolean | Prisma.User$focusSessionsArgs<ExtArgs>;
     refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>;
+    tasks?: boolean | Prisma.User$tasksArgs<ExtArgs>;
+    habits?: boolean | Prisma.User$habitsArgs<ExtArgs>;
+    notes?: boolean | Prisma.User$notesArgs<ExtArgs>;
+    weeklyInsights?: boolean | Prisma.User$weeklyInsightsArgs<ExtArgs>;
+    goals?: boolean | Prisma.User$goalsArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {};
@@ -756,6 +1386,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
         workSessions: Prisma.$WorkSessionPayload<ExtArgs>[];
         focusSessions: Prisma.$FocusSessionPayload<ExtArgs>[];
         refreshTokens: Prisma.$RefreshTokenPayload<ExtArgs>[];
+        tasks: Prisma.$TaskPayload<ExtArgs>[];
+        habits: Prisma.$HabitPayload<ExtArgs>[];
+        notes: Prisma.$NotePayload<ExtArgs>[];
+        weeklyInsights: Prisma.$WeeklyInsightPayload<ExtArgs>[];
+        goals: Prisma.$GoalPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -1099,6 +1734,11 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
     workSessions<T extends Prisma.User$workSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$workSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     focusSessions<T extends Prisma.User$focusSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$focusSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     refreshTokens<T extends Prisma.User$refreshTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$refreshTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefreshTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    tasks<T extends Prisma.User$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    habits<T extends Prisma.User$habitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$habitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HabitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    notes<T extends Prisma.User$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    weeklyInsights<T extends Prisma.User$weeklyInsightsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$weeklyInsightsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WeeklyInsightPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    goals<T extends Prisma.User$goalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$goalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1571,6 +2211,121 @@ export type User$refreshTokensArgs<ExtArgs extends runtime.Types.Extensions.Inte
     take?: number;
     skip?: number;
     distinct?: Prisma.RefreshTokenScalarFieldEnum | Prisma.RefreshTokenScalarFieldEnum[];
+};
+/**
+ * User.tasks
+ */
+export type User$tasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: Prisma.TaskSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: Prisma.TaskOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.TaskInclude<ExtArgs> | null;
+    where?: Prisma.TaskWhereInput;
+    orderBy?: Prisma.TaskOrderByWithRelationInput | Prisma.TaskOrderByWithRelationInput[];
+    cursor?: Prisma.TaskWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.TaskScalarFieldEnum | Prisma.TaskScalarFieldEnum[];
+};
+/**
+ * User.habits
+ */
+export type User$habitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Habit
+     */
+    select?: Prisma.HabitSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the Habit
+     */
+    omit?: Prisma.HabitOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.HabitInclude<ExtArgs> | null;
+    where?: Prisma.HabitWhereInput;
+    orderBy?: Prisma.HabitOrderByWithRelationInput | Prisma.HabitOrderByWithRelationInput[];
+    cursor?: Prisma.HabitWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.HabitScalarFieldEnum | Prisma.HabitScalarFieldEnum[];
+};
+/**
+ * User.notes
+ */
+export type User$notesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Note
+     */
+    select?: Prisma.NoteSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the Note
+     */
+    omit?: Prisma.NoteOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.NoteInclude<ExtArgs> | null;
+    where?: Prisma.NoteWhereInput;
+    orderBy?: Prisma.NoteOrderByWithRelationInput | Prisma.NoteOrderByWithRelationInput[];
+    cursor?: Prisma.NoteWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.NoteScalarFieldEnum | Prisma.NoteScalarFieldEnum[];
+};
+/**
+ * User.weeklyInsights
+ */
+export type User$weeklyInsightsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WeeklyInsight
+     */
+    select?: Prisma.WeeklyInsightSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the WeeklyInsight
+     */
+    omit?: Prisma.WeeklyInsightOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.WeeklyInsightInclude<ExtArgs> | null;
+    where?: Prisma.WeeklyInsightWhereInput;
+    orderBy?: Prisma.WeeklyInsightOrderByWithRelationInput | Prisma.WeeklyInsightOrderByWithRelationInput[];
+    cursor?: Prisma.WeeklyInsightWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.WeeklyInsightScalarFieldEnum | Prisma.WeeklyInsightScalarFieldEnum[];
+};
+/**
+ * User.goals
+ */
+export type User$goalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Goal
+     */
+    select?: Prisma.GoalSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the Goal
+     */
+    omit?: Prisma.GoalOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.GoalInclude<ExtArgs> | null;
+    where?: Prisma.GoalWhereInput;
+    orderBy?: Prisma.GoalOrderByWithRelationInput | Prisma.GoalOrderByWithRelationInput[];
+    cursor?: Prisma.GoalWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.GoalScalarFieldEnum | Prisma.GoalScalarFieldEnum[];
 };
 /**
  * User without action

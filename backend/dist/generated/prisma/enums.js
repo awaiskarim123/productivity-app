@@ -9,9 +9,24 @@
 * 🟢 You can import this file directly.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FocusSessionMode = void 0;
+exports.GoalHealthStatus = exports.GoalType = exports.TaskPriority = exports.FocusSessionMode = void 0;
 exports.FocusSessionMode = {
     FOCUS: 'FOCUS',
     BREAK: 'BREAK'
+};
+exports.TaskPriority = {
+    LOW: 'LOW',
+    MEDIUM: 'MEDIUM',
+    HIGH: 'HIGH',
+    URGENT: 'URGENT'
+};
+exports.GoalType = {
+    QUARTERLY: 'QUARTERLY',
+    MONTHLY: 'MONTHLY'
+};
+exports.GoalHealthStatus = {
+    ON_TRACK: 'ON_TRACK',
+    AT_RISK: 'AT_RISK',
+    OFF_TRACK: 'OFF_TRACK'
 };
 //# sourceMappingURL=enums.js.map

@@ -166,6 +166,83 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     get quote(): Prisma.QuoteDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
+    /**
+     * `prisma.task`: Exposes CRUD operations for the **Task** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more Tasks
+      * const tasks = await prisma.task.findMany()
+      * ```
+      */
+    get task(): Prisma.TaskDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.habit`: Exposes CRUD operations for the **Habit** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more Habits
+      * const habits = await prisma.habit.findMany()
+      * ```
+      */
+    get habit(): Prisma.HabitDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.habitLog`: Exposes CRUD operations for the **HabitLog** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more HabitLogs
+      * const habitLogs = await prisma.habitLog.findMany()
+      * ```
+      */
+    get habitLog(): Prisma.HabitLogDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.note`: Exposes CRUD operations for the **Note** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more Notes
+      * const notes = await prisma.note.findMany()
+      * ```
+      */
+    get note(): Prisma.NoteDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.weeklyInsight`: Exposes CRUD operations for the **WeeklyInsight** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more WeeklyInsights
+      * const weeklyInsights = await prisma.weeklyInsight.findMany()
+      * ```
+      */
+    get weeklyInsight(): Prisma.WeeklyInsightDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.goal`: Exposes CRUD operations for the **Goal** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more Goals
+      * const goals = await prisma.goal.findMany()
+      * ```
+      */
+    get goal(): Prisma.GoalDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.keyResult`: Exposes CRUD operations for the **KeyResult** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more KeyResults
+      * const keyResults = await prisma.keyResult.findMany()
+      * ```
+      */
+    get keyResult(): Prisma.KeyResultDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
 }
 export declare function getPrismaClientClass(dirname: string): PrismaClientConstructor;
 //# sourceMappingURL=class.d.ts.map

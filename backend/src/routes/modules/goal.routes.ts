@@ -35,6 +35,7 @@ export default async function goalRoutes(app: FastifyInstance) {
       data: {
         userId: request.user.id,
         ...goalData,
+        description: goalData.description ?? null,
         startDate: startDate instanceof Date ? startDate : new Date(startDate),
         endDate: endDate instanceof Date ? endDate : new Date(endDate),
         keyResults: {
@@ -150,16 +151,28 @@ export default async function goalRoutes(app: FastifyInstance) {
       return reply.code(404).send({ message: "Goal not found" });
     }
 
-    const updateData: any = { ...result.data };
-    if (result.data.startDate) {
+    const updateData: any = {};
+    if (result.data.title !== undefined) {
+      updateData.title = result.data.title;
+    }
+    if (result.data.description !== undefined) {
+      updateData.description = result.data.description ?? null;
+    }
+    if (result.data.startDate !== undefined) {
       updateData.startDate =
         result.data.startDate instanceof Date
           ? result.data.startDate
           : new Date(result.data.startDate);
     }
-    if (result.data.endDate) {
+    if (result.data.endDate !== undefined) {
       updateData.endDate =
         result.data.endDate instanceof Date ? result.data.endDate : new Date(result.data.endDate);
+    }
+    if (result.data.targetValue !== undefined) {
+      updateData.targetValue = result.data.targetValue;
+    }
+    if (result.data.isActive !== undefined) {
+      updateData.isActive = result.data.isActive;
     }
 
     const goal = await app.prisma.goal.update({
@@ -226,6 +239,7 @@ export default async function goalRoutes(app: FastifyInstance) {
       data: {
         goalId,
         ...result.data,
+        description: result.data.description ?? null,
       },
     });
 
@@ -252,18 +266,35 @@ export default async function goalRoutes(app: FastifyInstance) {
       return reply.code(404).send({ message: "Key result not found" });
     }
 
+    // Build update data, converting undefined to null for optional fields
+    const updateData: any = {};
+    if (result.data.title !== undefined) {
+      updateData.title = result.data.title;
+    }
+    if (result.data.description !== undefined) {
+      updateData.description = result.data.description ?? null;
+    }
+    if (result.data.targetValue !== undefined) {
+      updateData.targetValue = result.data.targetValue;
+    }
+    if (result.data.currentValue !== undefined) {
+      updateData.currentValue = result.data.currentValue;
+    }
+    if (result.data.weight !== undefined) {
+      updateData.weight = result.data.weight;
+    }
+
     // Calculate progress if currentValue or targetValue changed
     if (result.data.currentValue !== undefined || result.data.targetValue !== undefined) {
       const newCurrentValue = result.data.currentValue ?? keyResult.currentValue;
       const newTargetValue = result.data.targetValue ?? keyResult.targetValue;
-      // Ensure progressPercent is added to the update data, even if it's not defined on the schema
-      (result.data as any).progressPercent =
+      updateData.progressPercent =
         newTargetValue > 0 ? (newCurrentValue / newTargetValue) * 100 : 0;
     }
 
     const updated = await app.prisma.keyResult.update({
       where: { id },
-      data: result.data,
+      data: updateData,
     });
 
     // Recalculate goal progress

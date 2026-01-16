@@ -44,4 +44,39 @@ export type RefreshToken = Prisma.RefreshTokenModel;
  *
  */
 export type Quote = Prisma.QuoteModel;
+/**
+ * Model Task
+ *
+ */
+export type Task = Prisma.TaskModel;
+/**
+ * Model Habit
+ *
+ */
+export type Habit = Prisma.HabitModel;
+/**
+ * Model HabitLog
+ *
+ */
+export type HabitLog = Prisma.HabitLogModel;
+/**
+ * Model Note
+ *
+ */
+export type Note = Prisma.NoteModel;
+/**
+ * Model WeeklyInsight
+ *
+ */
+export type WeeklyInsight = Prisma.WeeklyInsightModel;
+/**
+ * Model Goal
+ *
+ */
+export type Goal = Prisma.GoalModel;
+/**
+ * Model KeyResult
+ *
+ */
+export type KeyResult = Prisma.KeyResultModel;
 //# sourceMappingURL=client.d.ts.map

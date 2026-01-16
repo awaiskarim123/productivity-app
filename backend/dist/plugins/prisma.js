@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fastify_plugin_1 = __importDefault(require("fastify-plugin"));
 const client_1 = require("../generated/prisma/client");
 exports.default = (0, fastify_plugin_1.default)(async (fastify) => {
+    // PrismaClient will automatically read from prisma.config.ts
     const prisma = new client_1.PrismaClient();
     fastify.decorate("prisma", prisma);
     fastify.addHook("onClose", async () => {

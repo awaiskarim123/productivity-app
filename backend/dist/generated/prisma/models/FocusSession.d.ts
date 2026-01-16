@@ -35,6 +35,8 @@ export type FocusSessionMinAggregateOutputType = {
     distractions: number | null;
     notes: string | null;
     createdAt: Date | null;
+    deletedAt: Date | null;
+    goalId: string | null;
 };
 export type FocusSessionMaxAggregateOutputType = {
     id: string | null;
@@ -48,6 +50,8 @@ export type FocusSessionMaxAggregateOutputType = {
     distractions: number | null;
     notes: string | null;
     createdAt: Date | null;
+    deletedAt: Date | null;
+    goalId: string | null;
 };
 export type FocusSessionCountAggregateOutputType = {
     id: number;
@@ -61,6 +65,8 @@ export type FocusSessionCountAggregateOutputType = {
     distractions: number;
     notes: number;
     createdAt: number;
+    deletedAt: number;
+    goalId: number;
     _all: number;
 };
 export type FocusSessionAvgAggregateInputType = {
@@ -85,6 +91,8 @@ export type FocusSessionMinAggregateInputType = {
     distractions?: true;
     notes?: true;
     createdAt?: true;
+    deletedAt?: true;
+    goalId?: true;
 };
 export type FocusSessionMaxAggregateInputType = {
     id?: true;
@@ -98,6 +106,8 @@ export type FocusSessionMaxAggregateInputType = {
     distractions?: true;
     notes?: true;
     createdAt?: true;
+    deletedAt?: true;
+    goalId?: true;
 };
 export type FocusSessionCountAggregateInputType = {
     id?: true;
@@ -111,6 +121,8 @@ export type FocusSessionCountAggregateInputType = {
     distractions?: true;
     notes?: true;
     createdAt?: true;
+    deletedAt?: true;
+    goalId?: true;
     _all?: true;
 };
 export type FocusSessionAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -201,6 +213,8 @@ export type FocusSessionGroupByOutputType = {
     distractions: number;
     notes: string | null;
     createdAt: Date;
+    deletedAt: Date | null;
+    goalId: string | null;
     _count: FocusSessionCountAggregateOutputType | null;
     _avg: FocusSessionAvgAggregateOutputType | null;
     _sum: FocusSessionSumAggregateOutputType | null;
@@ -225,7 +239,10 @@ export type FocusSessionWhereInput = {
     distractions?: Prisma.IntFilter<"FocusSession"> | number;
     notes?: Prisma.StringNullableFilter<"FocusSession"> | string | null;
     createdAt?: Prisma.DateTimeFilter<"FocusSession"> | Date | string;
+    deletedAt?: Prisma.DateTimeNullableFilter<"FocusSession"> | Date | string | null;
+    goalId?: Prisma.StringNullableFilter<"FocusSession"> | string | null;
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
+    goal?: Prisma.XOR<Prisma.GoalNullableScalarRelationFilter, Prisma.GoalWhereInput> | null;
 };
 export type FocusSessionOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -239,7 +256,10 @@ export type FocusSessionOrderByWithRelationInput = {
     distractions?: Prisma.SortOrder;
     notes?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
+    deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+    goalId?: Prisma.SortOrderInput | Prisma.SortOrder;
     user?: Prisma.UserOrderByWithRelationInput;
+    goal?: Prisma.GoalOrderByWithRelationInput;
 };
 export type FocusSessionWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -256,7 +276,10 @@ export type FocusSessionWhereUniqueInput = Prisma.AtLeast<{
     distractions?: Prisma.IntFilter<"FocusSession"> | number;
     notes?: Prisma.StringNullableFilter<"FocusSession"> | string | null;
     createdAt?: Prisma.DateTimeFilter<"FocusSession"> | Date | string;
+    deletedAt?: Prisma.DateTimeNullableFilter<"FocusSession"> | Date | string | null;
+    goalId?: Prisma.StringNullableFilter<"FocusSession"> | string | null;
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
+    goal?: Prisma.XOR<Prisma.GoalNullableScalarRelationFilter, Prisma.GoalWhereInput> | null;
 }, "id">;
 export type FocusSessionOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -270,6 +293,8 @@ export type FocusSessionOrderByWithAggregationInput = {
     distractions?: Prisma.SortOrder;
     notes?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
+    deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+    goalId?: Prisma.SortOrderInput | Prisma.SortOrder;
     _count?: Prisma.FocusSessionCountOrderByAggregateInput;
     _avg?: Prisma.FocusSessionAvgOrderByAggregateInput;
     _max?: Prisma.FocusSessionMaxOrderByAggregateInput;
@@ -291,6 +316,8 @@ export type FocusSessionScalarWhereWithAggregatesInput = {
     distractions?: Prisma.IntWithAggregatesFilter<"FocusSession"> | number;
     notes?: Prisma.StringNullableWithAggregatesFilter<"FocusSession"> | string | null;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"FocusSession"> | Date | string;
+    deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"FocusSession"> | Date | string | null;
+    goalId?: Prisma.StringNullableWithAggregatesFilter<"FocusSession"> | string | null;
 };
 export type FocusSessionCreateInput = {
     id?: string;
@@ -303,7 +330,9 @@ export type FocusSessionCreateInput = {
     distractions?: number;
     notes?: string | null;
     createdAt?: Date | string;
+    deletedAt?: Date | string | null;
     user: Prisma.UserCreateNestedOneWithoutFocusSessionsInput;
+    goal?: Prisma.GoalCreateNestedOneWithoutFocusSessionsInput;
 };
 export type FocusSessionUncheckedCreateInput = {
     id?: string;
@@ -317,6 +346,8 @@ export type FocusSessionUncheckedCreateInput = {
     distractions?: number;
     notes?: string | null;
     createdAt?: Date | string;
+    deletedAt?: Date | string | null;
+    goalId?: string | null;
 };
 export type FocusSessionUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -329,7 +360,9 @@ export type FocusSessionUpdateInput = {
     distractions?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     user?: Prisma.UserUpdateOneRequiredWithoutFocusSessionsNestedInput;
+    goal?: Prisma.GoalUpdateOneWithoutFocusSessionsNestedInput;
 };
 export type FocusSessionUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -343,6 +376,8 @@ export type FocusSessionUncheckedUpdateInput = {
     distractions?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 export type FocusSessionCreateManyInput = {
     id?: string;
@@ -356,6 +391,8 @@ export type FocusSessionCreateManyInput = {
     distractions?: number;
     notes?: string | null;
     createdAt?: Date | string;
+    deletedAt?: Date | string | null;
+    goalId?: string | null;
 };
 export type FocusSessionUpdateManyMutationInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -368,6 +405,7 @@ export type FocusSessionUpdateManyMutationInput = {
     distractions?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
 };
 export type FocusSessionUncheckedUpdateManyInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -381,6 +419,8 @@ export type FocusSessionUncheckedUpdateManyInput = {
     distractions?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 export type FocusSessionListRelationFilter = {
     every?: Prisma.FocusSessionWhereInput;
@@ -402,6 +442,8 @@ export type FocusSessionCountOrderByAggregateInput = {
     distractions?: Prisma.SortOrder;
     notes?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
+    deletedAt?: Prisma.SortOrder;
+    goalId?: Prisma.SortOrder;
 };
 export type FocusSessionAvgOrderByAggregateInput = {
     targetMinutes?: Prisma.SortOrder;
@@ -420,6 +462,8 @@ export type FocusSessionMaxOrderByAggregateInput = {
     distractions?: Prisma.SortOrder;
     notes?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
+    deletedAt?: Prisma.SortOrder;
+    goalId?: Prisma.SortOrder;
 };
 export type FocusSessionMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -433,6 +477,8 @@ export type FocusSessionMinOrderByAggregateInput = {
     distractions?: Prisma.SortOrder;
     notes?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
+    deletedAt?: Prisma.SortOrder;
+    goalId?: Prisma.SortOrder;
 };
 export type FocusSessionSumOrderByAggregateInput = {
     targetMinutes?: Prisma.SortOrder;
@@ -483,6 +529,44 @@ export type EnumFocusSessionModeFieldUpdateOperationsInput = {
 export type BoolFieldUpdateOperationsInput = {
     set?: boolean;
 };
+export type FocusSessionCreateNestedManyWithoutGoalInput = {
+    create?: Prisma.XOR<Prisma.FocusSessionCreateWithoutGoalInput, Prisma.FocusSessionUncheckedCreateWithoutGoalInput> | Prisma.FocusSessionCreateWithoutGoalInput[] | Prisma.FocusSessionUncheckedCreateWithoutGoalInput[];
+    connectOrCreate?: Prisma.FocusSessionCreateOrConnectWithoutGoalInput | Prisma.FocusSessionCreateOrConnectWithoutGoalInput[];
+    createMany?: Prisma.FocusSessionCreateManyGoalInputEnvelope;
+    connect?: Prisma.FocusSessionWhereUniqueInput | Prisma.FocusSessionWhereUniqueInput[];
+};
+export type FocusSessionUncheckedCreateNestedManyWithoutGoalInput = {
+    create?: Prisma.XOR<Prisma.FocusSessionCreateWithoutGoalInput, Prisma.FocusSessionUncheckedCreateWithoutGoalInput> | Prisma.FocusSessionCreateWithoutGoalInput[] | Prisma.FocusSessionUncheckedCreateWithoutGoalInput[];
+    connectOrCreate?: Prisma.FocusSessionCreateOrConnectWithoutGoalInput | Prisma.FocusSessionCreateOrConnectWithoutGoalInput[];
+    createMany?: Prisma.FocusSessionCreateManyGoalInputEnvelope;
+    connect?: Prisma.FocusSessionWhereUniqueInput | Prisma.FocusSessionWhereUniqueInput[];
+};
+export type FocusSessionUpdateManyWithoutGoalNestedInput = {
+    create?: Prisma.XOR<Prisma.FocusSessionCreateWithoutGoalInput, Prisma.FocusSessionUncheckedCreateWithoutGoalInput> | Prisma.FocusSessionCreateWithoutGoalInput[] | Prisma.FocusSessionUncheckedCreateWithoutGoalInput[];
+    connectOrCreate?: Prisma.FocusSessionCreateOrConnectWithoutGoalInput | Prisma.FocusSessionCreateOrConnectWithoutGoalInput[];
+    upsert?: Prisma.FocusSessionUpsertWithWhereUniqueWithoutGoalInput | Prisma.FocusSessionUpsertWithWhereUniqueWithoutGoalInput[];
+    createMany?: Prisma.FocusSessionCreateManyGoalInputEnvelope;
+    set?: Prisma.FocusSessionWhereUniqueInput | Prisma.FocusSessionWhereUniqueInput[];
+    disconnect?: Prisma.FocusSessionWhereUniqueInput | Prisma.FocusSessionWhereUniqueInput[];
+    delete?: Prisma.FocusSessionWhereUniqueInput | Prisma.FocusSessionWhereUniqueInput[];
+    connect?: Prisma.FocusSessionWhereUniqueInput | Prisma.FocusSessionWhereUniqueInput[];
+    update?: Prisma.FocusSessionUpdateWithWhereUniqueWithoutGoalInput | Prisma.FocusSessionUpdateWithWhereUniqueWithoutGoalInput[];
+    updateMany?: Prisma.FocusSessionUpdateManyWithWhereWithoutGoalInput | Prisma.FocusSessionUpdateManyWithWhereWithoutGoalInput[];
+    deleteMany?: Prisma.FocusSessionScalarWhereInput | Prisma.FocusSessionScalarWhereInput[];
+};
+export type FocusSessionUncheckedUpdateManyWithoutGoalNestedInput = {
+    create?: Prisma.XOR<Prisma.FocusSessionCreateWithoutGoalInput, Prisma.FocusSessionUncheckedCreateWithoutGoalInput> | Prisma.FocusSessionCreateWithoutGoalInput[] | Prisma.FocusSessionUncheckedCreateWithoutGoalInput[];
+    connectOrCreate?: Prisma.FocusSessionCreateOrConnectWithoutGoalInput | Prisma.FocusSessionCreateOrConnectWithoutGoalInput[];
+    upsert?: Prisma.FocusSessionUpsertWithWhereUniqueWithoutGoalInput | Prisma.FocusSessionUpsertWithWhereUniqueWithoutGoalInput[];
+    createMany?: Prisma.FocusSessionCreateManyGoalInputEnvelope;
+    set?: Prisma.FocusSessionWhereUniqueInput | Prisma.FocusSessionWhereUniqueInput[];
+    disconnect?: Prisma.FocusSessionWhereUniqueInput | Prisma.FocusSessionWhereUniqueInput[];
+    delete?: Prisma.FocusSessionWhereUniqueInput | Prisma.FocusSessionWhereUniqueInput[];
+    connect?: Prisma.FocusSessionWhereUniqueInput | Prisma.FocusSessionWhereUniqueInput[];
+    update?: Prisma.FocusSessionUpdateWithWhereUniqueWithoutGoalInput | Prisma.FocusSessionUpdateWithWhereUniqueWithoutGoalInput[];
+    updateMany?: Prisma.FocusSessionUpdateManyWithWhereWithoutGoalInput | Prisma.FocusSessionUpdateManyWithWhereWithoutGoalInput[];
+    deleteMany?: Prisma.FocusSessionScalarWhereInput | Prisma.FocusSessionScalarWhereInput[];
+};
 export type FocusSessionCreateWithoutUserInput = {
     id?: string;
     mode?: $Enums.FocusSessionMode;
@@ -494,6 +578,8 @@ export type FocusSessionCreateWithoutUserInput = {
     distractions?: number;
     notes?: string | null;
     createdAt?: Date | string;
+    deletedAt?: Date | string | null;
+    goal?: Prisma.GoalCreateNestedOneWithoutFocusSessionsInput;
 };
 export type FocusSessionUncheckedCreateWithoutUserInput = {
     id?: string;
@@ -506,6 +592,8 @@ export type FocusSessionUncheckedCreateWithoutUserInput = {
     distractions?: number;
     notes?: string | null;
     createdAt?: Date | string;
+    deletedAt?: Date | string | null;
+    goalId?: string | null;
 };
 export type FocusSessionCreateOrConnectWithoutUserInput = {
     where: Prisma.FocusSessionWhereUniqueInput;
@@ -543,6 +631,57 @@ export type FocusSessionScalarWhereInput = {
     distractions?: Prisma.IntFilter<"FocusSession"> | number;
     notes?: Prisma.StringNullableFilter<"FocusSession"> | string | null;
     createdAt?: Prisma.DateTimeFilter<"FocusSession"> | Date | string;
+    deletedAt?: Prisma.DateTimeNullableFilter<"FocusSession"> | Date | string | null;
+    goalId?: Prisma.StringNullableFilter<"FocusSession"> | string | null;
+};
+export type FocusSessionCreateWithoutGoalInput = {
+    id?: string;
+    mode?: $Enums.FocusSessionMode;
+    startedAt?: Date | string;
+    endedAt?: Date | string | null;
+    targetMinutes: number;
+    durationMinutes?: number | null;
+    completed?: boolean;
+    distractions?: number;
+    notes?: string | null;
+    createdAt?: Date | string;
+    deletedAt?: Date | string | null;
+    user: Prisma.UserCreateNestedOneWithoutFocusSessionsInput;
+};
+export type FocusSessionUncheckedCreateWithoutGoalInput = {
+    id?: string;
+    userId: string;
+    mode?: $Enums.FocusSessionMode;
+    startedAt?: Date | string;
+    endedAt?: Date | string | null;
+    targetMinutes: number;
+    durationMinutes?: number | null;
+    completed?: boolean;
+    distractions?: number;
+    notes?: string | null;
+    createdAt?: Date | string;
+    deletedAt?: Date | string | null;
+};
+export type FocusSessionCreateOrConnectWithoutGoalInput = {
+    where: Prisma.FocusSessionWhereUniqueInput;
+    create: Prisma.XOR<Prisma.FocusSessionCreateWithoutGoalInput, Prisma.FocusSessionUncheckedCreateWithoutGoalInput>;
+};
+export type FocusSessionCreateManyGoalInputEnvelope = {
+    data: Prisma.FocusSessionCreateManyGoalInput | Prisma.FocusSessionCreateManyGoalInput[];
+    skipDuplicates?: boolean;
+};
+export type FocusSessionUpsertWithWhereUniqueWithoutGoalInput = {
+    where: Prisma.FocusSessionWhereUniqueInput;
+    update: Prisma.XOR<Prisma.FocusSessionUpdateWithoutGoalInput, Prisma.FocusSessionUncheckedUpdateWithoutGoalInput>;
+    create: Prisma.XOR<Prisma.FocusSessionCreateWithoutGoalInput, Prisma.FocusSessionUncheckedCreateWithoutGoalInput>;
+};
+export type FocusSessionUpdateWithWhereUniqueWithoutGoalInput = {
+    where: Prisma.FocusSessionWhereUniqueInput;
+    data: Prisma.XOR<Prisma.FocusSessionUpdateWithoutGoalInput, Prisma.FocusSessionUncheckedUpdateWithoutGoalInput>;
+};
+export type FocusSessionUpdateManyWithWhereWithoutGoalInput = {
+    where: Prisma.FocusSessionScalarWhereInput;
+    data: Prisma.XOR<Prisma.FocusSessionUpdateManyMutationInput, Prisma.FocusSessionUncheckedUpdateManyWithoutGoalInput>;
 };
 export type FocusSessionCreateManyUserInput = {
     id?: string;
@@ -555,6 +694,8 @@ export type FocusSessionCreateManyUserInput = {
     distractions?: number;
     notes?: string | null;
     createdAt?: Date | string;
+    deletedAt?: Date | string | null;
+    goalId?: string | null;
 };
 export type FocusSessionUpdateWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -567,6 +708,8 @@ export type FocusSessionUpdateWithoutUserInput = {
     distractions?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    goal?: Prisma.GoalUpdateOneWithoutFocusSessionsNestedInput;
 };
 export type FocusSessionUncheckedUpdateWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -579,6 +722,8 @@ export type FocusSessionUncheckedUpdateWithoutUserInput = {
     distractions?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 export type FocusSessionUncheckedUpdateManyWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -591,6 +736,64 @@ export type FocusSessionUncheckedUpdateManyWithoutUserInput = {
     distractions?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    goalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+};
+export type FocusSessionCreateManyGoalInput = {
+    id?: string;
+    userId: string;
+    mode?: $Enums.FocusSessionMode;
+    startedAt?: Date | string;
+    endedAt?: Date | string | null;
+    targetMinutes: number;
+    durationMinutes?: number | null;
+    completed?: boolean;
+    distractions?: number;
+    notes?: string | null;
+    createdAt?: Date | string;
+    deletedAt?: Date | string | null;
+};
+export type FocusSessionUpdateWithoutGoalInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    mode?: Prisma.EnumFocusSessionModeFieldUpdateOperationsInput | $Enums.FocusSessionMode;
+    startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    targetMinutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    durationMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    completed?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    distractions?: Prisma.IntFieldUpdateOperationsInput | number;
+    notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    user?: Prisma.UserUpdateOneRequiredWithoutFocusSessionsNestedInput;
+};
+export type FocusSessionUncheckedUpdateWithoutGoalInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    userId?: Prisma.StringFieldUpdateOperationsInput | string;
+    mode?: Prisma.EnumFocusSessionModeFieldUpdateOperationsInput | $Enums.FocusSessionMode;
+    startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    targetMinutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    durationMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    completed?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    distractions?: Prisma.IntFieldUpdateOperationsInput | number;
+    notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+};
+export type FocusSessionUncheckedUpdateManyWithoutGoalInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    userId?: Prisma.StringFieldUpdateOperationsInput | string;
+    mode?: Prisma.EnumFocusSessionModeFieldUpdateOperationsInput | $Enums.FocusSessionMode;
+    startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    targetMinutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    durationMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    completed?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    distractions?: Prisma.IntFieldUpdateOperationsInput | number;
+    notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
 };
 export type FocusSessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -604,7 +807,10 @@ export type FocusSessionSelect<ExtArgs extends runtime.Types.Extensions.Internal
     distractions?: boolean;
     notes?: boolean;
     createdAt?: boolean;
+    deletedAt?: boolean;
+    goalId?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    goal?: boolean | Prisma.FocusSession$goalArgs<ExtArgs>;
 }, ExtArgs["result"]["focusSession"]>;
 export type FocusSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -618,7 +824,10 @@ export type FocusSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
     distractions?: boolean;
     notes?: boolean;
     createdAt?: boolean;
+    deletedAt?: boolean;
+    goalId?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    goal?: boolean | Prisma.FocusSession$goalArgs<ExtArgs>;
 }, ExtArgs["result"]["focusSession"]>;
 export type FocusSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -632,7 +841,10 @@ export type FocusSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
     distractions?: boolean;
     notes?: boolean;
     createdAt?: boolean;
+    deletedAt?: boolean;
+    goalId?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    goal?: boolean | Prisma.FocusSession$goalArgs<ExtArgs>;
 }, ExtArgs["result"]["focusSession"]>;
 export type FocusSessionSelectScalar = {
     id?: boolean;
@@ -646,21 +858,27 @@ export type FocusSessionSelectScalar = {
     distractions?: boolean;
     notes?: boolean;
     createdAt?: boolean;
+    deletedAt?: boolean;
+    goalId?: boolean;
 };
-export type FocusSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "mode" | "startedAt" | "endedAt" | "targetMinutes" | "durationMinutes" | "completed" | "distractions" | "notes" | "createdAt", ExtArgs["result"]["focusSession"]>;
+export type FocusSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "mode" | "startedAt" | "endedAt" | "targetMinutes" | "durationMinutes" | "completed" | "distractions" | "notes" | "createdAt" | "deletedAt" | "goalId", ExtArgs["result"]["focusSession"]>;
 export type FocusSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    goal?: boolean | Prisma.FocusSession$goalArgs<ExtArgs>;
 };
 export type FocusSessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    goal?: boolean | Prisma.FocusSession$goalArgs<ExtArgs>;
 };
 export type FocusSessionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    goal?: boolean | Prisma.FocusSession$goalArgs<ExtArgs>;
 };
 export type $FocusSessionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     name: "FocusSession";
     objects: {
         user: Prisma.$UserPayload<ExtArgs>;
+        goal: Prisma.$GoalPayload<ExtArgs> | null;
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -674,6 +892,8 @@ export type $FocusSessionPayload<ExtArgs extends runtime.Types.Extensions.Intern
         distractions: number;
         notes: string | null;
         createdAt: Date;
+        deletedAt: Date | null;
+        goalId: string | null;
     }, ExtArgs["result"]["focusSession"]>;
     composites: {};
 };
@@ -1004,6 +1224,7 @@ export interface FocusSessionDelegate<ExtArgs extends runtime.Types.Extensions.I
 export interface Prisma__FocusSessionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise";
     user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
+    goal<T extends Prisma.FocusSession$goalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FocusSession$goalArgs<ExtArgs>>): Prisma.Prisma__GoalClient<runtime.Types.Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1040,6 +1261,8 @@ export interface FocusSessionFieldRefs {
     readonly distractions: Prisma.FieldRef<"FocusSession", 'Int'>;
     readonly notes: Prisma.FieldRef<"FocusSession", 'String'>;
     readonly createdAt: Prisma.FieldRef<"FocusSession", 'DateTime'>;
+    readonly deletedAt: Prisma.FieldRef<"FocusSession", 'DateTime'>;
+    readonly goalId: Prisma.FieldRef<"FocusSession", 'String'>;
 }
 /**
  * FocusSession findUnique
@@ -1417,6 +1640,24 @@ export type FocusSessionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
      * Limit how many FocusSessions to delete.
      */
     limit?: number;
+};
+/**
+ * FocusSession.goal
+ */
+export type FocusSession$goalArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Goal
+     */
+    select?: Prisma.GoalSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the Goal
+     */
+    omit?: Prisma.GoalOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.GoalInclude<ExtArgs> | null;
+    where?: Prisma.GoalWhereInput;
 };
 /**
  * FocusSession without action

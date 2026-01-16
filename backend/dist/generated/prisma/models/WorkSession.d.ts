@@ -26,6 +26,7 @@ export type WorkSessionMinAggregateOutputType = {
     durationMinutes: number | null;
     notes: string | null;
     createdAt: Date | null;
+    deletedAt: Date | null;
 };
 export type WorkSessionMaxAggregateOutputType = {
     id: string | null;
@@ -35,6 +36,7 @@ export type WorkSessionMaxAggregateOutputType = {
     durationMinutes: number | null;
     notes: string | null;
     createdAt: Date | null;
+    deletedAt: Date | null;
 };
 export type WorkSessionCountAggregateOutputType = {
     id: number;
@@ -44,6 +46,7 @@ export type WorkSessionCountAggregateOutputType = {
     durationMinutes: number;
     notes: number;
     createdAt: number;
+    deletedAt: number;
     _all: number;
 };
 export type WorkSessionAvgAggregateInputType = {
@@ -60,6 +63,7 @@ export type WorkSessionMinAggregateInputType = {
     durationMinutes?: true;
     notes?: true;
     createdAt?: true;
+    deletedAt?: true;
 };
 export type WorkSessionMaxAggregateInputType = {
     id?: true;
@@ -69,6 +73,7 @@ export type WorkSessionMaxAggregateInputType = {
     durationMinutes?: true;
     notes?: true;
     createdAt?: true;
+    deletedAt?: true;
 };
 export type WorkSessionCountAggregateInputType = {
     id?: true;
@@ -78,6 +83,7 @@ export type WorkSessionCountAggregateInputType = {
     durationMinutes?: true;
     notes?: true;
     createdAt?: true;
+    deletedAt?: true;
     _all?: true;
 };
 export type WorkSessionAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -164,6 +170,7 @@ export type WorkSessionGroupByOutputType = {
     durationMinutes: number | null;
     notes: string | null;
     createdAt: Date;
+    deletedAt: Date | null;
     _count: WorkSessionCountAggregateOutputType | null;
     _avg: WorkSessionAvgAggregateOutputType | null;
     _sum: WorkSessionSumAggregateOutputType | null;
@@ -184,6 +191,7 @@ export type WorkSessionWhereInput = {
     durationMinutes?: Prisma.IntNullableFilter<"WorkSession"> | number | null;
     notes?: Prisma.StringNullableFilter<"WorkSession"> | string | null;
     createdAt?: Prisma.DateTimeFilter<"WorkSession"> | Date | string;
+    deletedAt?: Prisma.DateTimeNullableFilter<"WorkSession"> | Date | string | null;
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
 };
 export type WorkSessionOrderByWithRelationInput = {
@@ -194,6 +202,7 @@ export type WorkSessionOrderByWithRelationInput = {
     durationMinutes?: Prisma.SortOrderInput | Prisma.SortOrder;
     notes?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
+    deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
     user?: Prisma.UserOrderByWithRelationInput;
 };
 export type WorkSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -207,6 +216,7 @@ export type WorkSessionWhereUniqueInput = Prisma.AtLeast<{
     durationMinutes?: Prisma.IntNullableFilter<"WorkSession"> | number | null;
     notes?: Prisma.StringNullableFilter<"WorkSession"> | string | null;
     createdAt?: Prisma.DateTimeFilter<"WorkSession"> | Date | string;
+    deletedAt?: Prisma.DateTimeNullableFilter<"WorkSession"> | Date | string | null;
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
 }, "id">;
 export type WorkSessionOrderByWithAggregationInput = {
@@ -217,6 +227,7 @@ export type WorkSessionOrderByWithAggregationInput = {
     durationMinutes?: Prisma.SortOrderInput | Prisma.SortOrder;
     notes?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
+    deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
     _count?: Prisma.WorkSessionCountOrderByAggregateInput;
     _avg?: Prisma.WorkSessionAvgOrderByAggregateInput;
     _max?: Prisma.WorkSessionMaxOrderByAggregateInput;
@@ -234,6 +245,7 @@ export type WorkSessionScalarWhereWithAggregatesInput = {
     durationMinutes?: Prisma.IntNullableWithAggregatesFilter<"WorkSession"> | number | null;
     notes?: Prisma.StringNullableWithAggregatesFilter<"WorkSession"> | string | null;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"WorkSession"> | Date | string;
+    deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"WorkSession"> | Date | string | null;
 };
 export type WorkSessionCreateInput = {
     id?: string;
@@ -242,6 +254,7 @@ export type WorkSessionCreateInput = {
     durationMinutes?: number | null;
     notes?: string | null;
     createdAt?: Date | string;
+    deletedAt?: Date | string | null;
     user: Prisma.UserCreateNestedOneWithoutWorkSessionsInput;
 };
 export type WorkSessionUncheckedCreateInput = {
@@ -252,6 +265,7 @@ export type WorkSessionUncheckedCreateInput = {
     durationMinutes?: number | null;
     notes?: string | null;
     createdAt?: Date | string;
+    deletedAt?: Date | string | null;
 };
 export type WorkSessionUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -260,6 +274,7 @@ export type WorkSessionUpdateInput = {
     durationMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     user?: Prisma.UserUpdateOneRequiredWithoutWorkSessionsNestedInput;
 };
 export type WorkSessionUncheckedUpdateInput = {
@@ -270,6 +285,7 @@ export type WorkSessionUncheckedUpdateInput = {
     durationMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
 };
 export type WorkSessionCreateManyInput = {
     id?: string;
@@ -279,6 +295,7 @@ export type WorkSessionCreateManyInput = {
     durationMinutes?: number | null;
     notes?: string | null;
     createdAt?: Date | string;
+    deletedAt?: Date | string | null;
 };
 export type WorkSessionUpdateManyMutationInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -287,6 +304,7 @@ export type WorkSessionUpdateManyMutationInput = {
     durationMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
 };
 export type WorkSessionUncheckedUpdateManyInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -296,6 +314,7 @@ export type WorkSessionUncheckedUpdateManyInput = {
     durationMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
 };
 export type WorkSessionListRelationFilter = {
     every?: Prisma.WorkSessionWhereInput;
@@ -313,6 +332,7 @@ export type WorkSessionCountOrderByAggregateInput = {
     durationMinutes?: Prisma.SortOrder;
     notes?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
+    deletedAt?: Prisma.SortOrder;
 };
 export type WorkSessionAvgOrderByAggregateInput = {
     durationMinutes?: Prisma.SortOrder;
@@ -325,6 +345,7 @@ export type WorkSessionMaxOrderByAggregateInput = {
     durationMinutes?: Prisma.SortOrder;
     notes?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
+    deletedAt?: Prisma.SortOrder;
 };
 export type WorkSessionMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -334,6 +355,7 @@ export type WorkSessionMinOrderByAggregateInput = {
     durationMinutes?: Prisma.SortOrder;
     notes?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
+    deletedAt?: Prisma.SortOrder;
 };
 export type WorkSessionSumOrderByAggregateInput = {
     durationMinutes?: Prisma.SortOrder;
@@ -390,6 +412,7 @@ export type WorkSessionCreateWithoutUserInput = {
     durationMinutes?: number | null;
     notes?: string | null;
     createdAt?: Date | string;
+    deletedAt?: Date | string | null;
 };
 export type WorkSessionUncheckedCreateWithoutUserInput = {
     id?: string;
@@ -398,6 +421,7 @@ export type WorkSessionUncheckedCreateWithoutUserInput = {
     durationMinutes?: number | null;
     notes?: string | null;
     createdAt?: Date | string;
+    deletedAt?: Date | string | null;
 };
 export type WorkSessionCreateOrConnectWithoutUserInput = {
     where: Prisma.WorkSessionWhereUniqueInput;
@@ -431,6 +455,7 @@ export type WorkSessionScalarWhereInput = {
     durationMinutes?: Prisma.IntNullableFilter<"WorkSession"> | number | null;
     notes?: Prisma.StringNullableFilter<"WorkSession"> | string | null;
     createdAt?: Prisma.DateTimeFilter<"WorkSession"> | Date | string;
+    deletedAt?: Prisma.DateTimeNullableFilter<"WorkSession"> | Date | string | null;
 };
 export type WorkSessionCreateManyUserInput = {
     id?: string;
@@ -439,6 +464,7 @@ export type WorkSessionCreateManyUserInput = {
     durationMinutes?: number | null;
     notes?: string | null;
     createdAt?: Date | string;
+    deletedAt?: Date | string | null;
 };
 export type WorkSessionUpdateWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -447,6 +473,7 @@ export type WorkSessionUpdateWithoutUserInput = {
     durationMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
 };
 export type WorkSessionUncheckedUpdateWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -455,6 +482,7 @@ export type WorkSessionUncheckedUpdateWithoutUserInput = {
     durationMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
 };
 export type WorkSessionUncheckedUpdateManyWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -463,6 +491,7 @@ export type WorkSessionUncheckedUpdateManyWithoutUserInput = {
     durationMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
 };
 export type WorkSessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -472,6 +501,7 @@ export type WorkSessionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
     durationMinutes?: boolean;
     notes?: boolean;
     createdAt?: boolean;
+    deletedAt?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["workSession"]>;
 export type WorkSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -482,6 +512,7 @@ export type WorkSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
     durationMinutes?: boolean;
     notes?: boolean;
     createdAt?: boolean;
+    deletedAt?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["workSession"]>;
 export type WorkSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -492,6 +523,7 @@ export type WorkSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
     durationMinutes?: boolean;
     notes?: boolean;
     createdAt?: boolean;
+    deletedAt?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["workSession"]>;
 export type WorkSessionSelectScalar = {
@@ -502,8 +534,9 @@ export type WorkSessionSelectScalar = {
     durationMinutes?: boolean;
     notes?: boolean;
     createdAt?: boolean;
+    deletedAt?: boolean;
 };
-export type WorkSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "startedAt" | "endedAt" | "durationMinutes" | "notes" | "createdAt", ExtArgs["result"]["workSession"]>;
+export type WorkSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "startedAt" | "endedAt" | "durationMinutes" | "notes" | "createdAt" | "deletedAt", ExtArgs["result"]["workSession"]>;
 export type WorkSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 };
@@ -526,6 +559,7 @@ export type $WorkSessionPayload<ExtArgs extends runtime.Types.Extensions.Interna
         durationMinutes: number | null;
         notes: string | null;
         createdAt: Date;
+        deletedAt: Date | null;
     }, ExtArgs["result"]["workSession"]>;
     composites: {};
 };
@@ -888,6 +922,7 @@ export interface WorkSessionFieldRefs {
     readonly durationMinutes: Prisma.FieldRef<"WorkSession", 'Int'>;
     readonly notes: Prisma.FieldRef<"WorkSession", 'String'>;
     readonly createdAt: Prisma.FieldRef<"WorkSession", 'DateTime'>;
+    readonly deletedAt: Prisma.FieldRef<"WorkSession", 'DateTime'>;
 }
 /**
  * WorkSession findUnique

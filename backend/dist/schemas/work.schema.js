@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.workSessionsQuerySchema = exports.workSummaryQuerySchema = exports.endWorkSchema = exports.startWorkSchema = void 0;
+exports.updateWorkSessionSchema = exports.workSessionsQuerySchema = exports.workSummaryQuerySchema = exports.endWorkSchema = exports.startWorkSchema = void 0;
 const zod_1 = require("zod");
 exports.startWorkSchema = zod_1.z.object({
     notes: zod_1.z.string().max(500).optional(),
@@ -24,5 +24,10 @@ exports.workSessionsQuerySchema = zod_1.z.object({
         .max(100)
         .optional()
         .transform((value) => value ?? 50),
+});
+exports.updateWorkSessionSchema = zod_1.z.object({
+    notes: zod_1.z.string().max(500).optional(),
+    startedAt: zod_1.z.coerce.date().optional(),
+    endedAt: zod_1.z.coerce.date().optional().nullable(),
 });
 //# sourceMappingURL=work.schema.js.map
