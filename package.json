@@ -9,7 +9,8 @@
 		"dev:frontend": "cd frontend && npm run dev",
 		"dev:backend": "cd backend && npm run dev",
 		"install:all": "cd frontend && npm install && cd ../backend && npm install",
-		"postinstall": "npm run install:all"
+		"postinstall": "npm run install:all",
+		"vercel:build": "cd frontend && npm run build && mkdir -p ../.vercel && cp -r .vercel/output ../.vercel/"
 	}
 }
 
