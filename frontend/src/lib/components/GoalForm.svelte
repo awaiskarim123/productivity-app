@@ -137,7 +137,7 @@
 	}
 </script>
 
-<form on:submit={handleSubmit} class="space-y-4">
+<form onsubmit={handleSubmit} class="space-y-4">
 	{#if error}
 		<div class="rounded-lg border border-rose-300 dark:border-rose-500/50 bg-rose-50 dark:bg-rose-500/10 px-4 py-3 text-sm text-rose-800 dark:text-rose-200">
 			{error}
@@ -183,7 +183,7 @@
 				bind:value={type}
 				required
 				class="w-full rounded-2xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-3 text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200 cursor-pointer hover:border-gray-400 dark:hover:border-slate-600 focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
-				on:change={() => {
+				onchange={() => {
 					// Update end date based on type when changed
 					if (!goal) {
 						const today = dayjs();
@@ -261,12 +261,12 @@
 
 	<div>
 		<div class="flex items-center justify-between mb-2">
-			<label class="block text-sm font-medium text-gray-700 dark:text-slate-200">
+			<p class="block text-sm font-medium text-gray-700 dark:text-slate-200">
 				Key Results (OKRs)
-			</label>
+			</p>
 			<button
 				type="button"
-				on:click={addKeyResult}
+				onclick={addKeyResult}
 				class="text-xs text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium"
 			>
 				+ Add Key Result
@@ -281,7 +281,7 @@
 							<span class="text-xs font-medium text-gray-600 dark:text-slate-400">Key Result #{index + 1}</span>
 							<button
 								type="button"
-								on:click={() => removeKeyResult(index)}
+								onclick={() => removeKeyResult(index)}
 								class="text-xs text-rose-700 dark:text-rose-400 hover:text-rose-800 dark:hover:text-rose-300"
 							>
 								Remove
@@ -291,7 +291,7 @@
 						<input
 							type="text"
 							value={kr.title}
-							on:input={(e) => updateKeyResult(index, 'title', e.currentTarget.value)}
+							oninput={(e) => updateKeyResult(index, 'title', e.currentTarget.value)}
 							placeholder="Key result title"
 							maxlength="200"
 							class="input-field"
@@ -299,7 +299,7 @@
 
 						<textarea
 							value={kr.description}
-							on:input={(e) => updateKeyResult(index, 'description', e.currentTarget.value)}
+							oninput={(e) => updateKeyResult(index, 'description', e.currentTarget.value)}
 							placeholder="Description (optional)"
 							rows="2"
 							maxlength="500"
@@ -308,26 +308,40 @@
 
 						<div class="grid grid-cols-2 gap-3">
 							<div>
-								<label class="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1">
+								<label
+									for={`kr-target-${index}`}
+									class="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1"
+								>
 									Target Value
 								</label>
 								<input
+									id={`kr-target-${index}`}
 									type="number"
 									value={kr.targetValue}
-									on:input={(e) => updateKeyResult(index, 'targetValue', parseFloat(e.currentTarget.value) || 0)}
+									oninput={(e) =>
+										updateKeyResult(index, 'targetValue', parseFloat(e.currentTarget.value) || 0)}
 									min="0"
 									step="0.1"
 									class="input-field text-sm py-2"
 								/>
 							</div>
 							<div>
-								<label class="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1">
+								<label
+									for={`kr-weight-${index}`}
+									class="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1"
+								>
 									Weight (0-1)
 								</label>
 								<input
+									id={`kr-weight-${index}`}
 									type="number"
 									value={kr.weight}
-									on:input={(e) => updateKeyResult(index, 'weight', Math.max(0, Math.min(1, parseFloat(e.currentTarget.value) || 1)))}
+									oninput={(e) =>
+										updateKeyResult(
+											index,
+											'weight',
+											Math.max(0, Math.min(1, parseFloat(e.currentTarget.value) || 1))
+										)}
 									min="0"
 									max="1"
 									step="0.1"
@@ -361,7 +375,7 @@
 		{#if onCancel}
 			<button
 				type="button"
-				on:click={onCancel}
+				onclick={onCancel}
 				class="rounded-xl border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/50 px-4 py-3 text-sm font-medium text-gray-700 dark:text-slate-200 transition hover:bg-gray-100 dark:hover:bg-slate-800/70"
 			>
 				Cancel
