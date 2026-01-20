@@ -71,21 +71,21 @@
 	}
 </script>
 
-<div class="flex min-h-screen w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100">
+<div class="flex min-h-screen w-full bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-slate-100">
 	<!-- Sidebar -->
 	<aside
-		class="fixed inset-y-0 left-0 z-30 w-64 transform border-r border-slate-200 dark:border-slate-800/60 bg-slate-50/95 dark:bg-slate-900/95 backdrop-blur transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:w-72 {sidebarOpen
+		class="fixed inset-y-0 left-0 z-30 w-64 transform border-r border-gray-200 dark:border-slate-800/60 bg-white dark:bg-slate-900/95 backdrop-blur transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:w-72 {sidebarOpen
 			? 'translate-x-0'
 			: '-translate-x-full'}"
 	>
 		<div class="flex h-full flex-col">
 			<!-- Sidebar Header -->
-			<div class="flex items-center justify-between border-b border-slate-800/60 dark:border-slate-800/60 border-slate-200 px-3 py-3 sm:px-4">
+			<div class="flex items-center justify-between border-b border-gray-200 dark:border-slate-800/60 px-3 py-3 sm:px-4">
 				<div class="flex items-center gap-2">
 					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
-							class="h-5 w-5 text-emerald-400"
+							class="h-5 w-5 text-emerald-500 dark:text-emerald-400"
 							fill="none"
 							viewBox="0 0 24 24"
 							stroke="currentColor"
@@ -99,8 +99,8 @@
 						</svg>
 					</div>
 					<div>
-						<h2 class="text-base font-semibold text-white dark:text-white text-slate-900">Focus Flow</h2>
-						<p class="text-xs text-slate-400 dark:text-slate-400 text-slate-600">Productivity</p>
+						<h2 class="text-base font-semibold text-gray-900 dark:text-white">Focus Flow</h2>
+						<p class="text-xs text-gray-500 dark:text-slate-400">Productivity</p>
 					</div>
 				</div>
 				<div class="flex items-center gap-1">
@@ -109,7 +109,7 @@
 						type="button"
 						onclick={() => themeStore.toggle()}
 						aria-label="Toggle theme"
-						class="rounded-lg p-1.5 text-slate-400 dark:text-slate-400 text-slate-600 transition hover:bg-slate-800 dark:hover:bg-slate-800 hover:bg-slate-200 hover:text-slate-200 dark:hover:text-slate-200 hover:text-slate-900"
+						class="rounded-lg p-1.5 text-gray-600 dark:text-slate-400 transition hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-slate-200"
 					>
 						{#if $themeStore === 'dark'}
 							<!-- Sun icon for light mode -->
@@ -150,7 +150,7 @@
 						type="button"
 						onclick={closeSidebar}
 						aria-label="Close sidebar"
-						class="rounded-lg p-1.5 text-slate-400 dark:text-slate-400 text-slate-600 transition hover:bg-slate-800 dark:hover:bg-slate-800 hover:bg-slate-200 hover:text-slate-200 dark:hover:text-slate-200 hover:text-slate-900 lg:hidden"
+						class="rounded-lg p-1.5 text-gray-600 dark:text-slate-400 transition hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-slate-200 lg:hidden"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -178,8 +178,8 @@
 						href={item.href}
 						onclick={closeSidebar}
 						class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition {active
-							? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-100'
-							: 'text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white'}"
+							? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
+							: 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800/50 hover:text-gray-900 dark:hover:text-white'}"
 					>
 						{@html item.icon}
 						<span>{item.label}</span>
@@ -189,8 +189,8 @@
 
 			<!-- User Section -->
 			{#if $authStore.user}
-				<div class="border-t border-slate-200 dark:border-slate-800/60 p-3">
-					<div class="rounded-lg border border-slate-200 dark:border-slate-800/60 bg-white dark:bg-slate-950/50 p-2.5 sm:p-3">
+				<div class="border-t border-gray-200 dark:border-slate-800/60 p-3">
+					<div class="rounded-lg border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/50 p-2.5 sm:p-3">
 						<div class="flex items-center gap-3">
 							<div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400">
 								<span class="text-sm font-semibold">
@@ -198,10 +198,10 @@
 								</span>
 							</div>
 							<div class="min-w-0 flex-1">
-								<p class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
+								<p class="truncate text-sm font-medium text-gray-900 dark:text-slate-100">
 									{$authStore.user.name ?? 'User'}
 								</p>
-								<p class="truncate text-xs text-slate-600 dark:text-slate-400">
+								<p class="truncate text-xs text-gray-600 dark:text-slate-400">
 									{$authStore.user.dailyGoalMinutes ?? 0} min goal
 								</p>
 							</div>
@@ -212,7 +212,7 @@
 								authStore.logout();
 								closeSidebar();
 							}}
-							class="mt-3 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-900/80 px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-300 transition hover:bg-slate-200 dark:hover:bg-slate-800"
+							class="mt-3 w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900/80 px-3 py-2 text-xs font-medium text-gray-700 dark:text-slate-300 transition hover:bg-gray-100 dark:hover:bg-slate-800"
 						>
 							Log out
 						</button>
@@ -241,7 +241,7 @@
 			type="button"
 			onclick={toggleSidebar}
 			aria-label="Open sidebar"
-			class="fixed top-4 left-4 z-40 rounded-lg p-2 text-slate-600 dark:text-slate-400 transition hover:bg-slate-200 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200 lg:hidden"
+			class="fixed top-4 left-4 z-40 rounded-lg bg-white dark:bg-slate-800 p-2 text-gray-600 dark:text-slate-400 shadow-md dark:shadow-none border border-gray-200 dark:border-transparent transition hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-slate-200 lg:hidden"
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"

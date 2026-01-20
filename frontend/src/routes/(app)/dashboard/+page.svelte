@@ -228,17 +228,17 @@ dayjs.extend(relativeTime);
 
 {#if loading}
 	<div class="flex min-h-[60vh] items-center justify-center">
-		<div class="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/80 px-6 py-4 text-sm text-slate-300">
-			<span class="h-3 w-3 animate-ping rounded-full bg-emerald-400"></span>
+		<div class="flex items-center gap-3 rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 px-6 py-4 text-sm text-gray-700 dark:text-slate-300 shadow-sm dark:shadow-none">
+			<span class="h-3 w-3 animate-ping rounded-full bg-emerald-500 dark:bg-emerald-400"></span>
 			<span>Loading dashboard...</span>
 		</div>
 	</div>
 {:else if errorMessage}
-	<div class="rounded-2xl border border-rose-500/40 bg-rose-500/10 px-6 py-5 text-rose-200">
+	<div class="rounded-2xl border border-rose-300 dark:border-rose-500/40 bg-rose-50 dark:bg-rose-500/10 px-6 py-5 text-rose-800 dark:text-rose-200">
 		<h2 class="text-lg font-semibold">Something went wrong</h2>
 		<p class="mt-2 text-sm">{errorMessage}</p>
 		<button
-			class="mt-4 rounded-lg border border-rose-400/50 px-4 py-2 text-xs font-medium text-rose-100"
+			class="mt-4 rounded-lg border border-rose-300 dark:border-rose-400/50 bg-white dark:bg-transparent px-4 py-2 text-xs font-medium text-rose-700 dark:text-rose-100 transition hover:bg-rose-50 dark:hover:bg-rose-500/20"
 			type="button"
 			onclick={loadDashboard}
 		>
@@ -248,11 +248,11 @@ dayjs.extend(relativeTime);
 {:else if profile && summary}
 	<div class="space-y-2 sm:space-y-3 lg:space-y-4">
 		<section class="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4 lg:gap-3">
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3">
+			<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm dark:shadow-none">
 				<div class="flex items-start justify-between">
 					<div class="flex-1 min-w-0">
-						<h3 class="text-xs font-medium uppercase tracking-wide text-slate-400">Today's focus</h3>
-						<p class="mt-2 text-xl font-semibold text-white sm:mt-3 sm:text-2xl">{formatMinutes(summary.todayMinutes)}</p>
+						<h3 class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">Today's focus</h3>
+						<p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white sm:mt-3 sm:text-2xl">{formatMinutes(summary.todayMinutes)}</p>
 						{#if editingDailyGoal}
 							<div class="mt-2 space-y-2">
 								<input
@@ -260,25 +260,25 @@ dayjs.extend(relativeTime);
 									bind:value={newDailyGoal}
 									min="30"
 									max="1440"
-									class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
+									class="w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900/80 px-3 py-1.5 text-sm text-gray-900 dark:text-slate-100 focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:focus:ring-emerald-400/40"
 									placeholder="Minutes"
 									onkeydown={(e) => e.key === 'Enter' && saveDailyGoal()}
 								/>
 								{#if goalUpdateError}
-									<p class="text-xs text-rose-400">{goalUpdateError}</p>
+									<p class="text-xs text-rose-600 dark:text-rose-400">{goalUpdateError}</p>
 								{/if}
 								<div class="flex gap-2">
 									<button
 										type="button"
 										onclick={saveDailyGoal}
-										class="flex-1 rounded-lg bg-emerald-500/90 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-emerald-400"
+										class="flex-1 rounded-lg bg-emerald-500 dark:bg-emerald-500/90 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-emerald-600 dark:hover:bg-emerald-400"
 									>
 										Save
 									</button>
 									<button
 										type="button"
 										onclick={cancelEditingGoal}
-										class="flex-1 rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-800"
+										class="flex-1 rounded-lg border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/80 px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-slate-300 transition hover:bg-gray-100 dark:hover:bg-slate-800"
 									>
 										Cancel
 									</button>
@@ -286,11 +286,11 @@ dayjs.extend(relativeTime);
 							</div>
 						{:else}
 							<div class="mt-2 flex items-center gap-2">
-								<p class="text-xs text-slate-500">Goal: {profile.dailyGoalMinutes} minutes</p>
+								<p class="text-xs text-gray-500 dark:text-slate-500">Goal: {profile.dailyGoalMinutes} minutes</p>
 								<button
 									type="button"
 									onclick={startEditingGoal}
-									class="text-xs text-emerald-400 hover:text-emerald-300 transition"
+									class="text-xs text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition"
 									title="Edit daily goal"
 								>
 									<svg
@@ -313,20 +313,20 @@ dayjs.extend(relativeTime);
 					</div>
 				</div>
 			</div>
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3">
-				<h3 class="text-xs font-medium uppercase tracking-wide text-slate-400">Weekly progress</h3>
-				<p class="mt-2 text-xl font-semibold text-white sm:mt-3 sm:text-2xl">{formatMinutes(summary.weeklyMinutes)}</p>
-				<p class="mt-1 text-xs text-slate-500">Last 7 days of work</p>
+			<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm dark:shadow-none">
+				<h3 class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">Weekly progress</h3>
+				<p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white sm:mt-3 sm:text-2xl">{formatMinutes(summary.weeklyMinutes)}</p>
+				<p class="mt-1 text-xs text-gray-500 dark:text-slate-500">Last 7 days of work</p>
 			</div>
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3">
-				<h3 class="text-xs font-medium uppercase tracking-wide text-slate-400">Monthly output</h3>
-				<p class="mt-2 text-xl font-semibold text-white sm:mt-3 sm:text-2xl">{formatMinutes(summary.monthlyMinutes)}</p>
-				<p class="mt-1 text-xs text-slate-500">Steady habit is forming</p>
+			<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm dark:shadow-none">
+				<h3 class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">Monthly output</h3>
+				<p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white sm:mt-3 sm:text-2xl">{formatMinutes(summary.monthlyMinutes)}</p>
+				<p class="mt-1 text-xs text-gray-500 dark:text-slate-500">Steady habit is forming</p>
 			</div>
-			<div class="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2.5 sm:px-4 sm:py-3">
-				<h3 class="text-xs font-medium uppercase tracking-wide text-emerald-200">Focus streak</h3>
-				<p class="mt-2 text-xl font-semibold text-emerald-100 sm:mt-3 sm:text-2xl">{profile.focusStreak} days</p>
-				<p class="mt-1 text-xs text-emerald-200/70">Keep the momentum going</p>
+			<div class="rounded-2xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm dark:shadow-none">
+				<h3 class="text-xs font-medium uppercase tracking-wide text-emerald-700 dark:text-emerald-200">Focus streak</h3>
+				<p class="mt-2 text-xl font-semibold text-emerald-800 dark:text-emerald-100 sm:mt-3 sm:text-2xl">{profile.focusStreak} days</p>
+				<p class="mt-1 text-xs text-emerald-600 dark:text-emerald-200/70">Keep the momentum going</p>
 			</div>
 		</section>
 
@@ -340,58 +340,58 @@ dayjs.extend(relativeTime);
 			/>
 
 			{#if focusStats && analytics}
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
-				<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus stats</h2>
+			<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-2.5 sm:p-3 lg:p-4 shadow-sm dark:shadow-none">
+				<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Focus stats</h2>
 				<div class="mt-2.5 space-y-2 sm:mt-3 sm:space-y-2.5">
-					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
-						<span class="text-sm text-slate-400">Past {focusStats.rangeDays} days</span>
-						<span class="text-sm font-semibold text-white">
+					<div class="flex items-center justify-between rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-3">
+						<span class="text-sm text-gray-600 dark:text-slate-400">Past {focusStats.rangeDays} days</span>
+						<span class="text-sm font-semibold text-gray-900 dark:text-white">
 							{formatMinutes(focusStats.totalFocusMinutes)}
 						</span>
 					</div>
-					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
-						<span class="text-sm text-slate-400">Sessions completed</span>
-						<span class="text-sm font-semibold text-white">
+					<div class="flex items-center justify-between rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-3">
+						<span class="text-sm text-gray-600 dark:text-slate-400">Sessions completed</span>
+						<span class="text-sm font-semibold text-gray-900 dark:text-white">
 							{focusStats.completedSessions}/{focusStats.daily.length}
 						</span>
 					</div>
-					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
-						<span class="text-sm text-slate-400">Average focus session</span>
-						<span class="text-sm font-semibold text-white">
+					<div class="flex items-center justify-between rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-3">
+						<span class="text-sm text-gray-600 dark:text-slate-400">Average focus session</span>
+						<span class="text-sm font-semibold text-gray-900 dark:text-white">
 							{analytics.focus.averageFocusMinutes.toFixed(1)} min
 						</span>
 					</div>
-					<div class="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3">
-						<span class="text-sm text-slate-400">Distractions tracked</span>
-						<span class="text-sm font-semibold text-white">
+					<div class="flex items-center justify-between rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-3">
+						<span class="text-sm text-gray-600 dark:text-slate-400">Distractions tracked</span>
+						<span class="text-sm font-semibold text-gray-900 dark:text-white">
 							{analytics.focus.distractions}
 						</span>
 					</div>
 				</div>
 			</div>
 			{:else}
-				<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
-					<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus stats</h2>
-					<div class="mt-4 text-center text-sm text-slate-400">Loading focus stats...</div>
+				<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-2.5 sm:p-3 lg:p-4 shadow-sm dark:shadow-none">
+					<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Focus stats</h2>
+					<div class="mt-4 text-center text-sm text-gray-600 dark:text-slate-400">Loading focus stats...</div>
 				</div>
 			{/if}
 		</section>
 
 		<!-- Focus Trends and Motivation Section - Side by side -->
 		<section class="grid gap-2 sm:gap-3 lg:grid-cols-[1fr,400px] lg:gap-3">
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
+			<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-2.5 sm:p-3 lg:p-4 shadow-sm dark:shadow-none">
 				<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 					<div>
-						<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Focus trends</h2>
-						<p class="mt-1 text-xs text-slate-400 sm:text-sm">
+						<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Focus trends</h2>
+						<p class="mt-1 text-xs text-gray-600 dark:text-slate-400 sm:text-sm">
 							Monitor how your focus time evolves across chosen ranges
 						</p>
 					</div>
-					<div class="flex flex-wrap items-center gap-2 rounded-full border border-slate-800 bg-slate-950/50 px-1 py-1">
+					<div class="flex flex-wrap items-center gap-2 rounded-full border border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-950/50 px-1 py-1">
 						{#each summaryPeriods as period}
 							<button
 								type="button"
-								class={`rounded-full px-3 py-1 text-xs font-medium transition ${selectedSummaryPeriod === period.value ? 'bg-emerald-500/30 text-emerald-100' : 'text-slate-400'}`}
+								class={`rounded-full px-3 py-1 text-xs font-medium transition ${selectedSummaryPeriod === period.value ? 'bg-emerald-100 dark:bg-emerald-500/30 text-emerald-700 dark:text-emerald-100' : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200'}`}
 								onclick={() => refreshSummary(period.value)}
 							>
 								{period.label}
@@ -408,19 +408,19 @@ dayjs.extend(relativeTime);
 						accentColor="#34d399"
 					/>
 					{:else}
-						<div class="flex h-48 items-center justify-center text-sm text-slate-400">
+						<div class="flex h-48 items-center justify-center text-sm text-gray-600 dark:text-slate-400">
 							Loading chart data...
 						</div>
 					{/if}
 				</div>
 			</div>
 
-			<div class="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/10 to-slate-900/70 p-3 sm:p-4 lg:p-5">
+			<div class="rounded-2xl border border-emerald-200 dark:border-emerald-500/20 bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-500/10 dark:to-slate-900/70 p-3 sm:p-4 lg:p-5 shadow-sm dark:shadow-none">
 				<div class="flex items-start gap-3">
 					<div class="flex-shrink-0 mt-1">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
-							class="h-5 w-5 text-emerald-400"
+							class="h-5 w-5 text-emerald-600 dark:text-emerald-400"
 							fill="none"
 							viewBox="0 0 24 24"
 							stroke="currentColor"
@@ -434,20 +434,20 @@ dayjs.extend(relativeTime);
 						</svg>
 					</div>
 					<div class="flex-1 min-w-0">
-						<h2 class="text-sm font-semibold text-emerald-100 sm:text-base">Daily motivation</h2>
+						<h2 class="text-sm font-semibold text-emerald-800 dark:text-emerald-100 sm:text-base">Daily motivation</h2>
 						{#if quote}
 						<blockquote class="mt-3">
-							<p class="text-sm leading-relaxed text-slate-200 sm:text-base">
+							<p class="text-sm leading-relaxed text-gray-700 dark:text-slate-200 sm:text-base">
 									"{quote.text}"
 							</p>
 						</blockquote>
 						<cite class="mt-3 block not-italic">
-							<span class="text-xs font-medium text-emerald-300/80 sm:text-sm">
+							<span class="text-xs font-medium text-emerald-700 dark:text-emerald-300/80 sm:text-sm">
 									— {quote.author ?? 'Unknown'}
 							</span>
 						</cite>
 						{:else}
-							<div class="mt-3 text-sm text-slate-400">Loading quote...</div>
+							<div class="mt-3 text-sm text-gray-600 dark:text-slate-400">Loading quote...</div>
 						{/if}
 					</div>
 				</div>
@@ -468,12 +468,12 @@ dayjs.extend(relativeTime);
 		<!-- Productivity Insights Section -->
 		{#if analytics}
 			<section>
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-2.5 sm:p-3 lg:p-4">
-				<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Productivity insights</h2>
+			<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-2.5 sm:p-3 lg:p-4 shadow-sm dark:shadow-none">
+				<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Productivity insights</h2>
 				<ul class="mt-3 space-y-2 sm:mt-4 sm:space-y-2.5">
 					{#each analytics.suggestions as suggestion}
-						<li class="flex items-start gap-3 rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3 text-sm text-slate-300">
-							<span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span>
+						<li class="flex items-start gap-3 rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-3 text-sm text-gray-700 dark:text-slate-300">
+							<span class="mt-1 h-2 w-2 rounded-full bg-emerald-500 dark:bg-emerald-400"></span>
 							<span>{suggestion}</span>
 						</li>
 					{/each}
@@ -484,7 +484,7 @@ dayjs.extend(relativeTime);
 
 	</div>
 {:else}
-	<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-6 py-5 text-slate-300">
+	<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 px-6 py-5 text-gray-700 dark:text-slate-300 shadow-sm dark:shadow-none">
 		Unable to load dashboard data.
 	</div>
 {/if}

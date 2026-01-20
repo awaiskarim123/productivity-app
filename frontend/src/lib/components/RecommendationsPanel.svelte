@@ -62,16 +62,16 @@
 	}
 </script>
 
-<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4">
+<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-3 sm:p-4 shadow-sm dark:shadow-none">
 	<div class="mb-3 flex items-center justify-between">
 		<div>
-			<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Recommendations</h2>
-			<p class="mt-1 text-xs text-slate-400">Personalized suggestions for you</p>
+			<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Recommendations</h2>
+			<p class="mt-1 text-xs text-gray-600 dark:text-slate-400">Personalized suggestions for you</p>
 		</div>
 		<button
 			type="button"
 			onclick={loadRecommendations}
-			class="rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-700/50"
+			class="rounded-lg border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/50 px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-slate-300 transition hover:bg-gray-100 dark:hover:bg-slate-700/50"
 			title="Refresh recommendations"
 		>
 			↻
@@ -79,22 +79,22 @@
 	</div>
 
 	{#if error}
-		<div class="mb-3 rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-xs text-rose-300">
+		<div class="mb-3 rounded-lg border border-rose-300 dark:border-rose-500/40 bg-rose-50 dark:bg-rose-500/10 px-3 py-2 text-xs text-rose-700 dark:text-rose-300">
 			{error}
 		</div>
 	{/if}
 
 	{#if loading}
-		<div class="py-4 text-center text-sm text-slate-400">Loading recommendations...</div>
+		<div class="py-4 text-center text-sm text-gray-600 dark:text-slate-400">Loading recommendations...</div>
 	{:else if recommendations && recommendations.recommendations.length > 0}
 		<div class="space-y-3">
 			{#each recommendations.recommendations as recommendation}
-				<div class="rounded-xl border border-slate-800/60 bg-slate-950/40 p-3">
+				<div class="rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 p-3">
 					<div class="flex items-start gap-3">
 						<span class="text-lg">{getRecommendationIcon(recommendation.type)}</span>
 						<div class="flex-1 min-w-0">
 							<div class="flex items-start justify-between gap-2">
-								<h3 class="text-sm font-semibold text-slate-100">{recommendation.title}</h3>
+								<h3 class="text-sm font-semibold text-gray-900 dark:text-slate-100">{recommendation.title}</h3>
 								<span
 									class="rounded-full border px-2 py-0.5 text-xs font-medium {getConfidenceColor(
 										recommendation.confidence
@@ -104,14 +104,14 @@
 									{recommendation.confidence}
 								</span>
 							</div>
-							<p class="mt-1.5 text-xs leading-relaxed text-slate-300">{recommendation.description}</p>
+							<p class="mt-1.5 text-xs leading-relaxed text-gray-700 dark:text-slate-300">{recommendation.description}</p>
 						</div>
 					</div>
 				</div>
 			{/each}
 		</div>
 	{:else}
-		<div class="rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-6 text-center text-sm text-slate-400">
+		<div class="rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-6 text-center text-sm text-gray-600 dark:text-slate-400">
 			No recommendations at this time. Keep tracking to get personalized suggestions!
 		</div>
 	{/if}
