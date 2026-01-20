@@ -131,7 +131,7 @@
 		/>
 		<div class="flex items-center gap-2">
 			<div class="flex gap-1">
-				{#each colors as color}
+				{#each colors as color, index}
 					<button
 						type="button"
 						onclick={() => (newHabitColor = color)}
@@ -139,6 +139,7 @@
 							? 'border-gray-900 dark:border-white scale-110'
 							: 'border-gray-300 dark:border-slate-600 hover:border-gray-500 dark:hover:border-slate-400'}"
 						style="background-color: {color}"
+						aria-label={`Select habit color ${index + 1}`}
 					></button>
 				{/each}
 			</div>
