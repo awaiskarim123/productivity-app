@@ -53,8 +53,8 @@
 <div class="mx-auto max-w-7xl space-y-4 sm:space-y-6">
 	<div class="mb-6 flex items-center justify-between">
 		<div>
-			<h1 class="text-2xl font-bold text-slate-100 sm:text-3xl">Goals & OKRs</h1>
-			<p class="mt-2 text-sm text-slate-400 sm:text-base">
+			<h1 class="text-2xl font-bold text-gray-900 dark:text-slate-100 sm:text-3xl">Goals & OKRs</h1>
+			<p class="mt-2 text-sm text-gray-600 dark:text-slate-400 sm:text-base">
 				Set long-term goals, track progress, and achieve your objectives
 			</p>
 		</div>
@@ -72,15 +72,15 @@
 	</div>
 
 	{#if showCreateForm}
-		<div class="rounded-xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl">
+		<div class="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-6 shadow-sm dark:shadow-xl">
 			<div class="mb-4 flex items-center justify-between">
-				<h2 class="text-xl font-semibold text-white">
+				<h2 class="text-xl font-semibold text-gray-900 dark:text-white">
 					{editingGoal ? 'Edit Goal' : 'Create New Goal'}
 				</h2>
 				<button
 					type="button"
 					onclick={handleFormCancel}
-					class="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-slate-200"
+					class="rounded-lg p-1.5 text-gray-600 dark:text-slate-400 transition hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-slate-200"
 					aria-label="Close form"
 				>
 					<svg
@@ -104,12 +104,12 @@
 	{:else if showDetails && selectedGoal}
 		<div class="space-y-6">
 			<!-- Goal Header -->
-			<div class="rounded-xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl">
+			<div class="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-6 shadow-sm dark:shadow-xl">
 				<div class="mb-4 flex items-center justify-between">
 					<div class="flex-1">
 						<div class="flex items-center gap-3 mb-2">
-							<h2 class="text-2xl font-semibold text-white">{selectedGoal.title}</h2>
-							<span class="px-2 py-1 rounded text-xs font-medium bg-slate-800 text-slate-300">
+							<h2 class="text-2xl font-semibold text-gray-900 dark:text-white">{selectedGoal.title}</h2>
+							<span class="px-2 py-1 rounded text-xs font-medium bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-transparent">
 								{selectedGoal.type}
 							</span>
 							<span
@@ -127,14 +127,14 @@
 							</span>
 						</div>
 						{#if selectedGoal.description}
-							<p class="text-slate-400 mb-4">{selectedGoal.description}</p>
+							<p class="text-gray-600 dark:text-slate-400 mb-4">{selectedGoal.description}</p>
 						{/if}
 						<div class="space-y-2">
 							<div class="flex items-center justify-between text-sm">
-								<span class="text-slate-400">Progress</span>
-								<span class="font-medium text-slate-200">{Math.round(selectedGoal.progressPercent)}%</span>
+								<span class="text-gray-600 dark:text-slate-400">Progress</span>
+								<span class="font-medium text-gray-900 dark:text-slate-200">{Math.round(selectedGoal.progressPercent)}%</span>
 							</div>
-							<div class="w-full bg-slate-800 rounded-full h-3">
+							<div class="w-full bg-gray-200 dark:bg-slate-800 rounded-full h-3">
 								<div
 									class="h-3 rounded-full transition-all duration-300 {selectedGoal.healthStatus === 'ON_TRACK'
 										? 'bg-emerald-500'
@@ -150,14 +150,14 @@
 						<button
 							type="button"
 							onclick={() => handleEditGoal(selectedGoal!)}
-							class="rounded-lg px-3 py-2 text-sm font-medium text-slate-300 hover:text-white bg-slate-800/50 hover:bg-slate-800 transition"
+							class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white bg-gray-100 dark:bg-slate-800/50 hover:bg-gray-200 dark:hover:bg-slate-800 transition border border-gray-200 dark:border-transparent"
 						>
 							Edit
 						</button>
 						<button
 							type="button"
 							onclick={closeDetails}
-							class="rounded-lg px-3 py-2 text-sm font-medium text-slate-300 hover:text-white bg-slate-800/50 hover:bg-slate-800 transition"
+							class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white bg-gray-100 dark:bg-slate-800/50 hover:bg-gray-200 dark:hover:bg-slate-800 transition border border-gray-200 dark:border-transparent"
 						>
 							Close
 						</button>
@@ -167,10 +167,10 @@
 
 			<!-- Timeline and Contributions -->
 			<div class="grid gap-6 lg:grid-cols-2">
-				<div class="rounded-xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl">
+				<div class="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-6 shadow-sm dark:shadow-xl">
 					<GoalTimeline goalId={selectedGoal.id} />
 				</div>
-				<div class="rounded-xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl">
+				<div class="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-6 shadow-sm dark:shadow-xl">
 					<ContributionAnalysis goalId={selectedGoal.id} />
 				</div>
 			</div>

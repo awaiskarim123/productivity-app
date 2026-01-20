@@ -139,8 +139,8 @@
 <div class="mx-auto max-w-7xl space-y-4 sm:space-y-6">
 	<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 		<div>
-			<h1 class="text-2xl font-bold text-slate-100 sm:text-3xl">Work Sessions</h1>
-			<p class="mt-2 text-sm text-slate-400 sm:text-base">
+			<h1 class="text-2xl font-bold text-gray-900 dark:text-slate-100 sm:text-3xl">Work Sessions</h1>
+			<p class="mt-2 text-sm text-gray-600 dark:text-slate-400 sm:text-base">
 				Track and manage your deep work sessions
 			</p>
 		</div>
@@ -166,7 +166,7 @@
 	</div>
 
 	{#if errorMessage}
-		<div class="rounded-2xl border border-rose-500/40 bg-rose-500/10 px-6 py-5 text-rose-200">
+		<div class="rounded-2xl border border-rose-300 dark:border-rose-500/40 bg-rose-50 dark:bg-rose-500/10 px-6 py-5 text-rose-800 dark:text-rose-200">
 			<h2 class="text-lg font-semibold">Error</h2>
 			<p class="mt-2 text-sm">{errorMessage}</p>
 		</div>
@@ -174,35 +174,35 @@
 
 	{#if loading}
 		<div class="flex min-h-[60vh] items-center justify-center">
-			<div class="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/80 px-6 py-4 text-sm text-slate-300">
-				<span class="h-3 w-3 animate-ping rounded-full bg-emerald-400"></span>
+			<div class="flex items-center gap-3 rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 px-6 py-4 text-sm text-gray-700 dark:text-slate-300 shadow-sm dark:shadow-none">
+				<span class="h-3 w-3 animate-ping rounded-full bg-emerald-500 dark:bg-emerald-400"></span>
 				<span>Loading sessions...</span>
 			</div>
 		</div>
 	{:else if summary && workSummary}
 		<!-- Summary Stats -->
 		<section class="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4 lg:gap-3">
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3">
-				<h3 class="text-xs font-medium uppercase tracking-wide text-slate-400">Total Sessions</h3>
-				<p class="mt-2 text-xl font-semibold text-white sm:mt-3 sm:text-2xl">
+			<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm dark:shadow-none">
+				<h3 class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">Total Sessions</h3>
+				<p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white sm:mt-3 sm:text-2xl">
 					{workSessions.length}
 				</p>
 			</div>
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3">
-				<h3 class="text-xs font-medium uppercase tracking-wide text-slate-400">Today's Time</h3>
-				<p class="mt-2 text-xl font-semibold text-white sm:mt-3 sm:text-2xl">
+			<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm dark:shadow-none">
+				<h3 class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">Today's Time</h3>
+				<p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white sm:mt-3 sm:text-2xl">
 					{formatMinutes(summary.todayMinutes)}
 				</p>
 			</div>
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3">
-				<h3 class="text-xs font-medium uppercase tracking-wide text-slate-400">Weekly Time</h3>
-				<p class="mt-2 text-xl font-semibold text-white sm:mt-3 sm:text-2xl">
+			<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm dark:shadow-none">
+				<h3 class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">Weekly Time</h3>
+				<p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white sm:mt-3 sm:text-2xl">
 					{formatMinutes(summary.weeklyMinutes)}
 				</p>
 			</div>
-			<div class="rounded-2xl border border-slate-800 bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3">
-				<h3 class="text-xs font-medium uppercase tracking-wide text-slate-400">Monthly Time</h3>
-				<p class="mt-2 text-xl font-semibold text-white sm:mt-3 sm:text-2xl">
+			<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm dark:shadow-none">
+				<h3 class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">Monthly Time</h3>
+				<p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white sm:mt-3 sm:text-2xl">
 					{formatMinutes(summary.monthlyMinutes)}
 				</p>
 			</div>
@@ -210,18 +210,18 @@
 
 		<!-- Active Session Banner -->
 		{#if activeWorkSession}
-			<div class="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-4 sm:px-6 sm:py-5">
+			<div class="rounded-2xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-4 py-4 sm:px-6 sm:py-5 shadow-sm dark:shadow-none">
 				<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 					<div class="flex items-center gap-3">
-						<div class="flex h-3 w-3 animate-pulse rounded-full bg-emerald-400"></div>
+						<div class="flex h-3 w-3 animate-pulse rounded-full bg-emerald-500 dark:bg-emerald-400"></div>
 						<div>
-							<h3 class="text-base font-semibold text-emerald-100 sm:text-lg">Active Work Session</h3>
-							<p class="mt-1 text-sm text-emerald-200/80">
+							<h3 class="text-base font-semibold text-emerald-900 dark:text-emerald-100 sm:text-lg">Active Work Session</h3>
+							<p class="mt-1 text-sm text-emerald-800/80 dark:text-emerald-200/80">
 								Started {dayjs(activeWorkSession.startedAt).format('MMM D, HH:mm')} • 
 								{dayjs().diff(dayjs(activeWorkSession.startedAt), 'minute')} minutes elapsed
 							</p>
 							{#if activeWorkSession.notes}
-								<p class="mt-1 text-sm text-emerald-200/70">{activeWorkSession.notes}</p>
+								<p class="mt-1 text-sm text-emerald-800/70 dark:text-emerald-200/70">{activeWorkSession.notes}</p>
 							{/if}
 						</div>
 					</div>
@@ -237,51 +237,51 @@
 		{/if}
 
 		<!-- Sessions List -->
-		<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4 lg:p-5">
-			<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Session History</h2>
+		<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-3 sm:p-4 lg:p-5 shadow-sm dark:shadow-none">
+			<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Session History</h2>
 			{#if workSessions.length === 0}
-				<div class="mt-4 rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-8 text-center text-sm text-slate-400">
+				<div class="mt-4 rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-8 text-center text-sm text-gray-600 dark:text-slate-400">
 					No sessions logged yet. Start a work session to begin tracking your productivity.
 				</div>
 			{:else}
 				<div class="mt-4 space-y-6">
 					{#each groupedSessions as group}
 						<div>
-							<h3 class="mb-3 text-sm font-semibold text-slate-300">{group.dateFormatted}</h3>
+							<h3 class="mb-3 text-sm font-semibold text-gray-700 dark:text-slate-300">{group.dateFormatted}</h3>
 							<ul class="space-y-2">
 								{#each group.sessions as session}
 									<li
-										class="rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-4 transition hover:border-slate-700"
+										class="rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-4 transition hover:border-gray-300 dark:hover:border-slate-700"
 									>
 										<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 											<div class="flex-1">
 												<div class="flex items-center gap-2">
-													<p class="text-sm font-semibold text-slate-100">
+													<p class="text-sm font-semibold text-gray-900 dark:text-slate-100">
 														{dayjs(session.startedAt).format('HH:mm')}
 														{#if session.endedAt}
-															<span class="text-slate-500"> - {dayjs(session.endedAt).format('HH:mm')}</span>
+															<span class="text-gray-500 dark:text-slate-500"> - {dayjs(session.endedAt).format('HH:mm')}</span>
 														{/if}
 													</p>
 													{#if !session.endedAt}
 														<span
-															class="rounded-full bg-emerald-500/20 px-2 py-0.5 text-xs font-medium text-emerald-300"
+															class="rounded-full bg-emerald-50 dark:bg-emerald-500/20 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-transparent"
 														>
 															Active
 														</span>
 													{/if}
 												</div>
-												<p class="mt-1 text-xs text-slate-400">
+												<p class="mt-1 text-xs text-gray-600 dark:text-slate-400">
 													{session.notes ?? 'Focused work'}
 												</p>
 											</div>
 											<div class="text-right sm:text-left">
-												<p class="text-sm font-semibold text-white">
+												<p class="text-sm font-semibold text-gray-900 dark:text-white">
 													{session.durationMinutes != null
 														? formatMinutes(session.durationMinutes)
 														: 'In progress'}
 												</p>
 												{#if session.endedAt}
-													<p class="text-xs text-slate-500">
+													<p class="text-xs text-gray-500 dark:text-slate-500">
 														Ended {dayjs(session.endedAt).fromNow()}
 													</p>
 												{/if}

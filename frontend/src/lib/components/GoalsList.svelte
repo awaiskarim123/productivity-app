@@ -62,13 +62,13 @@
 	function getHealthColor(status: Goal['healthStatus']) {
 		switch (status) {
 			case 'ON_TRACK':
-				return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50';
+				return 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/50';
 			case 'AT_RISK':
-				return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
+				return 'bg-yellow-50 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-500/50';
 			case 'OFF_TRACK':
-				return 'bg-rose-500/20 text-rose-400 border-rose-500/50';
+				return 'bg-rose-50 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-500/50';
 			default:
-				return 'bg-slate-500/20 text-slate-400 border-slate-500/50';
+				return 'bg-gray-50 dark:bg-slate-500/20 text-gray-700 dark:text-slate-400 border-gray-200 dark:border-slate-500/50';
 		}
 	}
 
@@ -97,12 +97,12 @@
 
 <div class="space-y-4">
 	<div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-		<h2 class="text-xl font-semibold text-white">Goals & OKRs</h2>
+		<h2 class="text-xl font-semibold text-gray-900 dark:text-white">Goals & OKRs</h2>
 		<div class="flex gap-2 flex-wrap">
 			<select
 				bind:value={filterType}
 				on:change={loadGoals}
-				class="rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-2 text-sm text-slate-200 cursor-pointer transition hover:border-slate-600 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+				class="rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-3 py-2 text-sm text-gray-900 dark:text-slate-200 cursor-pointer transition hover:border-gray-400 dark:hover:border-slate-600 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
 			>
 				<option value="ALL">All Types</option>
 				<option value="DAILY">Daily</option>
@@ -114,7 +114,7 @@
 			<select
 				bind:value={filterActive}
 				on:change={loadGoals}
-				class="rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-2 text-sm text-slate-200 cursor-pointer transition hover:border-slate-600 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+				class="rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-3 py-2 text-sm text-gray-900 dark:text-slate-200 cursor-pointer transition hover:border-gray-400 dark:hover:border-slate-600 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
 			>
 				<option value={null}>All Status</option>
 				<option value={true}>Active</option>
@@ -122,7 +122,7 @@
 			</select>
 			<button
 				on:click={loadGoals}
-				class="rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800/70 transition"
+				class="rounded-lg border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/50 px-3 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800/70 transition"
 			>
 				Refresh
 			</button>
@@ -132,21 +132,21 @@
 	{#if loading}
 		<div class="text-center py-8">
 			<div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-slate-700 border-t-emerald-500"></div>
-			<p class="mt-2 text-sm text-slate-400">Loading goals...</p>
+			<p class="mt-2 text-sm text-gray-600 dark:text-slate-400">Loading goals...</p>
 		</div>
 	{:else if error}
-		<div class="rounded-lg border border-rose-500/50 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+		<div class="rounded-lg border border-rose-300 dark:border-rose-500/50 bg-rose-50 dark:bg-rose-500/10 px-4 py-3 text-sm text-rose-800 dark:text-rose-200">
 			{error}
 		</div>
 	{:else if goals.length === 0}
-		<div class="text-center py-12 rounded-xl border border-slate-800 bg-slate-900/50">
-			<p class="text-slate-400">No goals found. Create your first goal to get started!</p>
+		<div class="text-center py-12 rounded-xl border border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-900/50">
+			<p class="text-gray-600 dark:text-slate-400">No goals found. Create your first goal to get started!</p>
 		</div>
 	{:else}
 		<div class="grid gap-4">
 			{#each goals as goal}
 				<div
-					class="group relative rounded-xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg hover:border-slate-700 transition cursor-pointer"
+					class="group relative rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-6 shadow-sm dark:shadow-lg hover:border-gray-300 dark:hover:border-slate-700 transition cursor-pointer"
 					on:click={() => onGoalClick?.(goal)}
 					role="button"
 					tabindex="0"
@@ -155,8 +155,8 @@
 					<div class="flex items-start justify-between gap-4">
 						<div class="flex-1 min-w-0">
 							<div class="flex items-center gap-3 mb-2">
-								<h3 class="text-lg font-semibold text-white truncate">{goal.title}</h3>
-								<span class="px-2 py-1 rounded text-xs font-medium bg-slate-800 text-slate-300">
+								<h3 class="text-lg font-semibold text-gray-900 dark:text-white truncate">{goal.title}</h3>
+								<span class="px-2 py-1 rounded text-xs font-medium bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-transparent">
 									{goal.type}
 								</span>
 								<span class="px-2 py-1 rounded text-xs font-medium border {getHealthColor(goal.healthStatus)}">
@@ -165,15 +165,15 @@
 							</div>
 
 							{#if goal.description}
-								<p class="text-sm text-slate-400 mb-3 line-clamp-2">{goal.description}</p>
+								<p class="text-sm text-gray-600 dark:text-slate-400 mb-3 line-clamp-2">{goal.description}</p>
 							{/if}
 
 							<div class="space-y-2">
 								<div class="flex items-center justify-between text-sm">
-									<span class="text-slate-400">Progress</span>
-									<span class="font-medium text-slate-200">{Math.round(goal.progressPercent)}%</span>
+									<span class="text-gray-600 dark:text-slate-400">Progress</span>
+									<span class="font-medium text-gray-900 dark:text-slate-200">{Math.round(goal.progressPercent)}%</span>
 								</div>
-								<div class="w-full bg-slate-800 rounded-full h-2.5">
+								<div class="w-full bg-gray-200 dark:bg-slate-800 rounded-full h-2.5">
 									<div
 										class="h-2.5 rounded-full transition-all duration-300 {goal.healthStatus === 'ON_TRACK' ? 'bg-emerald-500' : goal.healthStatus === 'AT_RISK' ? 'bg-yellow-500' : 'bg-rose-500'}"
 										style="width: {Math.min(100, Math.max(0, goal.progressPercent))}%"
@@ -181,7 +181,7 @@
 								</div>
 							</div>
 
-							<div class="flex items-center gap-4 mt-4 text-xs text-slate-500">
+							<div class="flex items-center gap-4 mt-4 text-xs text-gray-500 dark:text-slate-500">
 								<span>{formatDate(goal.startDate)} - {formatDate(goal.endDate)}</span>
 								<span>•</span>
 								<span>{getDaysRemaining(goal.endDate)}</span>
@@ -192,13 +192,13 @@
 							</div>
 
 							{#if goal.keyResults && goal.keyResults.length > 0}
-								<div class="mt-4 pt-4 border-t border-slate-800">
-									<p class="text-xs font-medium text-slate-400 mb-2">Key Results:</p>
+								<div class="mt-4 pt-4 border-t border-gray-200 dark:border-slate-800">
+									<p class="text-xs font-medium text-gray-600 dark:text-slate-400 mb-2">Key Results:</p>
 									<div class="space-y-2">
 										{#each goal.keyResults as kr}
 											<div class="flex items-center justify-between text-xs">
-												<span class="text-slate-300 truncate flex-1 mr-2">{kr.title}</span>
-												<span class="text-slate-500">{Math.round(kr.progressPercent)}%</span>
+												<span class="text-gray-700 dark:text-slate-300 truncate flex-1 mr-2">{kr.title}</span>
+												<span class="text-gray-500 dark:text-slate-500">{Math.round(kr.progressPercent)}%</span>
 											</div>
 										{/each}
 									</div>
@@ -212,21 +212,21 @@
 									e.stopPropagation();
 									onEditGoal?.(goal);
 								}}
-								class="px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white bg-slate-800/50 hover:bg-slate-800 rounded-lg transition"
+								class="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white bg-gray-100 dark:bg-slate-800/50 hover:bg-gray-200 dark:hover:bg-slate-800 rounded-lg transition border border-gray-200 dark:border-transparent"
 								title="Edit goal"
 							>
 								Edit
 							</button>
 							<button
 								on:click={(e) => handleRecalculate(goal.id, e)}
-								class="px-3 py-1.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 bg-slate-800/50 hover:bg-slate-800 rounded-lg transition"
+								class="px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 bg-gray-100 dark:bg-slate-800/50 hover:bg-gray-200 dark:hover:bg-slate-800 rounded-lg transition border border-gray-200 dark:border-transparent"
 								title="Recalculate progress"
 							>
 								Refresh
 							</button>
 							<button
 								on:click={(e) => handleDelete(goal.id, e)}
-								class="px-3 py-1.5 text-xs font-medium text-rose-400 hover:text-rose-300 bg-slate-800/50 hover:bg-slate-800 rounded-lg transition"
+								class="px-3 py-1.5 text-xs font-medium text-rose-700 dark:text-rose-400 hover:text-rose-800 dark:hover:text-rose-300 bg-gray-100 dark:bg-slate-800/50 hover:bg-gray-200 dark:hover:bg-slate-800 rounded-lg transition border border-gray-200 dark:border-transparent"
 								title="Delete goal"
 							>
 								Delete

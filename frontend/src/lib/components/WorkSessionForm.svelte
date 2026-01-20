@@ -54,16 +54,16 @@
 	}
 </script>
 
-<form on:submit={handleSubmit} class="space-y-4">
+<form onsubmit={handleSubmit} class="space-y-4">
 	{#if error}
-		<div class="rounded-lg border border-rose-500/50 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+		<div class="rounded-lg border border-rose-300 dark:border-rose-500/50 bg-rose-50 dark:bg-rose-500/10 px-4 py-3 text-sm text-rose-800 dark:text-rose-200">
 			{error}
 		</div>
 	{/if}
 
 	<div class="grid grid-cols-2 gap-4">
 		<div>
-			<label for="startedAt" class="block text-sm font-medium text-slate-200 mb-2">
+			<label for="startedAt" class="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">
 				Started At
 			</label>
 			<input
@@ -71,22 +71,22 @@
 				type="datetime-local"
 				bind:value={startedAt}
 				required
-				class="w-full rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-slate-100 shadow-inner focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
+				class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900/80 px-4 py-3 text-gray-900 dark:text-slate-100 shadow-inner focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:focus:ring-emerald-400/40"
 			/>
 		</div>
 
 		<div>
-			<label for="endedAt" class="block text-sm font-medium text-slate-200 mb-2">
+			<label for="endedAt" class="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">
 				Ended At
 			</label>
 			<input
 				id="endedAt"
 				type="datetime-local"
 				bind:value={endedAt}
-				class="w-full rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-slate-100 shadow-inner focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
+				class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900/80 px-4 py-3 text-gray-900 dark:text-slate-100 shadow-inner focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:focus:ring-emerald-400/40"
 			/>
 			{#if calculateDuration()}
-				<p class="mt-1 text-xs text-slate-400">
+				<p class="mt-1 text-xs text-gray-600 dark:text-slate-400">
 					Duration: {calculateDuration()}
 				</p>
 			{/if}
@@ -94,7 +94,7 @@
 	</div>
 
 	<div>
-		<label for="notes" class="block text-sm font-medium text-slate-200 mb-2">
+		<label for="notes" class="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">
 			Notes
 		</label>
 		<textarea
@@ -102,7 +102,7 @@
 			bind:value={notes}
 			rows="4"
 			maxlength="500"
-			class="w-full rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-slate-100 shadow-inner focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 resize-none"
+			class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900/80 px-4 py-3 text-gray-900 dark:text-slate-100 shadow-inner focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:focus:ring-emerald-400/40 resize-none placeholder:text-gray-400 dark:placeholder:text-slate-500"
 			placeholder="Add notes about this work session..."
 		></textarea>
 	</div>
@@ -125,7 +125,7 @@
 				type="button"
 				onclick={onCancel}
 				disabled={isSubmitting}
-				class="rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-sm font-semibold text-slate-200 transition hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 disabled:cursor-not-allowed disabled:opacity-60"
+				class="rounded-xl border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/80 px-4 py-3 text-sm font-semibold text-gray-700 dark:text-slate-200 transition hover:bg-gray-100 dark:hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 disabled:cursor-not-allowed disabled:opacity-60"
 			>
 				Cancel
 			</button>
