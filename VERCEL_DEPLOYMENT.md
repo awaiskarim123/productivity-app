@@ -41,40 +41,17 @@ Replace `https://your-api.com` with your deployed backend URL (e.g. `https://you
 
 ---
 
-## 2. Backend Deployment (Railway, Render, Fly.io, etc.)
+## 2. Backend Deployment
 
-The backend is a **Fastify** app with **Prisma**, **WebSockets**, and a DB. It must run as a **long‑running process**, not as serverless.
+The backend cannot run on Vercel. Deploy it on **Railway** or **Render**, then set `VITE_API_URL` on Vercel.
 
-### Suggested: Railway
+**→ Step-by-step: [BACKEND_DEPLOYMENT.md](./BACKEND_DEPLOYMENT.md)**
 
-1. Create a project and connect the repo.
-2. Set **Root Directory** to `backend`.
-3. **Build**: `npm install && npx prisma generate && npm run build`
-4. **Start**: `npm run start` (runs `node dist/index.js`)
-5. Add a **Postgres** (or your DB) service and set `DATABASE_URL`.
-6. Set other env vars (e.g. `JWT_SECRET`, `PORT`).
-7. Expose the service (e.g. `https://your-app.railway.app`) and ensure the API is under `/api` or adjust your Fastify base path.
-
-### Render
-
-1. New **Web Service**, connect repo, **Root Directory**: `backend`.
-2. **Build**: `npm install && npx prisma generate && npm run build`
-3. **Start**: `npm start`
-4. Add **Postgres** and `DATABASE_URL`, plus `JWT_SECRET`, `PORT`, etc.
-
-### Fly.io
-
-1. `fly launch` in `backend/` (or from root with `--config` in `backend/`).
-2. Add Postgres: `fly postgres create` and attach.
-3. Set `DATABASE_URL`, `JWT_SECRET`, `PORT` in `fly secrets` or in `fly.toml` env.
-4. **Build** and **Start** as above.
-
-### CORS
-
-Configure CORS in the backend to allow your Vercel frontend origin, e.g.:
-
-- `https://your-project.vercel.app`
-- `https://your-domain.com`
+Summary:
+- **Build**: `npm install && npm run build` (includes `prisma generate`)
+- **Start**: `npm run start:prod` (runs `prisma migrate deploy` then `node dist/index.js`)
+- **Env**: `DATABASE_URL`, `JWT_SECRET` (see `backend/env.example`)
+- **API base path**: `/api` → set `VITE_API_URL` = `https://YOUR-BACKEND-URL/api`
 
 ---
 
@@ -111,11 +88,12 @@ The frontend uses `VITE_API_URL` in `frontend/src/lib/config.ts`; it defaults to
 
 - Install must run in `frontend`. `vercel.json` uses `"installCommand": "cd frontend && npm install"`. Do not set Root Directory to `frontend` if you rely on `vercel:build` copying from `frontend/` to root.
 
-### Frontend cannot reach the API
+### "Unable to connect to the server" / Frontend cannot reach the API
 
-- Check `VITE_API_URL` on Vercel (must include `/api` if that’s your base path).
-- Check backend CORS allows the Vercel (and prod) origins.
-- Ensure the backend is running and reachable at the URL used in `VITE_API_URL`.
+- **Backend not deployed**: The backend runs on Railway/Render, not Vercel. Follow **[BACKEND_DEPLOYMENT.md](./BACKEND_DEPLOYMENT.md)** to deploy it first.
+- **`VITE_API_URL`**: In Vercel → Project → Settings → Environment Variables, set `VITE_API_URL` = `https://YOUR-BACKEND-URL/api` (must end with `/api`). Redeploy the frontend after changing it.
+- **Backend running**: Open `https://YOUR-BACKEND-URL/api/health` in a browser; it should return `{"status":"ok"}`.
+- **CORS**: The backend allows all origins by default; if you restricted it, ensure the Vercel frontend origin is allowed.
 
 ### Backend DB / Prisma errors in production
 
