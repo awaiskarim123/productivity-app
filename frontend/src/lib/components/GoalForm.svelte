@@ -225,7 +225,7 @@
 				bind:value={targetValue}
 				min="1"
 				step="1"
-				class="input-field"
+				class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-3 text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 hover:border-gray-400 dark:hover:border-slate-600"
 				placeholder="100"
 			/>
 		</div>
@@ -241,7 +241,7 @@
 				type="date"
 				bind:value={startDate}
 				required
-				class="input-field"
+				class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-3 text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 hover:border-gray-400 dark:hover:border-slate-600"
 			/>
 		</div>
 
@@ -254,7 +254,7 @@
 				type="date"
 				bind:value={endDate}
 				required
-				class="input-field"
+				class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-3 text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 hover:border-gray-400 dark:hover-border-slate-600"
 			/>
 		</div>
 	</div>
@@ -294,7 +294,7 @@
 							oninput={(e) => updateKeyResult(index, 'title', e.currentTarget.value)}
 							placeholder="Key result title"
 							maxlength="200"
-							class="input-field"
+							class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-3 text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 hover:border-gray-400 dark:hover:border-slate-600"
 						/>
 
 						<textarea
@@ -322,7 +322,7 @@
 										updateKeyResult(index, 'targetValue', parseFloat(e.currentTarget.value) || 0)}
 									min="0"
 									step="0.1"
-									class="input-field text-sm py-2"
+									class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-2 text-sm text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 hover:border-gray-400 dark:hover:border-slate-600"
 								/>
 							</div>
 							<div>
@@ -345,7 +345,7 @@
 									min="0"
 									max="1"
 									step="0.1"
-									class="input-field text-sm py-2"
+									class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-2 text-sm text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 hover:border-gray-400 dark:hover:border-slate-600"
 								/>
 							</div>
 						</div>
@@ -385,13 +385,6 @@
 </form>
 
 <style>
-	:global(.input-field) {
-		@apply w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-3 text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200;
-		@apply placeholder:text-gray-400 dark:placeholder:text-slate-500;
-		@apply focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30;
-		@apply hover:border-gray-400 dark:hover:border-slate-600;
-	}
-
 	/* Custom select dropdown styling */
 	select {
 		appearance: none;
