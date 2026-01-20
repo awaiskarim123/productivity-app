@@ -137,15 +137,15 @@
 	}
 </script>
 
-<form on:submit={handleSubmit} class="space-y-4">
+<form onsubmit={handleSubmit} class="space-y-4">
 	{#if error}
-		<div class="rounded-lg border border-rose-500/50 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+		<div class="rounded-lg border border-rose-300 dark:border-rose-500/50 bg-rose-50 dark:bg-rose-500/10 px-4 py-3 text-sm text-rose-800 dark:text-rose-200">
 			{error}
 		</div>
 	{/if}
 
 	<div>
-		<label for="title" class="block text-sm font-medium text-slate-200 mb-2">
+		<label for="title" class="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">
 			Goal Title <span class="text-rose-400">*</span>
 		</label>
 		<input
@@ -160,7 +160,7 @@
 	</div>
 
 	<div>
-		<label for="description" class="block text-sm font-medium text-slate-200 mb-2">
+		<label for="description" class="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">
 			Description
 		</label>
 		<textarea
@@ -168,22 +168,22 @@
 			bind:value={description}
 			rows="3"
 			maxlength="1000"
-			class="w-full rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-3 text-slate-100 shadow-inner transition-all duration-200 placeholder:text-slate-500 focus:border-emerald-500 focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 hover:border-slate-600 resize-none"
+			class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-3 text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 hover:border-gray-400 dark:hover:border-slate-600 resize-none"
 			placeholder="Describe your goal and what success looks like..."
 		></textarea>
 	</div>
 
 	<div class="grid grid-cols-2 gap-4">
 		<div>
-			<label for="type" class="block text-sm font-medium text-slate-200 mb-2">
+			<label for="type" class="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">
 				Type <span class="text-rose-400">*</span>
 			</label>
 			<select
 				id="type"
 				bind:value={type}
 				required
-				class="w-full rounded-2xl border border-slate-700 bg-slate-800/50 px-4 py-3 text-slate-100 shadow-inner transition-all duration-200 cursor-pointer hover:border-slate-600 focus:border-emerald-500 focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
-				on:change={() => {
+				class="w-full rounded-2xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-3 text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200 cursor-pointer hover:border-gray-400 dark:hover:border-slate-600 focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+				onchange={() => {
 					// Update end date based on type when changed
 					if (!goal) {
 						const today = dayjs();
@@ -216,7 +216,7 @@
 		</div>
 
 		<div>
-			<label for="targetValue" class="block text-sm font-medium text-slate-200 mb-2">
+			<label for="targetValue" class="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">
 				Target Value
 			</label>
 			<input
@@ -225,7 +225,7 @@
 				bind:value={targetValue}
 				min="1"
 				step="1"
-				class="input-field"
+				class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-3 text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 hover:border-gray-400 dark:hover:border-slate-600"
 				placeholder="100"
 			/>
 		</div>
@@ -233,7 +233,7 @@
 
 	<div class="grid grid-cols-2 gap-4">
 		<div>
-			<label for="startDate" class="block text-sm font-medium text-slate-200 mb-2">
+			<label for="startDate" class="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">
 				Start Date <span class="text-rose-400">*</span>
 			</label>
 			<input
@@ -241,12 +241,12 @@
 				type="date"
 				bind:value={startDate}
 				required
-				class="input-field"
+				class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-3 text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 hover:border-gray-400 dark:hover:border-slate-600"
 			/>
 		</div>
 
 		<div>
-			<label for="endDate" class="block text-sm font-medium text-slate-200 mb-2">
+			<label for="endDate" class="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">
 				End Date <span class="text-rose-400">*</span>
 			</label>
 			<input
@@ -254,20 +254,20 @@
 				type="date"
 				bind:value={endDate}
 				required
-				class="input-field"
+				class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-3 text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 hover:border-gray-400 dark:hover-border-slate-600"
 			/>
 		</div>
 	</div>
 
 	<div>
 		<div class="flex items-center justify-between mb-2">
-			<label class="block text-sm font-medium text-slate-200">
+			<p class="block text-sm font-medium text-gray-700 dark:text-slate-200">
 				Key Results (OKRs)
-			</label>
+			</p>
 			<button
 				type="button"
-				on:click={addKeyResult}
-				class="text-xs text-emerald-400 hover:text-emerald-300 font-medium"
+				onclick={addKeyResult}
+				class="text-xs text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium"
 			>
 				+ Add Key Result
 			</button>
@@ -276,13 +276,13 @@
 		{#if keyResults.length > 0}
 			<div class="space-y-3">
 				{#each keyResults as kr, index}
-					<div class="rounded-xl border border-slate-700 bg-slate-800/30 p-4 space-y-3">
+					<div class="rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/30 p-4 space-y-3">
 						<div class="flex items-start justify-between">
-							<span class="text-xs font-medium text-slate-400">Key Result #{index + 1}</span>
+							<span class="text-xs font-medium text-gray-600 dark:text-slate-400">Key Result #{index + 1}</span>
 							<button
 								type="button"
-								on:click={() => removeKeyResult(index)}
-								class="text-xs text-rose-400 hover:text-rose-300"
+								onclick={() => removeKeyResult(index)}
+								class="text-xs text-rose-700 dark:text-rose-400 hover:text-rose-800 dark:hover:text-rose-300"
 							>
 								Remove
 							</button>
@@ -291,47 +291,61 @@
 						<input
 							type="text"
 							value={kr.title}
-							on:input={(e) => updateKeyResult(index, 'title', e.currentTarget.value)}
+							oninput={(e) => updateKeyResult(index, 'title', e.currentTarget.value)}
 							placeholder="Key result title"
 							maxlength="200"
-							class="input-field"
+							class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-3 text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 hover:border-gray-400 dark:hover:border-slate-600"
 						/>
 
 						<textarea
 							value={kr.description}
-							on:input={(e) => updateKeyResult(index, 'description', e.currentTarget.value)}
+							oninput={(e) => updateKeyResult(index, 'description', e.currentTarget.value)}
 							placeholder="Description (optional)"
 							rows="2"
 							maxlength="500"
-							class="w-full rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-2 text-slate-100 shadow-inner transition-all duration-200 placeholder:text-slate-500 focus:border-emerald-500 focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 hover:border-slate-600 resize-none text-sm"
+							class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-2 text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 hover:border-gray-400 dark:hover:border-slate-600 resize-none text-sm"
 						></textarea>
 
 						<div class="grid grid-cols-2 gap-3">
 							<div>
-								<label class="block text-xs font-medium text-slate-300 mb-1">
+								<label
+									for={`kr-target-${index}`}
+									class="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1"
+								>
 									Target Value
 								</label>
 								<input
+									id={`kr-target-${index}`}
 									type="number"
 									value={kr.targetValue}
-									on:input={(e) => updateKeyResult(index, 'targetValue', parseFloat(e.currentTarget.value) || 0)}
+									oninput={(e) =>
+										updateKeyResult(index, 'targetValue', parseFloat(e.currentTarget.value) || 0)}
 									min="0"
 									step="0.1"
-									class="input-field text-sm py-2"
+									class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-2 text-sm text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 hover:border-gray-400 dark:hover:border-slate-600"
 								/>
 							</div>
 							<div>
-								<label class="block text-xs font-medium text-slate-300 mb-1">
+								<label
+									for={`kr-weight-${index}`}
+									class="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1"
+								>
 									Weight (0-1)
 								</label>
 								<input
+									id={`kr-weight-${index}`}
 									type="number"
 									value={kr.weight}
-									on:input={(e) => updateKeyResult(index, 'weight', Math.max(0, Math.min(1, parseFloat(e.currentTarget.value) || 1)))}
+									oninput={(e) =>
+										updateKeyResult(
+											index,
+											'weight',
+											Math.max(0, Math.min(1, parseFloat(e.currentTarget.value) || 1))
+										)}
 									min="0"
 									max="1"
 									step="0.1"
-									class="input-field text-sm py-2"
+									class="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-4 py-2 text-sm text-gray-900 dark:text-slate-100 shadow-inner transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 hover:border-gray-400 dark:hover:border-slate-600"
 								/>
 							</div>
 						</div>
@@ -339,7 +353,7 @@
 				{/each}
 			</div>
 		{:else}
-			<p class="text-sm text-slate-400 italic">No key results added. Click "+ Add Key Result" to add one.</p>
+			<p class="text-sm text-gray-600 dark:text-slate-400 italic">No key results added. Click "+ Add Key Result" to add one.</p>
 		{/if}
 	</div>
 
@@ -361,8 +375,8 @@
 		{#if onCancel}
 			<button
 				type="button"
-				on:click={onCancel}
-				class="rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-3 text-sm font-medium text-slate-200 transition hover:bg-slate-800/70"
+				onclick={onCancel}
+				class="rounded-xl border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/50 px-4 py-3 text-sm font-medium text-gray-700 dark:text-slate-200 transition hover:bg-gray-100 dark:hover:bg-slate-800/70"
 			>
 				Cancel
 			</button>
@@ -371,13 +385,6 @@
 </form>
 
 <style>
-	:global(.input-field) {
-		@apply w-full rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-3 text-slate-100 shadow-inner transition-all duration-200;
-		@apply placeholder:text-slate-500;
-		@apply focus:border-emerald-500 focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30;
-		@apply hover:border-slate-600;
-	}
-
 	/* Custom select dropdown styling */
 	select {
 		appearance: none;
@@ -394,8 +401,8 @@
 
 	/* Style select options */
 	select option {
-		background-color: rgb(30 41 59);
-		color: rgb(241 245 249);
+		background-color: rgb(255 255 255);
+		color: rgb(17 24 39);
 		padding: 0.5rem;
 	}
 
@@ -403,6 +410,6 @@
 	select option:checked,
 	select option:focus {
 		background-color: rgb(16 185 129 / 0.2);
-		color: rgb(16 185 129);
+		color: rgb(4 120 87);
 	}
 </style>

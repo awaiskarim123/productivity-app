@@ -111,12 +111,12 @@
 	});
 </script>
 
-<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4">
+<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-3 sm:p-4 shadow-sm dark:shadow-none">
 	<div class="mb-3 flex items-center justify-between">
 		<div>
-			<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Tasks</h2>
+			<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Tasks</h2>
 			{#if stats}
-				<p class="mt-1 text-xs text-slate-400">
+				<p class="mt-1 text-xs text-gray-600 dark:text-slate-400">
 					{stats.total} active • {stats.overdue} overdue
 				</p>
 			{/if}
@@ -124,25 +124,25 @@
 	</div>
 
 	{#if error}
-		<div class="mb-3 rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-xs text-rose-300">
+		<div class="mb-3 rounded-lg border border-rose-300 dark:border-rose-500/40 bg-rose-50 dark:bg-rose-500/10 px-3 py-2 text-xs text-rose-700 dark:text-rose-300">
 			{error}
 		</div>
 	{/if}
 
 	<!-- Create Task Form -->
-	<div class="mb-3 space-y-2 rounded-xl border border-slate-800/60 bg-slate-950/40 p-3">
+	<div class="mb-3 space-y-2 rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 p-3">
 		<input
 			type="text"
 			bind:value={newTaskTitle}
 			placeholder="Add a new task..."
-			class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
+			class="w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900/80 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:focus:ring-emerald-400/40"
 			onkeydown={(e) => e.key === 'Enter' && handleCreateTask()}
 			disabled={isCreating}
 		/>
 		<div class="flex gap-2">
 			<select
 				bind:value={newTaskPriority}
-				class="flex-1 rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs text-slate-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
+				class="flex-1 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900/80 px-3 py-2 text-xs text-gray-900 dark:text-slate-100 focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:focus:ring-emerald-400/40"
 			>
 				<option value="LOW">Low</option>
 				<option value="MEDIUM">Medium</option>
@@ -153,7 +153,7 @@
 				type="button"
 				onclick={handleCreateTask}
 				disabled={isCreating || !newTaskTitle.trim()}
-				class="rounded-lg bg-emerald-500/90 px-4 py-2 text-xs font-medium text-white transition hover:bg-emerald-400 disabled:opacity-50"
+				class="rounded-lg bg-emerald-500 dark:bg-emerald-500/90 px-4 py-2 text-xs font-medium text-white transition hover:bg-emerald-600 dark:hover:bg-emerald-400 disabled:opacity-50"
 			>
 				Add
 			</button>
@@ -161,16 +161,16 @@
 	</div>
 
 	{#if loading}
-		<div class="py-4 text-center text-sm text-slate-400">Loading tasks...</div>
+		<div class="py-4 text-center text-sm text-gray-600 dark:text-slate-400">Loading tasks...</div>
 	{:else if tasks.length === 0}
-		<div class="rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-6 text-center text-sm text-slate-400">
+		<div class="rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-6 text-center text-sm text-gray-600 dark:text-slate-400">
 			No tasks yet. Create one to get started!
 		</div>
 	{:else}
 		<ul class="space-y-2">
 			{#each tasks as task}
 				<li
-					class="group rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3 transition hover:border-slate-700"
+					class="group rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-3 transition hover:border-gray-300 dark:hover:border-slate-700"
 				>
 					<div class="flex items-start gap-3">
 						<button
@@ -180,8 +180,8 @@
 						>
 							<div
 								class="h-5 w-5 rounded border-2 transition {task.completed
-									? 'border-emerald-400 bg-emerald-400'
-									: 'border-slate-600 hover:border-emerald-400'}"
+									? 'border-emerald-500 dark:border-emerald-400 bg-emerald-500 dark:bg-emerald-400'
+									: 'border-gray-400 dark:border-slate-600 hover:border-emerald-500 dark:hover:border-emerald-400'}"
 							>
 								{#if task.completed}
 									<svg
@@ -204,13 +204,13 @@
 								<div class="flex-1 min-w-0">
 									<p
 										class="text-sm font-medium {task.completed
-											? 'text-slate-500 line-through'
-											: 'text-slate-100'}"
+											? 'text-gray-400 dark:text-slate-500 line-through'
+											: 'text-gray-900 dark:text-slate-100'}"
 									>
 										{task.title}
 									</p>
 									{#if task.description}
-										<p class="mt-1 text-xs text-slate-400">{task.description}</p>
+										<p class="mt-1 text-xs text-gray-600 dark:text-slate-400">{task.description}</p>
 									{/if}
 									<div class="mt-2 flex flex-wrap items-center gap-2">
 										<span
@@ -223,8 +223,8 @@
 										{#if task.dueDate}
 											<span
 												class="text-xs {isOverdue(task.dueDate)
-													? 'text-rose-400'
-													: 'text-slate-400'}"
+													? 'text-rose-600 dark:text-rose-400'
+													: 'text-gray-600 dark:text-slate-400'}"
 											>
 												Due: {dayjs(task.dueDate).format('MMM D')}
 											</span>
@@ -239,7 +239,7 @@
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
-										class="h-4 w-4 text-slate-400 hover:text-rose-400"
+										class="h-4 w-4 text-gray-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400"
 										fill="none"
 										viewBox="0 0 24 24"
 										stroke="currentColor"

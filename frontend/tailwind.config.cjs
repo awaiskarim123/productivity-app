@@ -4,6 +4,7 @@ export default {
     "./src/**/*.{html,js,svelte,ts}",
     "./src/lib/**/*.{svelte,ts}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {},
   },

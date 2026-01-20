@@ -105,27 +105,27 @@
 	});
 </script>
 
-<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4">
+<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-3 sm:p-4 shadow-sm dark:shadow-none">
 	<div class="mb-3 flex items-center justify-between">
 		<div>
-			<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Habits</h2>
-			<p class="mt-1 text-xs text-slate-400">Track your daily routines</p>
+			<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Habits</h2>
+			<p class="mt-1 text-xs text-gray-600 dark:text-slate-400">Track your daily routines</p>
 		</div>
 	</div>
 
 	{#if error}
-		<div class="mb-3 rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-xs text-rose-300">
+		<div class="mb-3 rounded-lg border border-rose-300 dark:border-rose-500/40 bg-rose-50 dark:bg-rose-500/10 px-3 py-2 text-xs text-rose-700 dark:text-rose-300">
 			{error}
 		</div>
 	{/if}
 
 	<!-- Create Habit Form -->
-	<div class="mb-3 space-y-2 rounded-xl border border-slate-800/60 bg-slate-950/40 p-3">
+	<div class="mb-3 space-y-2 rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 p-3">
 		<input
 			type="text"
 			bind:value={newHabitName}
 			placeholder="Add a new habit..."
-			class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
+			class="w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900/80 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:focus:ring-emerald-400/40"
 			onkeydown={(e) => e.key === 'Enter' && handleCreateHabit()}
 			disabled={isCreating}
 		/>
@@ -136,8 +136,8 @@
 						type="button"
 						onclick={() => (newHabitColor = color)}
 						class="h-6 w-6 rounded-full border-2 transition {newHabitColor === color
-							? 'border-white scale-110'
-							: 'border-slate-600 hover:border-slate-400'}"
+							? 'border-gray-900 dark:border-white scale-110'
+							: 'border-gray-300 dark:border-slate-600 hover:border-gray-500 dark:hover:border-slate-400'}"
 						style="background-color: {color}"
 					></button>
 				{/each}
@@ -146,7 +146,7 @@
 				type="button"
 				onclick={handleCreateHabit}
 				disabled={isCreating || !newHabitName.trim()}
-				class="ml-auto rounded-lg bg-emerald-500/90 px-4 py-2 text-xs font-medium text-white transition hover:bg-emerald-400 disabled:opacity-50"
+				class="ml-auto rounded-lg bg-emerald-500 dark:bg-emerald-500/90 px-4 py-2 text-xs font-medium text-white transition hover:bg-emerald-600 dark:hover:bg-emerald-400 disabled:opacity-50"
 			>
 				Add
 			</button>
@@ -154,9 +154,9 @@
 	</div>
 
 	{#if loading}
-		<div class="py-4 text-center text-sm text-slate-400">Loading habits...</div>
+		<div class="py-4 text-center text-sm text-gray-600 dark:text-slate-400">Loading habits...</div>
 	{:else if habits.length === 0}
-		<div class="rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-6 text-center text-sm text-slate-400">
+		<div class="rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-6 text-center text-sm text-gray-600 dark:text-slate-400">
 			No habits yet. Create one to start tracking!
 		</div>
 	{:else}
@@ -165,7 +165,7 @@
 				{@const loggedToday = isLoggedToday(habit)}
 				{@const todayLog = getTodayLog(habit)}
 				<li
-					class="group rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-3 transition hover:border-slate-700"
+					class="group rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-3 transition hover:border-gray-300 dark:hover:border-slate-700"
 				>
 					<div class="flex items-center justify-between gap-3">
 						<div class="flex items-center gap-3 flex-1 min-w-0">
@@ -180,13 +180,13 @@
 								{/if}
 							</div>
 							<div class="flex-1 min-w-0">
-								<p class="text-sm font-medium text-slate-100">{habit.name}</p>
+								<p class="text-sm font-medium text-gray-900 dark:text-slate-100">{habit.name}</p>
 								<div class="mt-1 flex items-center gap-2">
-									<span class="text-xs text-slate-400">
+									<span class="text-xs text-gray-600 dark:text-slate-400">
 										🔥 {habit.streak} day streak
 									</span>
 									{#if habit.bestStreak > habit.streak}
-										<span class="text-xs text-slate-500">
+										<span class="text-xs text-gray-500 dark:text-slate-500">
 											Best: {habit.bestStreak}
 										</span>
 									{/if}
@@ -198,7 +198,7 @@
 								<button
 									type="button"
 									onclick={() => handleUnlogHabit(habit.id, todayLog.id)}
-									class="rounded-lg border-2 border-emerald-400 bg-emerald-400/20 px-3 py-1.5 text-xs font-medium text-emerald-300 transition hover:bg-emerald-400/30"
+									class="rounded-lg border-2 border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-400/20 px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300 transition hover:bg-emerald-100 dark:hover:bg-emerald-400/30"
 								>
 									✓ Done
 								</button>
@@ -206,7 +206,7 @@
 								<button
 									type="button"
 									onclick={() => handleLogHabit(habit.id)}
-									class="rounded-lg border border-slate-600 bg-slate-800/50 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-700/50"
+									class="rounded-lg border border-gray-300 dark:border-slate-600 bg-gray-100 dark:bg-slate-800/50 px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-slate-300 transition hover:bg-gray-200 dark:hover:bg-slate-700/50"
 								>
 									Mark done
 								</button>
@@ -219,7 +219,7 @@
 							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
-									class="h-4 w-4 text-slate-400 hover:text-rose-400"
+									class="h-4 w-4 text-gray-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400"
 									fill="none"
 									viewBox="0 0 24 24"
 									stroke="currentColor"

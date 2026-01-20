@@ -48,22 +48,22 @@
 </script>
 
 <div class="space-y-4">
-	<h3 class="text-lg font-semibold text-white">Timeline Progress</h3>
+	<h3 class="text-lg font-semibold text-gray-900 dark:text-white">Timeline Progress</h3>
 
 	{#if loading}
 		<div class="text-center py-8">
 			<div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-slate-700 border-t-emerald-500"></div>
-			<p class="mt-2 text-sm text-slate-400">Loading timeline...</p>
+			<p class="mt-2 text-sm text-gray-600 dark:text-slate-400">Loading timeline...</p>
 		</div>
 	{:else if error}
-		<div class="rounded-lg border border-rose-500/50 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+		<div class="rounded-lg border border-rose-300 dark:border-rose-500/50 bg-rose-50 dark:bg-rose-500/10 px-4 py-3 text-sm text-rose-800 dark:text-rose-200">
 			{error}
 		</div>
 	{:else if timeline}
-		<div class="rounded-xl border border-slate-800 bg-slate-900/70 p-6">
+		<div class="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-6 shadow-sm dark:shadow-none">
 			<div class="mb-6">
-				<h4 class="text-sm font-medium text-slate-300 mb-1">{timeline.goal.title}</h4>
-				<p class="text-xs text-slate-500">
+				<h4 class="text-sm font-medium text-gray-900 dark:text-slate-300 mb-1">{timeline.goal.title}</h4>
+				<p class="text-xs text-gray-500 dark:text-slate-500">
 					{dayjs(timeline.goal.startDate).format('MMM D, YYYY')} - {dayjs(timeline.goal.endDate).format('MMM D, YYYY')}
 				</p>
 			</div>
@@ -72,10 +72,10 @@
 				<!-- Progress Chart -->
 				<div>
 					<div class="flex items-center justify-between mb-2">
-						<span class="text-sm font-medium text-slate-300">Progress Over Time</span>
-						<span class="text-xs text-slate-500">{Math.round(timeline.goal.currentProgress)}%</span>
+						<span class="text-sm font-medium text-gray-700 dark:text-slate-300">Progress Over Time</span>
+						<span class="text-xs text-gray-500 dark:text-slate-500">{Math.round(timeline.goal.currentProgress)}%</span>
 					</div>
-					<div class="relative h-32 bg-slate-800/50 rounded-lg p-2">
+					<div class="relative h-32 bg-gray-50 dark:bg-slate-800/50 rounded-lg p-2 border border-gray-200 dark:border-transparent">
 						<svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
 							{#each timeline.timeline as point, index}
 								{#if index > 0}
@@ -101,20 +101,20 @@
 
 				<!-- Activity Breakdown -->
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-					<div class="rounded-lg border border-slate-800 bg-slate-800/30 p-4">
-						<div class="text-xs font-medium text-slate-400 mb-1">Tasks Completed</div>
+					<div class="rounded-lg border border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/30 p-4">
+						<div class="text-xs font-medium text-gray-600 dark:text-slate-400 mb-1">Tasks Completed</div>
 						<div class="text-2xl font-bold text-emerald-400">
 							{timeline.timeline.reduce((sum, p) => sum + p.tasksCompleted, 0)}
 						</div>
 					</div>
-					<div class="rounded-lg border border-slate-800 bg-slate-800/30 p-4">
-						<div class="text-xs font-medium text-slate-400 mb-1">Habit Logs</div>
+					<div class="rounded-lg border border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/30 p-4">
+						<div class="text-xs font-medium text-gray-600 dark:text-slate-400 mb-1">Habit Logs</div>
 						<div class="text-2xl font-bold text-blue-400">
 							{timeline.timeline.reduce((sum, p) => sum + p.habitLogs, 0)}
 						</div>
 					</div>
-					<div class="rounded-lg border border-slate-800 bg-slate-800/30 p-4">
-						<div class="text-xs font-medium text-slate-400 mb-1">Focus Minutes</div>
+					<div class="rounded-lg border border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/30 p-4">
+						<div class="text-xs font-medium text-gray-600 dark:text-slate-400 mb-1">Focus Minutes</div>
 						<div class="text-2xl font-bold text-purple-400">
 							{Math.round(timeline.timeline.reduce((sum, p) => sum + p.focusMinutes, 0) / 60)}h
 						</div>
@@ -124,10 +124,10 @@
 				<!-- Timeline Points -->
 				<div class="space-y-2 max-h-64 overflow-y-auto">
 					{#each timeline.timeline as point}
-						<div class="flex items-center justify-between p-3 rounded-lg border border-slate-800 bg-slate-800/20 hover:bg-slate-800/40 transition">
+						<div class="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-800/20 hover:bg-gray-50 dark:hover:bg-slate-800/40 transition">
 							<div class="flex-1">
-								<div class="text-sm font-medium text-slate-200">{formatDate(point.date)}</div>
-								<div class="flex items-center gap-4 mt-1 text-xs text-slate-500">
+								<div class="text-sm font-medium text-gray-900 dark:text-slate-200">{formatDate(point.date)}</div>
+								<div class="flex items-center gap-4 mt-1 text-xs text-gray-500 dark:text-slate-500">
 									<span>{point.tasksCompleted} tasks</span>
 									<span>{point.habitLogs} logs</span>
 									<span>{Math.round(point.focusMinutes / 60)}h focus</span>

@@ -2,3 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    /* Light theme colors */
+    --color-bg-primary: 255 255 255;
+    --color-bg-secondary: 249 250 251;
+    --color-bg-tertiary: 243 244 246;
+    --color-border: 229 231 235;
+    --color-border-hover: 209 213 219;
+    --color-text-primary: 17 24 39;
+    --color-text-secondary: 55 65 81;
+    --color-text-tertiary: 107 114 128;
+  }
+
+  .dark {
+    /* Dark theme colors */
+    --color-bg-primary: 2 6 23;
+    --color-bg-secondary: 15 23 42;
+    --color-bg-tertiary: 30 41 59;
+    --color-border: 51 65 85;
+    --color-border-hover: 71 85 105;
+    --color-text-primary: 248 250 252;
+    --color-text-secondary: 226 232 240;
+    --color-text-tertiary: 148 163 184;
+  }
+}

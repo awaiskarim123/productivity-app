@@ -34,11 +34,11 @@
 	function getConfidenceColor(confidence: 'low' | 'medium' | 'high'): string {
 		switch (confidence) {
 			case 'high':
-				return 'text-emerald-400';
+				return 'text-emerald-600 dark:text-emerald-400';
 			case 'medium':
-				return 'text-yellow-400';
+				return 'text-yellow-600 dark:text-yellow-400';
 			case 'low':
-				return 'text-slate-400';
+				return 'text-gray-500 dark:text-slate-400';
 		}
 	}
 
@@ -54,16 +54,16 @@
 	}
 </script>
 
-<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 sm:p-4">
+<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-3 sm:p-4 shadow-sm dark:shadow-none">
 	<div class="mb-3 flex items-center justify-between">
 		<div>
-			<h2 class="text-base font-semibold text-slate-100 sm:text-lg">Weekly Insights</h2>
-			<p class="mt-1 text-xs text-slate-400">AI-powered productivity analysis</p>
+			<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Weekly Insights</h2>
+			<p class="mt-1 text-xs text-gray-600 dark:text-slate-400">AI-powered productivity analysis</p>
 		</div>
 		<button
 			type="button"
 			onclick={loadInsights}
-			class="rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-700/50"
+			class="rounded-lg border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/50 px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-slate-300 transition hover:bg-gray-100 dark:hover:bg-slate-700/50"
 			title="Refresh insights"
 		>
 			↻
@@ -71,23 +71,23 @@
 	</div>
 
 	{#if error}
-		<div class="mb-3 rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-xs text-rose-300">
+		<div class="mb-3 rounded-lg border border-rose-300 dark:border-rose-500/40 bg-rose-50 dark:bg-rose-500/10 px-3 py-2 text-xs text-rose-700 dark:text-rose-300">
 			{error}
 		</div>
 	{/if}
 
 	{#if loading}
-		<div class="py-4 text-center text-sm text-slate-400">Loading insights...</div>
+		<div class="py-4 text-center text-sm text-gray-600 dark:text-slate-400">Loading insights...</div>
 	{:else if insights}
 		<div class="space-y-3">
 			<!-- Peak Hours -->
 			{#if insights.peakHours.length > 0}
-				<div class="rounded-xl border border-slate-800/60 bg-slate-950/40 p-3">
+				<div class="rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 p-3">
 					<div class="flex items-start gap-2">
 						<span class="text-lg">⏰</span>
 						<div class="flex-1 min-w-0">
-							<h3 class="text-sm font-semibold text-slate-100">Peak Productivity Hours</h3>
-							<p class="mt-1 text-xs text-slate-300">
+							<h3 class="text-sm font-semibold text-gray-900 dark:text-slate-100">Peak Productivity Hours</h3>
+							<p class="mt-1 text-xs text-gray-700 dark:text-slate-300">
 								You focus best between {insights.peakHours.map(h => formatHour(h)).join(', ')}. Schedule important work during these times.
 							</p>
 						</div>
@@ -97,12 +97,12 @@
 
 			<!-- Low Productivity Days -->
 			{#if insights.lowProductivityDays.length > 0}
-				<div class="rounded-xl border border-slate-800/60 bg-slate-950/40 p-3">
+				<div class="rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 p-3">
 					<div class="flex items-start gap-2">
 						<span class="text-lg">📅</span>
 						<div class="flex-1 min-w-0">
-							<h3 class="text-sm font-semibold text-slate-100">Low Productivity Days</h3>
-							<p class="mt-1 text-xs text-slate-300">
+							<h3 class="text-sm font-semibold text-gray-900 dark:text-slate-100">Low Productivity Days</h3>
+							<p class="mt-1 text-xs text-gray-700 dark:text-slate-300">
 								{insights.lowProductivityDays.join(', ')} tend to be less productive. Consider planning lighter tasks or breaks on these days.
 							</p>
 						</div>
@@ -112,14 +112,14 @@
 
 			<!-- Week-over-Week Trend -->
 			{#if insights.weekOverWeekTrend !== 'stable'}
-				<div class="rounded-xl border border-slate-800/60 bg-slate-950/40 p-3">
+				<div class="rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 p-3">
 					<div class="flex items-start gap-2">
 						<span class="text-lg">{getTrendIcon(insights.weekOverWeekTrend)}</span>
 						<div class="flex-1 min-w-0">
-							<h3 class="text-sm font-semibold text-slate-100">
+							<h3 class="text-sm font-semibold text-gray-900 dark:text-slate-100">
 								{insights.weekOverWeekTrend === 'improving' ? 'Productivity Improving' : 'Productivity Declining'}
 							</h3>
-							<p class="mt-1 text-xs text-slate-300">
+							<p class="mt-1 text-xs text-gray-700 dark:text-slate-300">
 								{insights.weekOverWeekTrend === 'improving'
 									? 'Your productivity is up compared to last week. Keep up the momentum!'
 									: 'Your productivity is down compared to last week. Consider reviewing your schedule.'}
@@ -131,17 +131,17 @@
 
 			<!-- Additional Insights -->
 			{#each insights.insights.filter(i => !['peak_hours', 'low_productivity_days', 'trend'].includes(i.type)) as insight}
-				<div class="rounded-xl border border-slate-800/60 bg-slate-950/40 p-3">
+				<div class="rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 p-3">
 					<div class="flex items-start gap-2">
 						<span class="text-lg">💡</span>
 						<div class="flex-1 min-w-0">
 							<div class="flex items-center gap-2">
-								<h3 class="text-sm font-semibold text-slate-100">{insight.title}</h3>
+								<h3 class="text-sm font-semibold text-gray-900 dark:text-slate-100">{insight.title}</h3>
 								<span class="text-xs {getConfidenceColor(insight.confidence)}">
 									{insight.confidence}
 								</span>
 							</div>
-							<p class="mt-1 text-xs text-slate-300">{insight.description}</p>
+							<p class="mt-1 text-xs text-gray-700 dark:text-slate-300">{insight.description}</p>
 						</div>
 					</div>
 				</div>
@@ -149,13 +149,13 @@
 
 			<!-- Empty State -->
 			{#if insights.insights.length === 0 && insights.peakHours.length === 0 && insights.lowProductivityDays.length === 0}
-				<div class="rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-6 text-center text-sm text-slate-400">
+				<div class="rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-6 text-center text-sm text-gray-600 dark:text-slate-400">
 					Not enough data yet. Keep tracking your sessions to get insights!
 				</div>
 			{/if}
 		</div>
 	{:else}
-		<div class="rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-6 text-center text-sm text-slate-400">
+		<div class="rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-6 text-center text-sm text-gray-600 dark:text-slate-400">
 			No insights available
 		</div>
 	{/if}
