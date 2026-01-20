@@ -1,3 +1,6 @@
-export const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:4000/api";
-export const STORAGE_KEY = "productivity-app-auth";
+/**
+ * App config. API and env are in api-config; this keeps STORAGE_KEY and re-exports API_BASE_URL.
+ */
+export { API_BASE_URL, SITE_URL, IS_DEV, IS_PROD } from './api-config';
 
+export const STORAGE_KEY = 'productivity-app-auth';
