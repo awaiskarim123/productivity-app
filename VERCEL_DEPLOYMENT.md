@@ -1,90 +1,123 @@
-# Vercel Deployment Guide for SvelteKit Monorepo
+# Vercel Deployment: Frontend + Backend
 
-## Critical Configuration Steps
+## Overview
 
-### 1. Vercel Dashboard Settings (REQUIRED)
+- **Frontend (SvelteKit)**: Deployed on **Vercel** using `@sveltejs/adapter-vercel` and Build Output API.
+- **Backend (Fastify + Prisma)**: Long‑running Node server with WebSockets and a DB — **cannot run on Vercel**. Deploy it on **Railway**, **Render**, **Fly.io**, or similar.
 
-You **MUST** configure these settings in your Vercel project dashboard:
+---
 
-1. Go to **Project Settings** → **General**
-2. Set **Root Directory** to: `frontend`
-3. Go to **Build & Development Settings**
-4. **Framework Preset**: Leave blank or set to "SvelteKit" (Vercel will auto-detect from Build Output API)
-5. **Output Directory**: Leave blank (adapter-vercel handles this automatically)
-6. **Node.js Version**: Should auto-detect from `.nvmrc` or `package.json` engines (Node 20.x)
+## 1. Frontend on Vercel
 
-### 2. How It Works
+### How It Works
 
-- **Root Directory = `frontend`**: Vercel changes to the `frontend` directory before running commands
-- **Build Command**: Runs `npm run build` from `frontend/` directory
-- **Output**: `@sveltejs/adapter-vercel` creates `.vercel/output` in `frontend/.vercel/output`
-- **Detection**: Vercel automatically detects the Build Output API format from `.vercel/output/config.json`
+- **Build from repo root** (no Root Directory override).
+- **Install**: `cd frontend && npm install` (frontend deps only).
+- **Build**: `npm run vercel:build`:
+  1. Builds SvelteKit in `frontend/` → creates `frontend/.vercel/output` (Build Output API).
+  2. Copies `frontend/.vercel/output` to `./.vercel/output` at repo root so Vercel finds it.
 
-### 3. Project Structure
+### Vercel Dashboard
 
-```
-productivity-app/
-├── frontend/              ← Root Directory in Vercel
-│   ├── .vercel/
-│   │   └── output/        ← Created by adapter-vercel (Build Output API)
-│   ├── src/
-│   ├── package.json
-│   └── svelte.config.js
-├── backend/
-└── vercel.json
-```
+1. **Root Directory**: leave **blank** (use repo root).
+2. **Build & Development** (if you override in `vercel.json`, these are optional):
+   - **Framework Preset**: SvelteKit or blank (auto from Build Output API).
+   - **Output Directory**: leave **blank**.
+3. **Node.js Version**: 20.x (from `.nvmrc` or `package.json` engines).
 
-### 4. Troubleshooting
+### Environment Variables (Vercel)
 
-**Error: "No Output Directory named 'public' found"**
-- ✅ **Solution**: Set Root Directory to `frontend` in Vercel dashboard
-- The adapter creates `.vercel/output`, not `public`
-- Vercel must look in the `frontend` directory to find it
+Set in **Project → Settings → Environment Variables**:
 
-**Build fails with "vite: command not found"**
-- ✅ **Solution**: Root Directory must be set to `frontend`
-- Commands run from `frontend/` where `node_modules` and `vite` are located
+| Name           | Value                      | Notes                                      |
+|----------------|----------------------------|--------------------------------------------|
+| `VITE_API_URL` | `https://your-api.com/api` | Backend base URL including `/api` path.    |
 
-**Node.js version errors**
-- ✅ **Solution**: `.nvmrc` file specifies Node 20
-- `package.json` engines field also specifies Node >=18.0.0
-- Adapter config specifies `runtime: 'nodejs20.x'`
+Replace `https://your-api.com` with your deployed backend URL (e.g. `https://your-app.railway.app` if the backend serves under `/api`).
 
-## Files Configuration
+### Verifying the Frontend Build
 
-### vercel.json
-```json
-{
-	"buildCommand": "npm run build",
-	"installCommand": "npm install"
-}
-```
-- Commands are relative to Root Directory (`frontend/`)
-- No `cd frontend` needed because Root Directory is set
+- `vercel:build` only builds the frontend and copies `.vercel/output` to the root. No `public` folder is used; the adapter emits Build Output API.
 
-### frontend/svelte.config.js
-```javascript
-import adapter from '@sveltejs/adapter-vercel';
+---
 
-export default {
-	kit: {
-		adapter: adapter({
-			runtime: 'nodejs20.x'
-		})
-	}
-};
-```
-- Uses `@sveltejs/adapter-vercel` which creates Build Output API format
-- Specifies Node.js 20.x runtime for serverless functions
+## 2. Backend Deployment (Railway, Render, Fly.io, etc.)
 
-### frontend/package.json
-- Has `engines.node` field for Node version specification
-- Includes `@sveltejs/adapter-vercel` as devDependency
+The backend is a **Fastify** app with **Prisma**, **WebSockets**, and a DB. It must run as a **long‑running process**, not as serverless.
 
-## Verification
+### Suggested: Railway
 
-After setting Root Directory to `frontend`:
-1. Push your code
-2. Vercel will detect the Build Output API automatically
-3. No "public" directory error should occur
-4. Deployment should succeed
+1. Create a project and connect the repo.
+2. Set **Root Directory** to `backend`.
+3. **Build**: `npm install && npx prisma generate && npm run build`
+4. **Start**: `npm run start` (runs `node dist/index.js`)
+5. Add a **Postgres** (or your DB) service and set `DATABASE_URL`.
+6. Set other env vars (e.g. `JWT_SECRET`, `PORT`).
+7. Expose the service (e.g. `https://your-app.railway.app`) and ensure the API is under `/api` or adjust your Fastify base path.
+
+### Render
+
+1. New **Web Service**, connect repo, **Root Directory**: `backend`.
+2. **Build**: `npm install && npx prisma generate && npm run build`
+3. **Start**: `npm start`
+4. Add **Postgres** and `DATABASE_URL`, plus `JWT_SECRET`, `PORT`, etc.
+
+### Fly.io
+
+1. `fly launch` in `backend/` (or from root with `--config` in `backend/`).
+2. Add Postgres: `fly postgres create` and attach.
+3. Set `DATABASE_URL`, `JWT_SECRET`, `PORT` in `fly secrets` or in `fly.toml` env.
+4. **Build** and **Start** as above.
+
+### CORS
+
+Configure CORS in the backend to allow your Vercel frontend origin, e.g.:
+
+- `https://your-project.vercel.app`
+- `https://your-domain.com`
+
+---
+
+## 3. Wiring Frontend and Backend
+
+1. Deploy the **backend** first and note its base URL (e.g. `https://your-api.railway.app`).
+2. In the backend, ensure the API is mounted at `/api` (or whatever your Fastify setup uses).
+3. In **Vercel**, set:
+   - `VITE_API_URL` = `https://your-api.railway.app/api` (or `https://.../api` to match your routes).
+4. Redeploy the frontend on Vercel so the new `VITE_API_URL` is baked into the build.
+
+The frontend uses `VITE_API_URL` in `frontend/src/lib/config.ts`; it defaults to `http://localhost:4000/api` for local dev.
+
+---
+
+## 4. Project Scripts
+
+| Script          | Purpose                                                                 |
+|-----------------|-------------------------------------------------------------------------|
+| `vercel:build`  | Frontend build + copy `frontend/.vercel/output` → `./.vercel/output`    |
+| `build`         | Frontend + backend (for local or CI; not used by Vercel)                |
+| `install:all`   | Installs deps in `frontend` and `backend` (e.g. for local `npm install`)|
+
+---
+
+## 5. Troubleshooting
+
+### "No Output Directory named 'public' found"
+
+- The app uses Build Output API (`.vercel/output`), not `public`.
+- Fix: `vercel:build` must run and copy `frontend/.vercel/output` to `./.vercel/output`. Ensure `vercel.json` uses `"buildCommand": "npm run vercel:build"` and that the root `vercel:build` script is present.
+
+### "vite: command not found"
+
+- Install must run in `frontend`. `vercel.json` uses `"installCommand": "cd frontend && npm install"`. Do not set Root Directory to `frontend` if you rely on `vercel:build` copying from `frontend/` to root.
+
+### Frontend cannot reach the API
+
+- Check `VITE_API_URL` on Vercel (must include `/api` if that’s your base path).
+- Check backend CORS allows the Vercel (and prod) origins.
+- Ensure the backend is running and reachable at the URL used in `VITE_API_URL`.
+
+### Backend DB / Prisma errors in production
+
+- `DATABASE_URL` must be set where the backend runs (Railway/Render/Fly.io).
+- Run `npx prisma migrate deploy` (or your migration strategy) as part of the backend build or release step.
