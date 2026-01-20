@@ -20,31 +20,32 @@
 
 <style>
 	:global(.input-field) {
-		@apply w-full rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-3 text-slate-100 shadow-inner transition-all duration-200;
-		@apply placeholder:text-slate-500;
-		@apply focus:border-emerald-500 focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30;
-		@apply hover:border-slate-600;
-		@apply [&:-webkit-autofill]:!bg-slate-800/50 [&:-webkit-autofill]:!text-slate-100;
-		@apply [&:-webkit-autofill]:!shadow-[0_0_0_1000px_rgb(30_41_59_/_0.5)_inset];
-		@apply [&:-webkit-autofill:hover]:!bg-slate-800/50 [&:-webkit-autofill:focus]:!bg-slate-800/70 [&:-webkit-autofill:active]:!bg-slate-800/50;
+		@apply w-full rounded-xl border px-4 py-3 shadow-inner transition-all duration-200;
+		@apply border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 text-slate-900 dark:text-slate-100;
+		@apply placeholder:text-slate-400 dark:placeholder:text-slate-500;
+		@apply focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/30;
+		@apply hover:border-slate-400 dark:hover:border-slate-600;
+		@apply [&:-webkit-autofill]:!bg-white dark:[&:-webkit-autofill]:!bg-slate-800/50 [&:-webkit-autofill]:!text-slate-900 dark:[&:-webkit-autofill]:!text-slate-100;
+		@apply [&:-webkit-autofill]:!shadow-[0_0_0_1000px_rgb(255_255_255)_inset] dark:[&:-webkit-autofill]:!shadow-[0_0_0_1000px_rgb(30_41_59_/_0.5)_inset];
+		@apply [&:-webkit-autofill:hover]:!bg-white dark:[&:-webkit-autofill:hover]:!bg-slate-800/50 [&:-webkit-autofill:focus]:!bg-white dark:[&:-webkit-autofill:focus]:!bg-slate-800/70 [&:-webkit-autofill:active]:!bg-white dark:[&:-webkit-autofill:active]:!bg-slate-800/50;
 	}
 </style>
 
 <div class="w-full max-w-md space-y-6 sm:space-y-8 px-4">
 	<div class="text-center">
-		<h1 class="text-2xl font-semibold text-white sm:text-3xl">Welcome back</h1>
-		<p class="mt-2 text-xs text-slate-400 sm:text-sm">Track your focus and stay productive</p>
+		<h1 class="text-2xl font-semibold text-slate-900 dark:text-white sm:text-3xl">Welcome back</h1>
+		<p class="mt-2 text-xs text-slate-600 dark:text-slate-400 sm:text-sm">Track your focus and stay productive</p>
 	</div>
 
-	<form class="space-y-5 rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl backdrop-blur sm:space-y-6 sm:p-8" on:submit={handleSubmit}>
+	<form class="space-y-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 p-6 shadow-xl backdrop-blur sm:space-y-6 sm:p-8" on:submit={handleSubmit}>
 		{#if errorMessage}
-			<div class="rounded-lg border border-rose-500/50 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+			<div class="rounded-lg border border-rose-500/50 bg-rose-500/10 px-4 py-3 text-sm text-rose-600 dark:text-rose-200">
 				{errorMessage}
 			</div>
 		{/if}
 
 		<label class="block space-y-2">
-			<span class="text-sm font-medium text-slate-300">Email</span>
+			<span class="text-sm font-medium text-slate-700 dark:text-slate-300">Email</span>
 			<input
 				type="email"
 				bind:value={email}
@@ -56,7 +57,7 @@
 		</label>
 
 		<label class="block space-y-2">
-			<span class="text-sm font-medium text-slate-300">Password</span>
+			<span class="text-sm font-medium text-slate-700 dark:text-slate-300">Password</span>
 			<input
 				type="password"
 				bind:value={password}
@@ -82,9 +83,9 @@
 		</button>
 	</form>
 
-	<p class="text-center text-xs text-slate-400 sm:text-sm">
+	<p class="text-center text-xs text-slate-600 dark:text-slate-400 sm:text-sm">
 		Don't have an account?
-		<a class="font-medium text-emerald-400 hover:text-emerald-300" href="/register">Create one</a>
+		<a class="font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300" href="/register">Create one</a>
 	</p>
 </div>
 
