@@ -1,7 +1,8 @@
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
 import { get, writable } from 'svelte/store';
-import { API_BASE_URL, STORAGE_KEY } from '../config';
+import { API_BASE_URL } from '$lib/api-config';
+import { STORAGE_KEY } from '../config';
 import type { AuthResponse, User } from '../types';
 
 export interface AuthState {
