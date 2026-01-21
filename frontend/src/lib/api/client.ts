@@ -1,6 +1,6 @@
 import { authStore } from '$lib/stores/auth';
 import { get } from 'svelte/store';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL } from '$lib/api-config';
 
 type ApiMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 

@@ -1,20 +1,18 @@
 /**
- * API and environment configuration for local vs production.
+ * API and env — applies to the whole app.
  *
- * Local:
- *   - API:  http://localhost:4000/api
- *   - Site: http://localhost:5173
+ * Set in .env (local) or Vercel → Project → Environment Variables (production).
+ * Vite exposes VITE_* to the client; api-config is the single source for the app.
  *
- * Production (https://productivity-app-dusky.vercel.app):
- *   - API:  VITE_API_URL (set in Vercel to your backend, e.g. Railway/Render)
- *   - Site: VITE_SITE_URL or https://productivity-app-dusky.vercel.app
+ * Local:   .env with VITE_API_URL (optional, defaults to http://localhost:4000/api)
+ * Production: VITE_API_URL required (e.g. https://your-api.railway.app/api)
  */
 
-/** Backend API base (includes /api). In Vercel, set VITE_API_URL to your backend URL, e.g. https://your-api.railway.app/api */
+/** Backend API base (includes /api). From env: VITE_API_URL. */
 export const API_BASE_URL: string =
 	import.meta.env.VITE_API_URL ?? 'http://localhost:4000/api';
 
-/** Frontend site URL. Set VITE_SITE_URL in Vercel to override (e.g. custom domain). */
+/** Frontend site URL. From env: VITE_SITE_URL. */
 export const SITE_URL: string =
 	import.meta.env.VITE_SITE_URL ??
 	(import.meta.env.DEV ? 'http://localhost:5173' : 'https://productivity-app-dusky.vercel.app');
