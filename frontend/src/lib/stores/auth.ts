@@ -146,6 +146,8 @@ function createAuthStore() {
 			const state = get(store);
 			if (!state.refreshToken) return false;
 
+			// TODO: Add a check to see if the refresh token is expired
+
 			try {
 				const response = await requestAuth('/auth/refresh', {
 					refreshToken: state.refreshToken
