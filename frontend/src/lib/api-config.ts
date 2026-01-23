@@ -9,13 +9,26 @@
  */
 
 /** Backend API base (includes /api). From env: VITE_API_URL. */
-export const API_BASE_URL: string =
-	import.meta.env.VITE_API_URL ?? 'http://localhost:4000/api';
+export const API_BASE_URL: string = (() => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl) return envUrl;
+
+  if (import.meta.env.PROD) {
+    console.error(
+      "CRITICAL: VITE_API_URL is not set in production environment variables. " +
+        "API calls will fail or default to localhost."
+    );
+  }
+
+  return "http://localhost:4000/api";
+})();
 
 /** Frontend site URL. From env: VITE_SITE_URL. */
 export const SITE_URL: string =
-	import.meta.env.VITE_SITE_URL ??
-	(import.meta.env.DEV ? 'http://localhost:5173' : 'https://productivity-app-dusky.vercel.app');
+  import.meta.env.VITE_SITE_URL ??
+  (import.meta.env.DEV
+    ? "http://localhost:5173"
+    : "https://productivity-app-dusky.vercel.app");
 
 export const IS_DEV = !!import.meta.env.DEV;
 export const IS_PROD = !!import.meta.env.PROD;
