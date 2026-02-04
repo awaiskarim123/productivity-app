@@ -32,6 +32,7 @@
 		<button
 			type="button"
 			onclick={load}
+			aria-label="Refresh burnout data"
 			class="rounded-lg border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/50 px-2 py-1 text-xs font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700/50"
 		>
 			↻
