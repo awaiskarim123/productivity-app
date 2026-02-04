@@ -47,7 +47,8 @@
 	function formatMinutes(m: number): string {
 		const h = Math.floor(m / 60);
 		const r = m % 60;
-		return h === 0 ? `${m}m` : `${h}h ${r}m`;
+		if (h === 0) return `${r} min`;
+		return `${h}h ${r}m`;
 	}
 
 	function scoreColor(s: number): string {
@@ -56,19 +57,25 @@
 		return 'text-rose-600 dark:text-rose-400';
 	}
 
-	function trendLabel(): string {
-		if (!comparison) return '—';
+	function trendDirection(): 'up' | 'down' | 'stable' {
+		if (!comparison) return 'stable';
 		const p = comparison.delta.focusMinutesPercent;
-		if (p > 5) return '↑ Up';
-		if (p < -5) return '↓ Down';
-		return '→ Stable';
+		if (p > 5) return 'up';
+		if (p < -5) return 'down';
+		return 'stable';
+	}
+
+	function trendLabel(): string {
+		const d = trendDirection();
+		if (d === 'up') return 'Up';
+		if (d === 'down') return 'Down';
+		return 'Stable';
 	}
 
 	function trendClass(): string {
-		if (!comparison) return 'text-gray-500 dark:text-slate-400';
-		const p = comparison.delta.focusMinutesPercent;
-		if (p > 5) return 'text-emerald-600 dark:text-emerald-400';
-		if (p < -5) return 'text-rose-600 dark:text-rose-400';
+		const d = trendDirection();
+		if (d === 'up') return 'text-emerald-600 dark:text-emerald-400';
+		if (d === 'down') return 'text-rose-600 dark:text-rose-400';
 		return 'text-gray-500 dark:text-slate-400';
 	}
 </script>
@@ -150,12 +157,23 @@
 					</p>
 					<p class="mt-auto pt-2 text-sm text-violet-600 dark:text-violet-400">This Week</p>
 				</div>
-				<!-- Week Trend -->
+				<!-- Week Trend (icon matches trend: up / down / stable) -->
 				<div class="relative rounded-xl bg-white dark:bg-slate-800/80 shadow-sm dark:shadow-none border border-gray-200/60 dark:border-slate-700/50 px-4 py-4 min-h-[7rem] flex flex-col">
 					<div class="absolute top-3 right-3 text-gray-500 dark:text-white/80" aria-hidden="true">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-						</svg>
+						{#if trendDirection() === 'up'}
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+							</svg>
+						{:else if trendDirection() === 'down'}
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6" />
+							</svg>
+						{:else}
+							<!-- Flat / stable trend -->
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14" />
+							</svg>
+						{/if}
 					</div>
 					<p class="text-sm font-medium text-gray-900 dark:text-white">Week Trend</p>
 					<p class="mt-2 text-2xl font-bold {trendClass()}">
