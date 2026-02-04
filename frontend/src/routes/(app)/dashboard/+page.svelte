@@ -4,6 +4,10 @@
 	import WeeklyInsights from '$lib/components/WeeklyInsights.svelte';
 	import RecommendationsPanel from '$lib/components/RecommendationsPanel.svelte';
 	import HabitImpactVisualization from '$lib/components/HabitImpactVisualization.svelte';
+	import FocusHeatmap from '$lib/components/FocusHeatmap.svelte';
+	import BurnoutCard from '$lib/components/BurnoutCard.svelte';
+	import ProductivityScoreCard from '$lib/components/ProductivityScoreCard.svelte';
+	import PeriodComparison from '$lib/components/PeriodComparison.svelte';
 	import {
 		endFocusSession,
 		fetchActiveFocusSession,
@@ -458,6 +462,21 @@ dayjs.extend(relativeTime);
 		<section class="grid gap-2 sm:gap-3 lg:grid-cols-2 lg:gap-3">
 			<WeeklyInsights />
 			<RecommendationsPanel />
+		</section>
+
+		<!-- Advanced Analytics: Heatmap, Burnout, Score, Compare -->
+		<section>
+			<h2 class="mb-2 text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Advanced analytics</h2>
+			<div class="grid gap-2 sm:gap-3 lg:grid-cols-2 lg:gap-3">
+				<FocusHeatmap />
+				<div class="grid gap-2 sm:gap-3 sm:grid-cols-2">
+					<BurnoutCard />
+					<ProductivityScoreCard />
+				</div>
+				<div class="lg:col-span-2">
+					<PeriodComparison />
+				</div>
+			</div>
 		</section>
 
 		<!-- Habit Impact Section -->
