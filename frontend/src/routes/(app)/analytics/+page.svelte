@@ -95,49 +95,77 @@
 		</button>
 	</div>
 
-	<!-- Key metrics strip -->
-	<section class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-3 sm:p-4 shadow-sm dark:shadow-none">
+	<!-- Key metrics strip (reference dashboard style: dark blue-grey, white titles, purple context, icon per card) -->
+	<section
+		class="rounded-2xl p-3 sm:p-4 shadow-sm border border-gray-200 dark:border-transparent bg-gray-100 dark:bg-[#1A1A2E]"
+	>
 		{#if metricsError}
-			<div class="rounded-xl border border-rose-200 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10 px-4 py-3 text-sm text-rose-700 dark:text-rose-300">
+			<div class="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-700 dark:text-rose-300">
 				{metricsError}
 			</div>
 		{:else if metricsLoading}
 			<div class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:gap-4">
 				{#each [1, 2, 3, 4] as _}
-					<div class="h-20 rounded-xl bg-gray-100 dark:bg-slate-800/50 animate-pulse"></div>
+					<div class="h-28 rounded-xl bg-gray-200/80 dark:bg-white/10 animate-pulse"></div>
 				{/each}
 			</div>
 		{:else}
 			<div class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:gap-4">
-				<div class="rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-3">
-					<p class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">Productivity score</p>
-					<p class="mt-1 text-xl font-bold {score != null ? scoreColor(score.score) : 'text-gray-900 dark:text-slate-100'}">
-						{score != null ? score.score : '—'}<span class="text-sm font-normal text-gray-500 dark:text-slate-400">/100</span>
+				<!-- Productivity Score -->
+				<div class="relative rounded-xl bg-white dark:bg-slate-800/80 shadow-sm dark:shadow-none border border-gray-200/60 dark:border-slate-700/50 px-4 py-4 min-h-[7rem] flex flex-col">
+					<div class="absolute top-3 right-3 text-gray-500 dark:text-white/80" aria-hidden="true">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+						</svg>
+					</div>
+					<p class="text-sm font-medium text-gray-900 dark:text-white">Productivity Score</p>
+					<p class="mt-2 text-2xl font-bold tabular-nums {score != null ? scoreColor(score.score) : 'text-gray-900 dark:text-white'}">
+						{score != null ? score.score : '—'}<span class="text-base font-normal text-gray-500 dark:text-white/70">/100</span>
 					</p>
+					<p class="mt-auto pt-2 text-sm text-violet-600 dark:text-violet-400">This Week</p>
 				</div>
-				<div class="rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-3">
-					<p class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">This week</p>
-					<p class="mt-1 text-xl font-bold text-gray-900 dark:text-slate-100">
+				<!-- This Week Focus -->
+				<div class="relative rounded-xl bg-white dark:bg-slate-800/80 shadow-sm dark:shadow-none border border-gray-200/60 dark:border-slate-700/50 px-4 py-4 min-h-[7rem] flex flex-col">
+					<div class="absolute top-3 right-3 text-gray-500 dark:text-white/80" aria-hidden="true">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+						</svg>
+					</div>
+					<p class="text-sm font-medium text-gray-900 dark:text-white">Focus Time</p>
+					<p class="mt-2 text-2xl font-bold tabular-nums text-gray-900 dark:text-white">
 						{overview != null ? formatMinutes(overview.summary.weeklyMinutes) : '—'}
 					</p>
-					<p class="text-xs text-gray-500 dark:text-slate-400">focus</p>
+					<p class="mt-auto pt-2 text-sm text-violet-600 dark:text-violet-400">This Week</p>
 				</div>
-				<div class="rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-3">
-					<p class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">Burnout</p>
-					<p class="mt-1 text-lg font-semibold {burnout?.atRisk ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'}">
+				<!-- Burnout -->
+				<div class="relative rounded-xl bg-white dark:bg-slate-800/80 shadow-sm dark:shadow-none border border-gray-200/60 dark:border-slate-700/50 px-4 py-4 min-h-[7rem] flex flex-col">
+					<div class="absolute top-3 right-3 text-gray-500 dark:text-white/80" aria-hidden="true">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+						</svg>
+					</div>
+					<p class="text-sm font-medium text-gray-900 dark:text-white">Burnout</p>
+					<p class="mt-2 text-2xl font-bold {burnout?.atRisk ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'}">
 						{burnout != null ? (burnout.atRisk ? 'At risk' : 'OK') : '—'}
 					</p>
+					<p class="mt-auto pt-2 text-sm text-violet-600 dark:text-violet-400">This Week</p>
 				</div>
-				<div class="rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-3">
-					<p class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">Week trend</p>
-					<p class="mt-1 text-lg font-semibold {trendClass()}">
+				<!-- Week Trend -->
+				<div class="relative rounded-xl bg-white dark:bg-slate-800/80 shadow-sm dark:shadow-none border border-gray-200/60 dark:border-slate-700/50 px-4 py-4 min-h-[7rem] flex flex-col">
+					<div class="absolute top-3 right-3 text-gray-500 dark:text-white/80" aria-hidden="true">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+						</svg>
+					</div>
+					<p class="text-sm font-medium text-gray-900 dark:text-white">Week Trend</p>
+					<p class="mt-2 text-2xl font-bold {trendClass()}">
 						{trendLabel()}
 					</p>
-					{#if comparison != null && Math.abs(comparison.delta.focusMinutesPercent) >= 1}
-						<p class="text-xs text-gray-500 dark:text-slate-400">
-							{comparison.delta.focusMinutes >= 0 ? '+' : ''}{comparison.delta.focusMinutes} min
-						</p>
-					{/if}
+					<p class="mt-auto pt-2 text-sm text-violet-600 dark:text-violet-400">
+						{comparison != null && Math.abs(comparison.delta.focusMinutesPercent) >= 1
+							? (comparison.delta.focusMinutes >= 0 ? '+' : '') + comparison.delta.focusMinutes + ' min'
+							: 'vs Last Week'}
+					</p>
 				</div>
 			</div>
 		{/if}
