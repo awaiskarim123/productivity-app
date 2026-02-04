@@ -102,10 +102,8 @@
 		</button>
 	</div>
 
-	<!-- Key metrics strip (reference dashboard style: dark blue-grey, white titles, purple context, icon per card) -->
-	<section
-		class="rounded-2xl p-3 sm:p-4 shadow-sm border border-gray-200 dark:border-transparent bg-gray-100 dark:bg-[#1A1A2E]"
-	>
+	<!-- Key metrics strip -->
+	<section class="rounded-2xl p-3 sm:p-4">
 		{#if metricsError}
 			<div class="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-700 dark:text-rose-300">
 				{metricsError}
