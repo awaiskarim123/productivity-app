@@ -289,3 +289,50 @@ export interface GoalTimeline {
 		focusMinutes: number;
 	}>;
 }
+
+// Advanced analytics
+export interface FocusHeatmap {
+	days: string[];
+	hours: number[];
+	cells: Array<{ dayIndex: number; hour: number; minutes: number }>;
+}
+
+export interface BurnoutSignal {
+	atRisk: boolean;
+	longSessionsCount: number;
+	completionRate: number;
+	message?: string;
+}
+
+export interface ProductivityScoreBreakdown {
+	focusTime: number;
+	completionRate: number;
+	consistency: number;
+	taskCompletion: number;
+}
+
+export interface ProductivityScore {
+	score: number;
+	breakdown: ProductivityScoreBreakdown;
+}
+
+export interface PeriodAggregate {
+	focusMinutes: number;
+	completedSessions: number;
+	totalSessions: number;
+	taskCompleted: number;
+	taskTotal: number;
+}
+
+export interface PeriodComparisonDelta {
+	focusMinutes: number;
+	focusMinutesPercent: number;
+	completionRateChange: number;
+	taskCompletionChange: number;
+}
+
+export interface PeriodComparison {
+	thisWeek: PeriodAggregate;
+	lastWeek: PeriodAggregate;
+	delta: PeriodComparisonDelta;
+}

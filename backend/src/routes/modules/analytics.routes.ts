@@ -3,6 +3,17 @@ import dayjs from "dayjs";
 import { FocusSessionMode } from "../../generated/prisma/enums";
 import { getTimeSummary } from "../../services/statistics.service";
 import { getOrGenerateWeeklyInsights } from "../../services/insights.service";
+import {
+  getFocusHeatmapData,
+  getBurnoutSignalData,
+  getProductivityScoreData,
+  getPeriodComparisonData,
+} from "../../services/advanced-analytics.service";
+import {
+  heatmapQuerySchema,
+  burnoutQuerySchema,
+  productivityScoreQuerySchema,
+} from "../../schemas/analytics.schema";
 
 function buildBuckets(
   start: dayjs.Dayjs,
@@ -191,6 +202,48 @@ export default async function analyticsRoutes(app: FastifyInstance) {
       recommendations: insights.recommendations,
       habitCorrelations: insights.habitCorrelations || [],
     };
+  });
+
+  app.get("/heatmap", async (request, reply) => {
+    const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
+    if (!user) {
+      return reply.code(404).send({ message: "User not found" });
+    }
+    const parsed = heatmapQuerySchema.safeParse(request.query ?? {});
+    const days = parsed.success ? parsed.data.days : 14;
+    const heatmap = await getFocusHeatmapData(app.prisma, user.id, days);
+    return heatmap;
+  });
+
+  app.get("/burnout", async (request, reply) => {
+    const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
+    if (!user) {
+      return reply.code(404).send({ message: "User not found" });
+    }
+    const parsed = burnoutQuerySchema.safeParse(request.query ?? {});
+    const windowDays = parsed.success ? parsed.data.windowDays : 7;
+    const burnout = await getBurnoutSignalData(app.prisma, user.id, windowDays);
+    return burnout;
+  });
+
+  app.get("/productivity-score", async (request, reply) => {
+    const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
+    if (!user) {
+      return reply.code(404).send({ message: "User not found" });
+    }
+    const parsed = productivityScoreQuerySchema.safeParse(request.query ?? {});
+    const periodDays = parsed.success ? parsed.data.periodDays : 7;
+    const score = await getProductivityScoreData(app.prisma, user.id, periodDays);
+    return score;
+  });
+
+  app.get("/compare-periods", async (request, reply) => {
+    const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
+    if (!user) {
+      return reply.code(404).send({ message: "User not found" });
+    }
+    const comparison = await getPeriodComparisonData(app.prisma, user.id);
+    return comparison;
   });
 }
 

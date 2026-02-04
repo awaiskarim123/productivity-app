@@ -19,7 +19,11 @@ import type {
 	Goal,
 	KeyResult,
 	GoalContributions,
-	GoalTimeline
+	GoalTimeline,
+	FocusHeatmap,
+	BurnoutSignal,
+	ProductivityScore,
+	PeriodComparison
 } from '../types';
 
 export async function fetchProfile(): Promise<{ profile: User; summary: TimeSummary }> {
@@ -328,6 +332,25 @@ export async function fetchWeeklyInsights(weekStart?: string) {
 
 export async function fetchRecommendations() {
 	return apiFetch<RecommendationsResponse>('/analytics/recommendations', { method: 'GET' });
+}
+
+// Advanced analytics
+export async function fetchFocusHeatmap(days = 14) {
+	return apiFetch<FocusHeatmap>(`/analytics/heatmap?days=${days}`, { method: 'GET' });
+}
+
+export async function fetchBurnoutSignal(windowDays = 7) {
+	return apiFetch<BurnoutSignal>(`/analytics/burnout?windowDays=${windowDays}`, { method: 'GET' });
+}
+
+export async function fetchProductivityScore(periodDays = 7) {
+	return apiFetch<ProductivityScore>(`/analytics/productivity-score?periodDays=${periodDays}`, {
+		method: 'GET'
+	});
+}
+
+export async function fetchComparePeriods() {
+	return apiFetch<PeriodComparison>('/analytics/compare-periods', { method: 'GET' });
 }
 
 // Goals API
