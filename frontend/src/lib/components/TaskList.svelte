@@ -16,6 +16,7 @@
 	let loading = true;
 	let error: string | null = null;
 	let showCompleted = false;
+	let loadSeq = 0;
 	let newTaskTitle = '';
 	let newTaskDescription = '';
 	let newTaskPriority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT' = 'MEDIUM';
@@ -47,6 +48,7 @@
 	}
 
 	async function loadTasks() {
+		const seq = ++loadSeq;
 		loading = true;
 		error = null;
 		try {
@@ -66,10 +68,12 @@
 				fetchTaskStats(),
 				fetchTaskCategories()
 			]);
+			if (seq !== loadSeq) return;
 			tasks = tasksResponse.tasks;
 			stats = statsResponse;
 			categories = categoriesResponse.categories;
 		} catch (err) {
+			if (seq !== loadSeq) return;
 			const errorMessage = err instanceof Error ? err.message : 'Failed to load tasks';
 			if (!errorMessage.includes('Unable to connect')) {
 				error = errorMessage;
@@ -77,7 +81,9 @@
 				error = 'Connection error. Please check if the server is running.';
 			}
 		} finally {
-			loading = false;
+			if (seq === loadSeq) {
+				loading = false;
+			}
 		}
 	}
 
