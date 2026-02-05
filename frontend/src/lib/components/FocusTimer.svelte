@@ -104,9 +104,9 @@ let currentSessionId: string | null = null;
 	};
 </script>
 
-<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-4 shadow-sm dark:shadow-lg backdrop-blur sm:p-6">
+<div class="min-w-0 rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-4 shadow-sm dark:shadow-lg backdrop-blur sm:p-6">
 	<div class="flex flex-col gap-4 sm:gap-6 md:flex-row md:items-start md:justify-between">
-		<div>
+		<div class="min-w-0">
 			<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Focus Timer</h2>
 			<p class="mt-1 text-xs text-gray-600 dark:text-slate-400 sm:text-sm">
 				Stay in flow with guided Pomodoro-style focus and recovery blocks
@@ -121,8 +121,8 @@ let currentSessionId: string | null = null;
 		{/if}
 	</div>
 
-	<div class="mt-6 grid gap-6 sm:mt-8 sm:gap-8 lg:grid-cols-[1.2fr,0.8fr]">
-		<div class="flex flex-col items-center justify-center rounded-2xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/50 p-4 sm:p-6 md:p-8">
+	<div class="mt-6 grid min-w-0 grid-cols-1 gap-6 sm:mt-8 sm:gap-8 lg:grid-cols-[minmax(0,1.2fr),minmax(0,0.8fr)]">
+		<div class="flex min-w-0 flex-col items-center justify-center rounded-2xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/50 p-4 sm:p-6 md:p-8">
 			<div class="relative flex h-40 w-40 items-center justify-center rounded-full border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 sm:h-48 sm:w-48">
 				<svg class="absolute h-full w-full -rotate-90 transform" viewBox="0 0 100 100">
 					<circle
@@ -203,7 +203,7 @@ let currentSessionId: string | null = null;
 			{/if}
 		</div>
 
-		<div class="space-y-4 sm:space-y-6">
+		<div class="min-w-0 space-y-4 sm:space-y-6">
 			<div class="grid gap-3 sm:gap-4">
 				<label class="space-y-2">
 					<span class="flex items-center justify-between text-xs font-medium uppercase tracking-wide text-gray-600 dark:text-slate-400">

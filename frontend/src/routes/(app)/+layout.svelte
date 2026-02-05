@@ -242,7 +242,7 @@
 	{/if}
 
 	<!-- Main Content -->
-	<div class="flex flex-1 flex-col">
+	<div class="flex min-w-0 flex-1 flex-col">
 		<!-- Mobile hamburger menu button -->
 		<button
 			type="button"
@@ -266,7 +266,7 @@
 			</svg>
 		</button>
 
-		<main class="flex-1 py-1.5 pr-1 pl-1 sm:py-2 sm:pr-1.5 sm:pl-1.5 lg:py-2 lg:pr-1 lg:pl-2">
+		<main class="min-w-0 flex-1 overflow-x-hidden py-1.5 pr-1 pl-1 sm:py-2 sm:pr-1.5 sm:pl-1.5 lg:py-2 lg:pr-1 lg:pl-2">
 			{@render children()}
 		</main>
 	</div>

@@ -246,9 +246,9 @@ dayjs.extend(relativeTime);
 		</button>
 	</div>
 {:else if profile && summary}
-	<div class="space-y-2 sm:space-y-3 lg:space-y-4">
-		<section class="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4 lg:gap-3">
-			<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm dark:shadow-none">
+	<div class="min-w-0 max-w-full space-y-2 sm:space-y-3 lg:space-y-4">
+		<section class="grid min-w-0 grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4 lg:gap-3">
+			<div class="min-w-0 rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm dark:shadow-none">
 				<div class="flex items-start justify-between">
 					<div class="flex-1 min-w-0">
 						<h3 class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">Today's focus</h3>
@@ -313,17 +313,17 @@ dayjs.extend(relativeTime);
 					</div>
 				</div>
 			</div>
-			<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm dark:shadow-none">
+			<div class="min-w-0 rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm dark:shadow-none">
 				<h3 class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">Weekly progress</h3>
 				<p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white sm:mt-3 sm:text-2xl">{formatMinutes(summary.weeklyMinutes)}</p>
 				<p class="mt-1 text-xs text-gray-500 dark:text-slate-500">Last 7 days of work</p>
 			</div>
-			<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm dark:shadow-none">
+			<div class="min-w-0 rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm dark:shadow-none">
 				<h3 class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">Monthly output</h3>
 				<p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white sm:mt-3 sm:text-2xl">{formatMinutes(summary.monthlyMinutes)}</p>
 				<p class="mt-1 text-xs text-gray-500 dark:text-slate-500">Steady habit is forming</p>
 			</div>
-			<div class="rounded-2xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm dark:shadow-none">
+			<div class="min-w-0 rounded-2xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-3 py-2.5 sm:px-4 sm:py-3 shadow-sm dark:shadow-none">
 				<h3 class="text-xs font-medium uppercase tracking-wide text-emerald-700 dark:text-emerald-200">Focus streak</h3>
 				<p class="mt-2 text-xl font-semibold text-emerald-800 dark:text-emerald-100 sm:mt-3 sm:text-2xl">{profile.focusStreak} days</p>
 				<p class="mt-1 text-xs text-emerald-600 dark:text-emerald-200/70">Keep the momentum going</p>
@@ -331,16 +331,18 @@ dayjs.extend(relativeTime);
 		</section>
 
 		<!-- Focus Timer Section - Prominent placement -->
-		<section class="grid gap-2 sm:gap-3 lg:grid-cols-[1.2fr,0.8fr] lg:gap-3">
+		<section class="grid min-w-0 grid-cols-1 gap-2 sm:gap-3 lg:grid-cols-[minmax(0,1.2fr),minmax(0,0.8fr)] lg:gap-3">
+			<div class="min-w-0">
 			<FocusTimer
 				activeSession={activeFocusSession}
 				onStartFocus={handleFocusStart}
 				onStartBreak={handleBreakStart}
 				onEndSession={handleFocusEnd}
 			/>
+			</div>
 
 			{#if focusStats && analytics}
-			<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-2.5 sm:p-3 lg:p-4 shadow-sm dark:shadow-none">
+			<div class="min-w-0 rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-2.5 sm:p-3 lg:p-4 shadow-sm dark:shadow-none">
 				<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Focus stats</h2>
 				<div class="mt-2.5 space-y-2 sm:mt-3 sm:space-y-2.5">
 					<div class="flex items-center justify-between rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-3">
@@ -370,7 +372,7 @@ dayjs.extend(relativeTime);
 				</div>
 			</div>
 			{:else}
-				<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-2.5 sm:p-3 lg:p-4 shadow-sm dark:shadow-none">
+				<div class="min-w-0 rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-2.5 sm:p-3 lg:p-4 shadow-sm dark:shadow-none">
 					<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Focus stats</h2>
 					<div class="mt-4 text-center text-sm text-gray-600 dark:text-slate-400">Loading focus stats...</div>
 				</div>
@@ -378,8 +380,8 @@ dayjs.extend(relativeTime);
 		</section>
 
 		<!-- Focus Trends and Motivation Section - Side by side -->
-		<section class="grid gap-2 sm:gap-3 lg:grid-cols-[1fr,400px] lg:gap-3">
-			<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-2.5 sm:p-3 lg:p-4 shadow-sm dark:shadow-none">
+		<section class="grid min-w-0 grid-cols-1 gap-2 sm:gap-3 lg:grid-cols-[minmax(0,1fr),minmax(280px,400px)] lg:gap-3">
+			<div class="min-w-0 rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-2.5 sm:p-3 lg:p-4 shadow-sm dark:shadow-none">
 				<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 					<div>
 						<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Focus trends</h2>
@@ -415,7 +417,7 @@ dayjs.extend(relativeTime);
 				</div>
 			</div>
 
-			<div class="rounded-2xl border border-emerald-200 dark:border-emerald-500/20 bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-500/10 dark:to-slate-900/70 p-3 sm:p-4 lg:p-5 shadow-sm dark:shadow-none">
+			<div class="min-w-0 rounded-2xl border border-emerald-200 dark:border-emerald-500/20 bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-500/10 dark:to-slate-900/70 p-3 sm:p-4 lg:p-5 shadow-sm dark:shadow-none">
 				<div class="flex items-start gap-3">
 					<div class="flex-shrink-0 mt-1">
 						<svg
@@ -455,19 +457,19 @@ dayjs.extend(relativeTime);
 		</section>
 
 		<!-- Weekly Insights & Recommendations Section -->
-		<section class="grid gap-2 sm:gap-3 lg:grid-cols-2 lg:gap-3">
+		<section class="grid min-w-0 grid-cols-1 gap-2 sm:gap-3 lg:grid-cols-2 lg:gap-3">
 			<WeeklyInsights />
 			<RecommendationsPanel />
 		</section>
 
 		<!-- Habit Impact Section -->
-		<section>
+		<section class="min-w-0">
 			<HabitImpactVisualization />
 		</section>
 
 		<!-- Productivity Insights Section -->
 		{#if analytics}
-			<section>
+			<section class="min-w-0">
 			<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-2.5 sm:p-3 lg:p-4 shadow-sm dark:shadow-none">
 				<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Productivity insights</h2>
 				<ul class="mt-3 space-y-2 sm:mt-4 sm:space-y-2.5">
