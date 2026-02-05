@@ -56,7 +56,9 @@
 				category?: string;
 				limit: number;
 			} = { limit };
-			if (showCompleted !== undefined) params.completed = showCompleted;
+			// When filtering by priority or category, show both active and completed tasks that match
+			const hasFilter = !!filterPriority || !!filterCategory;
+			if (!hasFilter && showCompleted !== undefined) params.completed = showCompleted;
 			if (filterPriority) params.priority = filterPriority as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
 			if (filterCategory) params.category = filterCategory;
 			const [tasksResponse, statsResponse, categoriesResponse] = await Promise.all([
@@ -198,7 +200,9 @@
 			<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Tasks</h2>
 			{#if stats}
 				<p class="mt-1 text-xs text-gray-600 dark:text-slate-400">
-					{#if showCompleted}
+					{#if filterPriority || filterCategory}
+						Showing active and completed for this filter
+					{:else if showCompleted}
 						{stats.completed} completed
 					{:else}
 						{stats.total} active • {stats.overdue} overdue
