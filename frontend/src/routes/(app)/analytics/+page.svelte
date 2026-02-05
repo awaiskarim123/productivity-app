@@ -187,6 +187,25 @@
 		{/if}
 	</section>
 
+	<!-- Insights & recommendations -->
+	<section class="space-y-3">
+		<div class="flex items-center gap-2">
+			<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/15">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+				</svg>
+			</div>
+			<div>
+				<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Insights & recommendations</h2>
+				<p class="text-xs text-gray-600 dark:text-slate-400">Weekly patterns and personalized suggestions</p>
+			</div>
+		</div>
+		<div class="grid gap-2 sm:gap-3 lg:grid-cols-2 lg:gap-3">
+			<WeeklyInsights />
+			<RecommendationsPanel />
+		</div>
+	</section>
+
 	<!-- Focus & productivity -->
 	<section class="space-y-3">
 		<div class="flex items-center gap-2">
@@ -209,25 +228,6 @@
 			<div class="lg:col-span-2">
 				<PeriodComparison />
 			</div>
-		</div>
-	</section>
-
-	<!-- Insights & recommendations -->
-	<section class="space-y-3">
-		<div class="flex items-center gap-2">
-			<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/15">
-				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-				</svg>
-			</div>
-			<div>
-				<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Insights & recommendations</h2>
-				<p class="text-xs text-gray-600 dark:text-slate-400">Weekly patterns and personalized suggestions</p>
-			</div>
-		</div>
-		<div class="grid gap-2 sm:gap-3 lg:grid-cols-2 lg:gap-3">
-			<WeeklyInsights />
-			<RecommendationsPanel />
 		</div>
 	</section>
 
