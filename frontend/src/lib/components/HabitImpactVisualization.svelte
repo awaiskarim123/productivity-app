@@ -63,7 +63,7 @@
 	$: neutralHabits = habitCorrelations.filter((h) => h.impact === 'neutral');
 </script>
 
-<div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-3 sm:p-4 shadow-sm dark:shadow-none">
+<div class="min-w-0 rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-3 sm:p-4 shadow-sm dark:shadow-none">
 	<div class="mb-3 flex items-center justify-between">
 		<div>
 			<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Habit Impact</h2>

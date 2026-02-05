@@ -401,7 +401,7 @@ dayjs.extend(relativeTime);
 						{/each}
 					</div>
 				</div>
-				<div class="mt-3 sm:mt-4">
+				<div class="mt-3 min-w-0 sm:mt-4">
 					{#if workSummary}
 					<WorkSummaryChart
 						title="Focus minutes"
