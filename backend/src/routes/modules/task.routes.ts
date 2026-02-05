@@ -71,6 +71,19 @@ export default async function taskRoutes(app: FastifyInstance) {
     return { tasks, total, limit, offset };
   });
 
+  app.get("/categories", async (request) => {
+    const tasks = await app.prisma.task.findMany({
+      where: { userId: request.user.id, deletedAt: null },
+      select: { category: true },
+      distinct: ["category"],
+    });
+    const categories = tasks
+      .map((t) => t.category)
+      .filter((c): c is string => c != null && c.trim() !== "")
+      .sort();
+    return { categories };
+  });
+
   app.get("/:id", async (request, reply) => {
     const { id } = request.params as { id: string };
     const task = await app.prisma.task.findFirst({

@@ -108,7 +108,7 @@
 	}
 </script>
 
-<div class="h-48 w-full sm:h-64">
+<div class="h-48 min-w-0 w-full sm:h-64">
 	<canvas bind:this={canvas}></canvas>
 </div>
 

@@ -78,7 +78,7 @@
 	}
 </script>
 
-<div class="flex min-h-screen w-full bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-slate-100">
+<div class="flex min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-slate-100">
 	<!-- Sidebar -->
 	<aside
 		class="fixed inset-y-0 left-0 z-30 w-64 transform border-r border-gray-200 dark:border-slate-800/60 bg-white dark:bg-slate-900/95 backdrop-blur transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:w-72 {sidebarOpen
@@ -242,7 +242,7 @@
 	{/if}
 
 	<!-- Main Content -->
-	<div class="flex flex-1 flex-col">
+	<div class="flex min-w-0 flex-1 flex-col">
 		<!-- Mobile hamburger menu button -->
 		<button
 			type="button"
@@ -266,7 +266,7 @@
 			</svg>
 		</button>
 
-		<main class="flex-1 py-1.5 pr-1 pl-1 sm:py-2 sm:pr-1.5 sm:pl-1.5 lg:py-2 lg:pr-1 lg:pl-2">
+		<main class="min-w-0 flex-1 overflow-x-hidden py-1.5 pr-1 pl-1 sm:py-2 sm:pr-1.5 sm:pl-1.5 lg:py-2 lg:pr-1 lg:pl-2">
 			{@render children()}
 		</main>
 	</div>
