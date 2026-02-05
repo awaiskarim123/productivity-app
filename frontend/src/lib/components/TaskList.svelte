@@ -27,7 +27,7 @@
 		error = null;
 		try {
 			const [tasksResponse, statsResponse] = await Promise.all([
-				fetchTasks({ completed: false, limit }),
+				fetchTasks({ completed: showCompleted, limit }),
 				fetchTaskStats()
 			]);
 			tasks = tasksResponse.tasks;
@@ -43,6 +43,11 @@
 		} finally {
 			loading = false;
 		}
+	}
+
+	async function toggleShowCompleted() {
+		showCompleted = !showCompleted;
+		await loadTasks();
 	}
 
 	async function handleCreateTask() {
@@ -112,15 +117,26 @@
 </script>
 
 <div class="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-3 sm:p-4 shadow-sm dark:shadow-none">
-	<div class="mb-3 flex items-center justify-between">
+	<div class="mb-3 flex items-center justify-between gap-2">
 		<div>
 			<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Tasks</h2>
 			{#if stats}
 				<p class="mt-1 text-xs text-gray-600 dark:text-slate-400">
-					{stats.total} active • {stats.overdue} overdue
+					{#if showCompleted}
+						{stats.completed} completed
+					{:else}
+						{stats.total} active • {stats.overdue} overdue
+					{/if}
 				</p>
 			{/if}
 		</div>
+		<button
+			type="button"
+			onclick={toggleShowCompleted}
+			class="rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800/80 px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+		>
+			{showCompleted ? 'Show active' : 'Show completed'}
+		</button>
 	</div>
 
 	{#if error}
@@ -129,7 +145,8 @@
 		</div>
 	{/if}
 
-	<!-- Create Task Form -->
+	<!-- Create Task Form (only when viewing active tasks) -->
+	{#if !showCompleted}
 	<div class="mb-3 space-y-2 rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 p-3">
 		<input
 			type="text"
@@ -159,12 +176,17 @@
 			</button>
 		</div>
 	</div>
+	{/if}
 
 	{#if loading}
 		<div class="py-4 text-center text-sm text-gray-600 dark:text-slate-400">Loading tasks...</div>
 	{:else if tasks.length === 0}
 		<div class="rounded-xl border border-gray-200 dark:border-slate-800/60 bg-gray-50 dark:bg-slate-950/40 px-4 py-6 text-center text-sm text-gray-600 dark:text-slate-400">
-			No tasks yet. Create one to get started!
+			{#if showCompleted}
+				No completed tasks yet.
+			{:else}
+				No tasks yet. Create one to get started!
+			{/if}
 		</div>
 	{:else}
 		<ul class="space-y-2">
@@ -227,6 +249,11 @@
 													: 'text-gray-600 dark:text-slate-400'}"
 											>
 												Due: {dayjs(task.dueDate).format('MMM D')}
+											</span>
+										{/if}
+										{#if task.completed && task.completedAt}
+											<span class="text-xs text-emerald-600 dark:text-emerald-400">
+												Done: {dayjs(task.completedAt).format('MMM D')}
 											</span>
 										{/if}
 									</div>
