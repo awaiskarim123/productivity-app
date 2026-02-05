@@ -206,6 +206,10 @@ export async function fetchTaskStats() {
 	return apiFetch<TaskStats>('/tasks/stats/summary', { method: 'GET' });
 }
 
+export async function fetchTaskCategories() {
+	return apiFetch<{ categories: string[] }>('/tasks/categories', { method: 'GET' });
+}
+
 // Habits API
 export async function createHabit(payload: {
 	name: string;
