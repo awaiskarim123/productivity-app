@@ -4,7 +4,7 @@ const taskExportItem = z.object({
   title: z.string(),
   description: z.string().nullable().optional(),
   completed: z.boolean().optional(),
-  priority: z.string(),
+  priority: z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]),
   dueDate: z.string().nullable().optional(),
   category: z.string().nullable().optional(),
 });
@@ -14,7 +14,10 @@ const habitExportItem = z.object({
   color: z.string(),
   targetDays: z.number(),
 });
-const habitLogExportItem = z.object({ habitIndex: z.number(), date: z.string() });
+const habitLogExportItem = z.object({
+  habitIndex: z.number().int().min(0),
+  date: z.string(),
+});
 const noteExportItem = z.object({
   title: z.string(),
   content: z.string(),
@@ -28,7 +31,7 @@ const workSessionExportItem = z.object({
   notes: z.string().nullable().optional(),
 });
 const focusSessionExportItem = z.object({
-  mode: z.string(),
+  mode: z.enum(["FOCUS", "BREAK"]),
   startedAt: z.string(),
   endedAt: z.string().nullable().optional(),
   targetMinutes: z.number(),
@@ -45,7 +48,7 @@ const keyResultExportItem = z.object({
 const goalExportItem = z.object({
   title: z.string(),
   description: z.string().nullable().optional(),
-  type: z.string(),
+  type: z.enum(["DAILY", "WEEKLY", "MONTHLY", "QUARTERLY", "YEARLY"]),
   startDate: z.string(),
   endDate: z.string(),
   targetValue: z.number().optional(),

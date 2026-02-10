@@ -14,6 +14,7 @@ const routes_1 = __importDefault(require("./routes"));
 function buildApp() {
     const app = (0, fastify_1.default)({
         logger: env_1.default.NODE_ENV !== "test",
+        trustProxy: true,
     });
     app.register(cors_1.default, {
         origin: true,
@@ -21,19 +22,12 @@ function buildApp() {
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization'],
     });
-    // Per-IP rate limiting; in test use high limit to avoid flakiness
+    // Per-IP rate limiting (uses Fastify request.ip; trustProxy ensures correct client IP when behind a proxy)
     const rateLimitMax = env_1.default.NODE_ENV === "test" ? 10000 : env_1.default.RATE_LIMIT_MAX;
     const rateLimitWindowMs = env_1.default.NODE_ENV === "test" ? 60000 : env_1.default.RATE_LIMIT_WINDOW_MS;
     app.register(rate_limit_1.default, {
         max: rateLimitMax,
         timeWindow: rateLimitWindowMs,
-        keyGenerator: (request) => {
-            const ip = request.headers["x-forwarded-for"]?.toString().split(",")[0]?.trim()
-                ?? request.headers["x-real-ip"]?.toString()
-                ?? request.ip
-                ?? "unknown";
-            return ip;
-        },
     });
     app.register(prisma_1.default);
     app.register(auth_1.default);

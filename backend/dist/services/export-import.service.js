@@ -171,8 +171,17 @@ async function importUserData(prisma, userId, payload) {
                 });
                 imported.habitLogs++;
             }
-            catch {
-                // ignore duplicate (same habit+date)
+            catch (err) {
+                const isP2002 = err &&
+                    typeof err === "object" &&
+                    "code" in err &&
+                    err.code === "P2002";
+                if (isP2002) {
+                    // Unique constraint (habitId + date) – skip duplicate
+                }
+                else {
+                    throw err;
+                }
             }
         }
         for (const n of payload.notes) {
@@ -227,7 +236,8 @@ async function importUserData(prisma, userId, payload) {
                     targetValue: g.targetValue ?? 100,
                 },
             });
-            for (const kr of g.keyResults) {
+            const keyResults = g.keyResults ?? [];
+            for (const kr of keyResults) {
                 await tx.keyResult.create({
                     data: {
                         goalId: goal.id,

@@ -13,16 +13,27 @@ function getRequestMeta(request) {
 }
 async function logAudit(prisma, userId, resource, resourceId, action, details, request) {
     const { ipAddress, userAgent } = getRequestMeta(request);
-    await prisma.auditLog.create({
-        data: {
+    try {
+        await prisma.auditLog.create({
+            data: {
+                userId,
+                resource,
+                resourceId,
+                action,
+                ...(details != null && Object.keys(details).length > 0 ? { details: details } : {}),
+                ipAddress,
+                userAgent,
+            },
+        });
+    }
+    catch (err) {
+        console.error("[audit] logAudit failed", {
             userId,
             resource,
             resourceId,
             action,
-            ...(details != null && Object.keys(details).length > 0 ? { details: details } : {}),
-            ipAddress,
-            userAgent,
-        },
-    });
+            error: err instanceof Error ? err.message : String(err),
+        });
+    }
 }
 //# sourceMappingURL=audit.service.js.map

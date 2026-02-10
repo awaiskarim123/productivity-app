@@ -235,8 +235,17 @@ export async function importUserData(prisma: PrismaClient, userId: string, paylo
           data: { habitId, date },
         });
         imported.habitLogs++;
-      } catch {
-        // ignore duplicate (same habit+date)
+      } catch (err: unknown) {
+        const isP2002 =
+          err &&
+          typeof err === "object" &&
+          "code" in err &&
+          (err as { code: string }).code === "P2002";
+        if (isP2002) {
+          // Unique constraint (habitId + date) – skip duplicate
+        } else {
+          throw err;
+        }
       }
     }
 
@@ -295,7 +304,8 @@ export async function importUserData(prisma: PrismaClient, userId: string, paylo
           targetValue: g.targetValue ?? 100,
         },
       });
-      for (const kr of g.keyResults) {
+      const keyResults = g.keyResults ?? [];
+      for (const kr of keyResults) {
         await tx.keyResult.create({
           data: {
             goalId: goal.id,

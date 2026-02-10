@@ -10,7 +10,12 @@ export declare const importPayloadSchema: z.ZodObject<{
         title: z.ZodString;
         description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         completed: z.ZodOptional<z.ZodBoolean>;
-        priority: z.ZodString;
+        priority: z.ZodEnum<{
+            LOW: "LOW";
+            MEDIUM: "MEDIUM";
+            HIGH: "HIGH";
+            URGENT: "URGENT";
+        }>;
         dueDate: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         category: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     }, z.core.$strip>>>;
@@ -37,7 +42,10 @@ export declare const importPayloadSchema: z.ZodObject<{
         notes: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     }, z.core.$strip>>>;
     focusSessions: z.ZodDefault<z.ZodArray<z.ZodObject<{
-        mode: z.ZodString;
+        mode: z.ZodEnum<{
+            FOCUS: "FOCUS";
+            BREAK: "BREAK";
+        }>;
         startedAt: z.ZodString;
         endedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         targetMinutes: z.ZodNumber;
@@ -49,7 +57,13 @@ export declare const importPayloadSchema: z.ZodObject<{
     goals: z.ZodDefault<z.ZodArray<z.ZodObject<{
         title: z.ZodString;
         description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-        type: z.ZodString;
+        type: z.ZodEnum<{
+            DAILY: "DAILY";
+            WEEKLY: "WEEKLY";
+            MONTHLY: "MONTHLY";
+            QUARTERLY: "QUARTERLY";
+            YEARLY: "YEARLY";
+        }>;
         startDate: z.ZodString;
         endDate: z.ZodString;
         targetValue: z.ZodOptional<z.ZodNumber>;
