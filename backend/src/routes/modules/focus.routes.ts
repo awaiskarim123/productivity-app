@@ -8,6 +8,7 @@ import {
   focusSessionsQuerySchema,
   updateFocusSessionSchema,
 } from "../../schemas/focus.schema";
+import { logAudit } from "../../services/audit.service";
 
 export default async function focusRoutes(app: FastifyInstance) {
   app.addHook("preHandler", app.authenticate);
@@ -53,6 +54,7 @@ export default async function focusRoutes(app: FastifyInstance) {
       },
     });
 
+    await logAudit(app.prisma, request.user.id, "focus_session", session.id, "create", { mode: session.mode, targetMinutes: session.targetMinutes }, request);
     return reply.code(201).send({ session });
   });
 
@@ -93,6 +95,7 @@ export default async function focusRoutes(app: FastifyInstance) {
       },
     });
 
+    await logAudit(app.prisma, request.user.id, "focus_session", session.id, "update", { action: "end", durationMinutes }, request);
     return { session: updated };
   });
 
@@ -241,6 +244,7 @@ export default async function focusRoutes(app: FastifyInstance) {
       data: updateData,
     });
 
+    await logAudit(app.prisma, request.user.id, "focus_session", id, "update", { updatedFields: Object.keys(updateData) }, request);
     return { session };
   });
 
@@ -257,6 +261,7 @@ export default async function focusRoutes(app: FastifyInstance) {
       return reply.code(404).send({ message: "Focus session not found" });
     }
 
+    await logAudit(app.prisma, request.user.id, "focus_session", id, "delete", {}, request);
     return reply.code(204).send();
   });
 }

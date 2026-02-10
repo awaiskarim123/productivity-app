@@ -1,5 +1,6 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import rateLimit from "@fastify/rate-limit";
 import env from "./config/env";
 import prismaPlugin from "./plugins/prisma";
 import authPlugin from "./plugins/auth";
@@ -15,6 +16,21 @@ export function buildApp() {
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+  });
+
+  // Per-IP rate limiting; in test use high limit to avoid flakiness
+  const rateLimitMax = env.NODE_ENV === "test" ? 10000 : env.RATE_LIMIT_MAX;
+  const rateLimitWindowMs = env.NODE_ENV === "test" ? 60000 : env.RATE_LIMIT_WINDOW_MS;
+  app.register(rateLimit, {
+    max: rateLimitMax,
+    timeWindow: rateLimitWindowMs,
+    keyGenerator: (request) => {
+      const ip = request.headers["x-forwarded-for"]?.toString().split(",")[0]?.trim()
+        ?? request.headers["x-real-ip"]?.toString()
+        ?? request.ip
+        ?? "unknown";
+      return ip;
+    },
   });
 
   app.register(prismaPlugin);

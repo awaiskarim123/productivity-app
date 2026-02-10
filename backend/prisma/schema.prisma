@@ -33,6 +33,23 @@ model User {
   notes          Note[]
   weeklyInsights WeeklyInsight[]
   goals          Goal[]
+  auditLogs      AuditLog[]
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resource   String   // task | habit | note | work_session | focus_session
+  resourceId String
+  action     String   // create | update | delete
+  details    Json?    // e.g. { field: "title", oldValue, newValue } or snapshot
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([resource, resourceId])
 }
 
 model WorkSession {

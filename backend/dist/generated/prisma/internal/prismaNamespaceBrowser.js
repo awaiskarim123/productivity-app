@@ -48,7 +48,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JsonNullValueFilter = exports.NullsOrder = exports.QueryMode = exports.JsonNullValueInput = exports.NullableJsonNullValueInput = exports.SortOrder = exports.KeyResultScalarFieldEnum = exports.GoalScalarFieldEnum = exports.WeeklyInsightScalarFieldEnum = exports.NoteScalarFieldEnum = exports.HabitLogScalarFieldEnum = exports.HabitScalarFieldEnum = exports.TaskScalarFieldEnum = exports.QuoteScalarFieldEnum = exports.RefreshTokenScalarFieldEnum = exports.FocusSessionScalarFieldEnum = exports.WorkSessionScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.JsonNullValueFilter = exports.NullsOrder = exports.QueryMode = exports.JsonNullValueInput = exports.NullableJsonNullValueInput = exports.SortOrder = exports.KeyResultScalarFieldEnum = exports.GoalScalarFieldEnum = exports.WeeklyInsightScalarFieldEnum = exports.NoteScalarFieldEnum = exports.HabitLogScalarFieldEnum = exports.HabitScalarFieldEnum = exports.TaskScalarFieldEnum = exports.QuoteScalarFieldEnum = exports.RefreshTokenScalarFieldEnum = exports.FocusSessionScalarFieldEnum = exports.WorkSessionScalarFieldEnum = exports.AuditLogScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -76,6 +76,7 @@ exports.JsonNull = runtime.objectEnumValues.instances.JsonNull;
 exports.AnyNull = runtime.objectEnumValues.instances.AnyNull;
 exports.ModelName = {
     User: 'User',
+    AuditLog: 'AuditLog',
     WorkSession: 'WorkSession',
     FocusSession: 'FocusSession',
     RefreshToken: 'RefreshToken',
@@ -107,6 +108,17 @@ exports.UserScalarFieldEnum = {
     lastLoginAt: 'lastLoginAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
+};
+exports.AuditLogScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    resource: 'resource',
+    resourceId: 'resourceId',
+    action: 'action',
+    details: 'details',
+    ipAddress: 'ipAddress',
+    userAgent: 'userAgent',
+    createdAt: 'createdAt'
 };
 exports.WorkSessionScalarFieldEnum = {
     id: 'id',

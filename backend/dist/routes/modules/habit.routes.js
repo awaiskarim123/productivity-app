@@ -8,6 +8,7 @@ const dayjs_1 = __importDefault(require("dayjs"));
 const utc_1 = __importDefault(require("dayjs/plugin/utc"));
 dayjs_1.default.extend(utc_1.default);
 const habit_schema_1 = require("../../schemas/habit.schema");
+const audit_service_1 = require("../../services/audit.service");
 /**
  * Calculate habit streak with proper timezone handling and date boundaries.
  * A streak is consecutive days with at least one log entry.
@@ -93,6 +94,7 @@ async function habitRoutes(app) {
                 targetDays: result.data.targetDays ?? 7,
             },
         });
+        await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "habit", habit.id, "create", { name: habit.name }, request);
         return reply.code(201).send({ habit });
     });
     app.get("/", async (request, reply) => {
@@ -332,6 +334,7 @@ async function habitRoutes(app) {
             where: { id },
             data: updateData,
         });
+        await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "habit", id, "update", { updatedFields: Object.keys(updateData) }, request);
         return { habit };
     });
     app.delete("/:id", async (request, reply) => {
@@ -344,6 +347,7 @@ async function habitRoutes(app) {
         if (updateResult.count === 0) {
             return reply.code(404).send({ message: "Habit not found" });
         }
+        await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "habit", id, "delete", {}, request);
         return reply.code(204).send();
     });
 }

@@ -4,6 +4,7 @@ import {
   updateNoteSchema,
   notesQuerySchema,
 } from "../../schemas/note.schema";
+import { logAudit } from "../../services/audit.service";
 
 export default async function noteRoutes(app: FastifyInstance) {
   app.addHook("preHandler", app.authenticate);
@@ -24,6 +25,7 @@ export default async function noteRoutes(app: FastifyInstance) {
       },
     });
 
+    await logAudit(app.prisma, request.user.id, "note", note.id, "create", { title: note.title }, request);
     return reply.code(201).send({ note });
   });
 
@@ -129,6 +131,7 @@ export default async function noteRoutes(app: FastifyInstance) {
       data: updateData,
     });
 
+    await logAudit(app.prisma, request.user.id, "note", id, "update", { updatedFields: Object.keys(updateData) }, request);
     return { note };
   });
 
@@ -145,6 +148,7 @@ export default async function noteRoutes(app: FastifyInstance) {
       return reply.code(404).send({ message: "Note not found" });
     }
 
+    await logAudit(app.prisma, request.user.id, "note", id, "delete", {}, request);
     return reply.code(204).send();
   });
 }

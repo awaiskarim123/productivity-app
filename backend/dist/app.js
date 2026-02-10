@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildApp = buildApp;
 const fastify_1 = __importDefault(require("fastify"));
 const cors_1 = __importDefault(require("@fastify/cors"));
+const rate_limit_1 = __importDefault(require("@fastify/rate-limit"));
 const env_1 = __importDefault(require("./config/env"));
 const prisma_1 = __importDefault(require("./plugins/prisma"));
 const auth_1 = __importDefault(require("./plugins/auth"));
@@ -19,6 +20,20 @@ function buildApp() {
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization'],
+    });
+    // Per-IP rate limiting; in test use high limit to avoid flakiness
+    const rateLimitMax = env_1.default.NODE_ENV === "test" ? 10000 : env_1.default.RATE_LIMIT_MAX;
+    const rateLimitWindowMs = env_1.default.NODE_ENV === "test" ? 60000 : env_1.default.RATE_LIMIT_WINDOW_MS;
+    app.register(rate_limit_1.default, {
+        max: rateLimitMax,
+        timeWindow: rateLimitWindowMs,
+        keyGenerator: (request) => {
+            const ip = request.headers["x-forwarded-for"]?.toString().split(",")[0]?.trim()
+                ?? request.headers["x-real-ip"]?.toString()
+                ?? request.ip
+                ?? "unknown";
+            return ip;
+        },
     });
     app.register(prisma_1.default);
     app.register(auth_1.default);

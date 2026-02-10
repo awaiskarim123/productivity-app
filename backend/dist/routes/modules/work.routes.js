@@ -7,6 +7,7 @@ exports.default = workRoutes;
 const dayjs_1 = __importDefault(require("dayjs"));
 const work_schema_1 = require("../../schemas/work.schema");
 const statistics_service_1 = require("../../services/statistics.service");
+const audit_service_1 = require("../../services/audit.service");
 function getPeriodConfig(period) {
     switch (period) {
         case "weekly":
@@ -39,6 +40,7 @@ async function workRoutes(app) {
                 startedAt: result.data.startedAt ?? new Date(),
             },
         });
+        await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "work_session", session.id, "create", { startedAt: session.startedAt }, request);
         return reply.code(201).send({ session });
     });
     app.post("/end", async (request, reply) => {
@@ -67,6 +69,7 @@ async function workRoutes(app) {
                 notes: notes ?? session.notes ?? null,
             },
         });
+        await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "work_session", session.id, "update", { action: "end", durationMinutes }, request);
         const streak = await (0, statistics_service_1.calculateFocusStreak)(app.prisma, request.user.id, session.user.dailyGoalMinutes);
         await app.prisma.user.update({
             where: { id: request.user.id },
@@ -160,6 +163,7 @@ async function workRoutes(app) {
             where: { id },
             data: updateData,
         });
+        await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "work_session", id, "update", { updatedFields: Object.keys(updateData) }, request);
         return { session };
     });
     app.delete("/:id", async (request, reply) => {
@@ -172,6 +176,7 @@ async function workRoutes(app) {
         if (updateResult.count === 0) {
             return reply.code(404).send({ message: "Work session not found" });
         }
+        await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "work_session", id, "delete", {}, request);
         return reply.code(204).send();
     });
     app.get("/summary", async (request, reply) => {

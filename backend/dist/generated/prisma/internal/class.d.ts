@@ -123,6 +123,17 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
         omit: OmitOpts;
     }>;
     /**
+     * `prisma.auditLog`: Exposes CRUD operations for the **AuditLog** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more AuditLogs
+      * const auditLogs = await prisma.auditLog.findMany()
+      * ```
+      */
+    get auditLog(): Prisma.AuditLogDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
      * `prisma.workSession`: Exposes CRUD operations for the **WorkSession** model.
       * Example usage:
       * ```ts

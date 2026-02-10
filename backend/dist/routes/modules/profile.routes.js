@@ -4,6 +4,7 @@ exports.default = profileRoutes;
 const profile_schema_1 = require("../../schemas/profile.schema");
 const statistics_service_1 = require("../../services/statistics.service");
 const password_1 = require("../../utils/password");
+const export_import_service_1 = require("../../services/export-import.service");
 async function profileRoutes(app) {
     app.addHook("preHandler", app.authenticate);
     app.get("/", async (request, reply) => {
@@ -87,6 +88,36 @@ async function profileRoutes(app) {
             data: { passwordHash: newPasswordHash },
         });
         return reply.send({ message: "Password updated successfully" });
+    });
+    app.get("/export", async (request, reply) => {
+        const format = request.query?.format ?? "json";
+        const entity = request.query?.entity;
+        const payload = await (0, export_import_service_1.exportUserData)(app.prisma, request.user.id);
+        if (format === "csv") {
+            if (entity === "tasks") {
+                reply.header("Content-Type", "text/csv; charset=utf-8");
+                reply.header("Content-Disposition", "attachment; filename=tasks.csv");
+                return reply.send((0, export_import_service_1.exportTasksToCsv)(payload.tasks));
+            }
+            if (entity === "notes") {
+                reply.header("Content-Type", "text/csv; charset=utf-8");
+                reply.header("Content-Disposition", "attachment; filename=notes.csv");
+                return reply.send((0, export_import_service_1.exportNotesToCsv)(payload.notes));
+            }
+            return reply.code(400).send({ message: "CSV export requires entity=tasks or entity=notes" });
+        }
+        reply.header("Content-Type", "application/json");
+        reply.header("Content-Disposition", "attachment; filename=productivity-backup.json");
+        return reply.send(payload);
+    });
+    app.post("/import", async (request, reply) => {
+        const result = profile_schema_1.importPayloadSchema.safeParse(request.body ?? {});
+        if (!result.success) {
+            return reply.code(400).send({ message: "Invalid backup payload", errors: result.error.flatten() });
+        }
+        const payload = result.data;
+        const { imported } = await (0, export_import_service_1.importUserData)(app.prisma, request.user.id, payload);
+        return reply.send({ message: "Import completed", imported });
     });
 }
 //# sourceMappingURL=profile.routes.js.map

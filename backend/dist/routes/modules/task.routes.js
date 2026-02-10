@@ -7,6 +7,7 @@ exports.default = taskRoutes;
 const dayjs_1 = __importDefault(require("dayjs"));
 const utc_1 = __importDefault(require("dayjs/plugin/utc"));
 const task_schema_1 = require("../../schemas/task.schema");
+const audit_service_1 = require("../../services/audit.service");
 dayjs_1.default.extend(utc_1.default);
 async function taskRoutes(app) {
     app.addHook("preHandler", app.authenticate);
@@ -25,6 +26,7 @@ async function taskRoutes(app) {
                 category: result.data.category ?? null,
             },
         });
+        await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "task", task.id, "create", { title: task.title }, request);
         return reply.code(201).send({ task });
     });
     app.get("/", async (request, reply) => {
@@ -60,6 +62,18 @@ async function taskRoutes(app) {
             app.prisma.task.count({ where }),
         ]);
         return { tasks, total, limit, offset };
+    });
+    app.get("/categories", async (request) => {
+        const tasks = await app.prisma.task.findMany({
+            where: { userId: request.user.id, deletedAt: null },
+            select: { category: true },
+            distinct: ["category"],
+        });
+        const categories = tasks
+            .map((t) => t.category)
+            .filter((c) => c != null && c.trim() !== "")
+            .sort();
+        return { categories };
     });
     app.get("/:id", async (request, reply) => {
         const { id } = request.params;
@@ -127,6 +141,8 @@ async function taskRoutes(app) {
             if (!task) {
                 return reply.code(404).send({ message: "Task not found" });
             }
+            const updatedFields = Object.keys(updateData).filter((k) => k !== "completedAt");
+            await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "task", id, "update", { updatedFields }, request);
             return { task };
         }
         catch (error) {
@@ -147,6 +163,7 @@ async function taskRoutes(app) {
         if (updateResult.count === 0) {
             return reply.code(404).send({ message: "Task not found" });
         }
+        await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "task", id, "delete", {}, request);
         return reply.code(204).send();
     });
     app.get("/stats/summary", async (request) => {
