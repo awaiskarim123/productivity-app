@@ -1,4 +1,79 @@
 import { z } from "zod";
+export declare const importPayloadSchema: z.ZodObject<{
+    version: z.ZodNumber;
+    exportedAt: z.ZodOptional<z.ZodString>;
+    profile: z.ZodOptional<z.ZodObject<{
+        name: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        dailyGoalMinutes: z.ZodOptional<z.ZodNumber>;
+    }, z.core.$strip>>;
+    tasks: z.ZodDefault<z.ZodArray<z.ZodObject<{
+        title: z.ZodString;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        completed: z.ZodOptional<z.ZodBoolean>;
+        priority: z.ZodEnum<{
+            LOW: "LOW";
+            MEDIUM: "MEDIUM";
+            HIGH: "HIGH";
+            URGENT: "URGENT";
+        }>;
+        dueDate: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        category: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>>>;
+    habits: z.ZodDefault<z.ZodArray<z.ZodObject<{
+        name: z.ZodString;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        color: z.ZodString;
+        targetDays: z.ZodNumber;
+    }, z.core.$strip>>>;
+    habitLogs: z.ZodDefault<z.ZodArray<z.ZodObject<{
+        habitIndex: z.ZodNumber;
+        date: z.ZodString;
+    }, z.core.$strip>>>;
+    notes: z.ZodDefault<z.ZodArray<z.ZodObject<{
+        title: z.ZodString;
+        content: z.ZodString;
+        tags: z.ZodArray<z.ZodString>;
+        isPinned: z.ZodOptional<z.ZodBoolean>;
+    }, z.core.$strip>>>;
+    workSessions: z.ZodDefault<z.ZodArray<z.ZodObject<{
+        startedAt: z.ZodString;
+        endedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        durationMinutes: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+        notes: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>>>;
+    focusSessions: z.ZodDefault<z.ZodArray<z.ZodObject<{
+        mode: z.ZodEnum<{
+            FOCUS: "FOCUS";
+            BREAK: "BREAK";
+        }>;
+        startedAt: z.ZodString;
+        endedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        targetMinutes: z.ZodNumber;
+        durationMinutes: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+        completed: z.ZodOptional<z.ZodBoolean>;
+        distractions: z.ZodOptional<z.ZodNumber>;
+        notes: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>>>;
+    goals: z.ZodDefault<z.ZodArray<z.ZodObject<{
+        title: z.ZodString;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        type: z.ZodEnum<{
+            DAILY: "DAILY";
+            WEEKLY: "WEEKLY";
+            MONTHLY: "MONTHLY";
+            QUARTERLY: "QUARTERLY";
+            YEARLY: "YEARLY";
+        }>;
+        startDate: z.ZodString;
+        endDate: z.ZodString;
+        targetValue: z.ZodOptional<z.ZodNumber>;
+        keyResults: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            title: z.ZodString;
+            targetValue: z.ZodNumber;
+            weight: z.ZodOptional<z.ZodNumber>;
+        }, z.core.$strip>>>;
+    }, z.core.$strip>>>;
+}, z.core.$strip>;
 export declare const updateProfileSchema: z.ZodObject<{
     name: z.ZodOptional<z.ZodString>;
     dailyGoalMinutes: z.ZodOptional<z.ZodCoercedNumber<unknown>>;

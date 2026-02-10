@@ -8,6 +8,7 @@ import {
   updateWorkSessionSchema,
 } from "../../schemas/work.schema";
 import { calculateFocusStreak, getTimeSummary } from "../../services/statistics.service";
+import { logAudit } from "../../services/audit.service";
 
 function getPeriodConfig(period: "daily" | "weekly" | "monthly") {
   switch (period) {
@@ -47,6 +48,7 @@ export default async function workRoutes(app: FastifyInstance) {
       },
     });
 
+    await logAudit(app.prisma, request.user.id, "work_session", session.id, "create", { startedAt: session.startedAt }, request);
     return reply.code(201).send({ session });
   });
 
@@ -85,6 +87,7 @@ export default async function workRoutes(app: FastifyInstance) {
       },
     });
 
+    await logAudit(app.prisma, request.user.id, "work_session", session.id, "update", { action: "end", durationMinutes }, request);
     const streak = await calculateFocusStreak(
       app.prisma,
       request.user.id,
@@ -201,6 +204,7 @@ export default async function workRoutes(app: FastifyInstance) {
       data: updateData,
     });
 
+    await logAudit(app.prisma, request.user.id, "work_session", id, "update", { updatedFields: Object.keys(updateData) }, request);
     return { session };
   });
 
@@ -217,6 +221,7 @@ export default async function workRoutes(app: FastifyInstance) {
       return reply.code(404).send({ message: "Work session not found" });
     }
 
+    await logAudit(app.prisma, request.user.id, "work_session", id, "delete", {}, request);
     return reply.code(204).send();
   });
 

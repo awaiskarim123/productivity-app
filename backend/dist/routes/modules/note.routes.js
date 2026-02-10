@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = noteRoutes;
 const note_schema_1 = require("../../schemas/note.schema");
+const audit_service_1 = require("../../services/audit.service");
 async function noteRoutes(app) {
     app.addHook("preHandler", app.authenticate);
     app.post("/", async (request, reply) => {
@@ -18,6 +19,7 @@ async function noteRoutes(app) {
                 isPinned: result.data.isPinned ?? false,
             },
         });
+        await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "note", note.id, "create", { title: note.title }, request);
         return reply.code(201).send({ note });
     });
     app.get("/", async (request, reply) => {
@@ -108,6 +110,7 @@ async function noteRoutes(app) {
             where: { id },
             data: updateData,
         });
+        await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "note", id, "update", { updatedFields: Object.keys(updateData) }, request);
         return { note };
     });
     app.delete("/:id", async (request, reply) => {
@@ -120,6 +123,7 @@ async function noteRoutes(app) {
         if (updateResult.count === 0) {
             return reply.code(404).send({ message: "Note not found" });
         }
+        await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "note", id, "delete", {}, request);
         return reply.code(204).send();
     });
 }

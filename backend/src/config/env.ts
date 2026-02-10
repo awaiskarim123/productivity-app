@@ -9,6 +9,8 @@ const envSchema = z.object({
   JWT_ACCESS_TOKEN_TTL: z.string().default("15m"),
   JWT_REFRESH_TOKEN_TTL: z.string().default("30d"),
   PORT: z.coerce.number().default(4000),
+  RATE_LIMIT_MAX: z.coerce.number().int().positive().default(100),
+  RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(900000), // 15 min
 });
 
 const env = envSchema.parse({
@@ -18,6 +20,8 @@ const env = envSchema.parse({
   JWT_ACCESS_TOKEN_TTL: process.env.JWT_ACCESS_TOKEN_TTL ?? "15m",
   JWT_REFRESH_TOKEN_TTL: process.env.JWT_REFRESH_TOKEN_TTL ?? "30d",
   PORT: process.env.PORT ?? "4000",
+  RATE_LIMIT_MAX: process.env.RATE_LIMIT_MAX ?? "100",
+  RATE_LIMIT_WINDOW_MS: process.env.RATE_LIMIT_WINDOW_MS ?? "900000",
 });
 
 export type Env = typeof env;

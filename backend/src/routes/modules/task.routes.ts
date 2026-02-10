@@ -6,6 +6,7 @@ import {
   updateTaskSchema,
   tasksQuerySchema,
 } from "../../schemas/task.schema";
+import { logAudit } from "../../services/audit.service";
 
 dayjs.extend(utc);
 
@@ -29,6 +30,7 @@ export default async function taskRoutes(app: FastifyInstance) {
       },
     });
 
+    await logAudit(app.prisma, request.user.id, "task", task.id, "create", { title: task.title }, request);
     return reply.code(201).send({ task });
   });
 
@@ -156,6 +158,8 @@ export default async function taskRoutes(app: FastifyInstance) {
         return reply.code(404).send({ message: "Task not found" });
       }
 
+      const updatedFields = Object.keys(updateData).filter((k) => k !== "completedAt");
+      await logAudit(app.prisma, request.user.id, "task", id, "update", { updatedFields }, request);
       return { task };
     } catch (error: any) {
       // Handle Prisma not-found errors
@@ -179,6 +183,7 @@ export default async function taskRoutes(app: FastifyInstance) {
       return reply.code(404).send({ message: "Task not found" });
     }
 
+    await logAudit(app.prisma, request.user.id, "task", id, "delete", {}, request);
     return reply.code(204).send();
   });
 

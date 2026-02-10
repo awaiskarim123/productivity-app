@@ -212,6 +212,7 @@ export type UserWhereInput = {
     notes?: Prisma.NoteListRelationFilter;
     weeklyInsights?: Prisma.WeeklyInsightListRelationFilter;
     goals?: Prisma.GoalListRelationFilter;
+    auditLogs?: Prisma.AuditLogListRelationFilter;
 };
 export type UserOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -231,6 +232,7 @@ export type UserOrderByWithRelationInput = {
     notes?: Prisma.NoteOrderByRelationAggregateInput;
     weeklyInsights?: Prisma.WeeklyInsightOrderByRelationAggregateInput;
     goals?: Prisma.GoalOrderByRelationAggregateInput;
+    auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput;
 };
 export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -253,6 +255,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
     notes?: Prisma.NoteListRelationFilter;
     weeklyInsights?: Prisma.WeeklyInsightListRelationFilter;
     goals?: Prisma.GoalListRelationFilter;
+    auditLogs?: Prisma.AuditLogListRelationFilter;
 }, "id" | "email">;
 export type UserOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -302,6 +305,7 @@ export type UserCreateInput = {
     notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
     weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
     goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateInput = {
     id?: string;
@@ -321,6 +325,7 @@ export type UserUncheckedCreateInput = {
     notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
     weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
     goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -340,6 +345,7 @@ export type UserUpdateInput = {
     notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
     weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
     goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -359,6 +365,7 @@ export type UserUncheckedUpdateInput = {
     notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
     weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
     goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserCreateManyInput = {
     id?: string;
@@ -457,6 +464,18 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
 export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string;
 };
+export type UserCreateNestedOneWithoutAuditLogsInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuditLogsInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutAuditLogsInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserUpdateOneRequiredWithoutAuditLogsNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuditLogsInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutAuditLogsInput;
+    upsert?: Prisma.UserUpsertWithoutAuditLogsInput;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.UserUpdateWithoutAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>;
+};
 export type UserCreateNestedOneWithoutWorkSessionsInput = {
     create?: Prisma.XOR<Prisma.UserCreateWithoutWorkSessionsInput, Prisma.UserUncheckedCreateWithoutWorkSessionsInput>;
     connectOrCreate?: Prisma.UserCreateOrConnectWithoutWorkSessionsInput;
@@ -553,6 +572,95 @@ export type UserUpdateOneRequiredWithoutGoalsNestedInput = {
     connect?: Prisma.UserWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGoalsInput, Prisma.UserUpdateWithoutGoalsInput>, Prisma.UserUncheckedUpdateWithoutGoalsInput>;
 };
+export type UserCreateWithoutAuditLogsInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name?: string | null;
+    dailyGoalMinutes?: number;
+    focusStreak?: number;
+    lastLoginAt?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    workSessions?: Prisma.WorkSessionCreateNestedManyWithoutUserInput;
+    focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput;
+    refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
+};
+export type UserUncheckedCreateWithoutAuditLogsInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name?: string | null;
+    dailyGoalMinutes?: number;
+    focusStreak?: number;
+    lastLoginAt?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    workSessions?: Prisma.WorkSessionUncheckedCreateNestedManyWithoutUserInput;
+    focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput;
+    refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput;
+    tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput;
+    habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput;
+    notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
+    goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
+};
+export type UserCreateOrConnectWithoutAuditLogsInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuditLogsInput>;
+};
+export type UserUpsertWithoutAuditLogsInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutAuditLogsInput, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuditLogsInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutAuditLogsInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutAuditLogsInput, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>;
+};
+export type UserUpdateWithoutAuditLogsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyGoalMinutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    focusStreak?: Prisma.IntFieldUpdateOperationsInput | number;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workSessions?: Prisma.WorkSessionUpdateManyWithoutUserNestedInput;
+    focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput;
+    refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
+};
+export type UserUncheckedUpdateWithoutAuditLogsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyGoalMinutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    focusStreak?: Prisma.IntFieldUpdateOperationsInput | number;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workSessions?: Prisma.WorkSessionUncheckedUpdateManyWithoutUserNestedInput;
+    focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput;
+    refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput;
+    tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput;
+    habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput;
+    notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
+    weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
+    goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
+};
 export type UserCreateWithoutWorkSessionsInput = {
     id?: string;
     email: string;
@@ -570,6 +678,7 @@ export type UserCreateWithoutWorkSessionsInput = {
     notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
     weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
     goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateWithoutWorkSessionsInput = {
     id?: string;
@@ -588,6 +697,7 @@ export type UserUncheckedCreateWithoutWorkSessionsInput = {
     notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
     weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
     goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserCreateOrConnectWithoutWorkSessionsInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -619,6 +729,7 @@ export type UserUpdateWithoutWorkSessionsInput = {
     notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
     weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
     goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateWithoutWorkSessionsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -637,6 +748,7 @@ export type UserUncheckedUpdateWithoutWorkSessionsInput = {
     notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
     weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
     goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserCreateWithoutFocusSessionsInput = {
     id?: string;
@@ -655,6 +767,7 @@ export type UserCreateWithoutFocusSessionsInput = {
     notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
     weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
     goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateWithoutFocusSessionsInput = {
     id?: string;
@@ -673,6 +786,7 @@ export type UserUncheckedCreateWithoutFocusSessionsInput = {
     notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
     weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
     goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserCreateOrConnectWithoutFocusSessionsInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -704,6 +818,7 @@ export type UserUpdateWithoutFocusSessionsInput = {
     notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
     weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
     goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateWithoutFocusSessionsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -722,6 +837,7 @@ export type UserUncheckedUpdateWithoutFocusSessionsInput = {
     notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
     weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
     goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserCreateWithoutRefreshTokensInput = {
     id?: string;
@@ -740,6 +856,7 @@ export type UserCreateWithoutRefreshTokensInput = {
     notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
     weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
     goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateWithoutRefreshTokensInput = {
     id?: string;
@@ -758,6 +875,7 @@ export type UserUncheckedCreateWithoutRefreshTokensInput = {
     notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
     weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
     goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserCreateOrConnectWithoutRefreshTokensInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -789,6 +907,7 @@ export type UserUpdateWithoutRefreshTokensInput = {
     notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
     weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
     goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateWithoutRefreshTokensInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -807,6 +926,7 @@ export type UserUncheckedUpdateWithoutRefreshTokensInput = {
     notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
     weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
     goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserCreateWithoutTasksInput = {
     id?: string;
@@ -825,6 +945,7 @@ export type UserCreateWithoutTasksInput = {
     notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
     weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
     goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateWithoutTasksInput = {
     id?: string;
@@ -843,6 +964,7 @@ export type UserUncheckedCreateWithoutTasksInput = {
     notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
     weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
     goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserCreateOrConnectWithoutTasksInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -874,6 +996,7 @@ export type UserUpdateWithoutTasksInput = {
     notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
     weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
     goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateWithoutTasksInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -892,6 +1015,7 @@ export type UserUncheckedUpdateWithoutTasksInput = {
     notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
     weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
     goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserCreateWithoutHabitsInput = {
     id?: string;
@@ -910,6 +1034,7 @@ export type UserCreateWithoutHabitsInput = {
     notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
     weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
     goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateWithoutHabitsInput = {
     id?: string;
@@ -928,6 +1053,7 @@ export type UserUncheckedCreateWithoutHabitsInput = {
     notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
     weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
     goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserCreateOrConnectWithoutHabitsInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -959,6 +1085,7 @@ export type UserUpdateWithoutHabitsInput = {
     notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
     weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
     goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateWithoutHabitsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -977,6 +1104,7 @@ export type UserUncheckedUpdateWithoutHabitsInput = {
     notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
     weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
     goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserCreateWithoutNotesInput = {
     id?: string;
@@ -995,6 +1123,7 @@ export type UserCreateWithoutNotesInput = {
     habits?: Prisma.HabitCreateNestedManyWithoutUserInput;
     weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
     goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateWithoutNotesInput = {
     id?: string;
@@ -1013,6 +1142,7 @@ export type UserUncheckedCreateWithoutNotesInput = {
     habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput;
     weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
     goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserCreateOrConnectWithoutNotesInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -1044,6 +1174,7 @@ export type UserUpdateWithoutNotesInput = {
     habits?: Prisma.HabitUpdateManyWithoutUserNestedInput;
     weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
     goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateWithoutNotesInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1062,6 +1193,7 @@ export type UserUncheckedUpdateWithoutNotesInput = {
     habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput;
     weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
     goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserCreateWithoutWeeklyInsightsInput = {
     id?: string;
@@ -1080,6 +1212,7 @@ export type UserCreateWithoutWeeklyInsightsInput = {
     habits?: Prisma.HabitCreateNestedManyWithoutUserInput;
     notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
     goals?: Prisma.GoalCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateWithoutWeeklyInsightsInput = {
     id?: string;
@@ -1098,6 +1231,7 @@ export type UserUncheckedCreateWithoutWeeklyInsightsInput = {
     habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput;
     notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
     goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserCreateOrConnectWithoutWeeklyInsightsInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -1129,6 +1263,7 @@ export type UserUpdateWithoutWeeklyInsightsInput = {
     habits?: Prisma.HabitUpdateManyWithoutUserNestedInput;
     notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
     goals?: Prisma.GoalUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateWithoutWeeklyInsightsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1147,6 +1282,7 @@ export type UserUncheckedUpdateWithoutWeeklyInsightsInput = {
     habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput;
     notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
     goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserCreateWithoutGoalsInput = {
     id?: string;
@@ -1165,6 +1301,7 @@ export type UserCreateWithoutGoalsInput = {
     habits?: Prisma.HabitCreateNestedManyWithoutUserInput;
     notes?: Prisma.NoteCreateNestedManyWithoutUserInput;
     weeklyInsights?: Prisma.WeeklyInsightCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateWithoutGoalsInput = {
     id?: string;
@@ -1183,6 +1320,7 @@ export type UserUncheckedCreateWithoutGoalsInput = {
     habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput;
     notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput;
     weeklyInsights?: Prisma.WeeklyInsightUncheckedCreateNestedManyWithoutUserInput;
+    auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserCreateOrConnectWithoutGoalsInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -1214,6 +1352,7 @@ export type UserUpdateWithoutGoalsInput = {
     habits?: Prisma.HabitUpdateManyWithoutUserNestedInput;
     notes?: Prisma.NoteUpdateManyWithoutUserNestedInput;
     weeklyInsights?: Prisma.WeeklyInsightUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateWithoutGoalsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1232,6 +1371,7 @@ export type UserUncheckedUpdateWithoutGoalsInput = {
     habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput;
     notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput;
     weeklyInsights?: Prisma.WeeklyInsightUncheckedUpdateManyWithoutUserNestedInput;
+    auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput;
 };
 /**
  * Count Type UserCountOutputType
@@ -1245,6 +1385,7 @@ export type UserCountOutputType = {
     notes: number;
     weeklyInsights: number;
     goals: number;
+    auditLogs: number;
 };
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     workSessions?: boolean | UserCountOutputTypeCountWorkSessionsArgs;
@@ -1255,6 +1396,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
     notes?: boolean | UserCountOutputTypeCountNotesArgs;
     weeklyInsights?: boolean | UserCountOutputTypeCountWeeklyInsightsArgs;
     goals?: boolean | UserCountOutputTypeCountGoalsArgs;
+    auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs;
 };
 /**
  * UserCountOutputType without action
@@ -1313,6 +1455,12 @@ export type UserCountOutputTypeCountWeeklyInsightsArgs<ExtArgs extends runtime.T
 export type UserCountOutputTypeCountGoalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.GoalWhereInput;
 };
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.AuditLogWhereInput;
+};
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     email?: boolean;
@@ -1331,6 +1479,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
     notes?: boolean | Prisma.User$notesArgs<ExtArgs>;
     weeklyInsights?: boolean | Prisma.User$weeklyInsightsArgs<ExtArgs>;
     goals?: boolean | Prisma.User$goalsArgs<ExtArgs>;
+    auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["user"]>;
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1376,6 +1525,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     notes?: boolean | Prisma.User$notesArgs<ExtArgs>;
     weeklyInsights?: boolean | Prisma.User$weeklyInsightsArgs<ExtArgs>;
     goals?: boolean | Prisma.User$goalsArgs<ExtArgs>;
+    auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {};
@@ -1391,6 +1541,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
         notes: Prisma.$NotePayload<ExtArgs>[];
         weeklyInsights: Prisma.$WeeklyInsightPayload<ExtArgs>[];
         goals: Prisma.$GoalPayload<ExtArgs>[];
+        auditLogs: Prisma.$AuditLogPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -1739,6 +1890,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
     notes<T extends Prisma.User$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     weeklyInsights<T extends Prisma.User$weeklyInsightsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$weeklyInsightsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WeeklyInsightPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     goals<T extends Prisma.User$goalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$goalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2326,6 +2478,29 @@ export type User$goalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
     take?: number;
     skip?: number;
     distinct?: Prisma.GoalScalarFieldEnum | Prisma.GoalScalarFieldEnum[];
+};
+/**
+ * User.auditLogs
+ */
+export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuditLog
+     */
+    select?: Prisma.AuditLogSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the AuditLog
+     */
+    omit?: Prisma.AuditLogOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.AuditLogInclude<ExtArgs> | null;
+    where?: Prisma.AuditLogWhereInput;
+    orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[];
+    cursor?: Prisma.AuditLogWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[];
 };
 /**
  * User without action

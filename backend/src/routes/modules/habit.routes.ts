@@ -10,6 +10,7 @@ import {
   habitsQuerySchema,
   habitLogsQuerySchema,
 } from "../../schemas/habit.schema";
+import { logAudit } from "../../services/audit.service";
 
 /**
  * Calculate habit streak with proper timezone handling and date boundaries.
@@ -111,6 +112,7 @@ export default async function habitRoutes(app: FastifyInstance) {
       },
     });
 
+    await logAudit(app.prisma, request.user.id, "habit", habit.id, "create", { name: habit.name }, request);
     return reply.code(201).send({ habit });
   });
 
@@ -392,6 +394,7 @@ export default async function habitRoutes(app: FastifyInstance) {
       data: updateData,
     });
 
+    await logAudit(app.prisma, request.user.id, "habit", id, "update", { updatedFields: Object.keys(updateData) }, request);
     return { habit };
   });
 
@@ -408,6 +411,7 @@ export default async function habitRoutes(app: FastifyInstance) {
       return reply.code(404).send({ message: "Habit not found" });
     }
 
+    await logAudit(app.prisma, request.user.id, "habit", id, "delete", {}, request);
     return reply.code(204).send();
   });
 }

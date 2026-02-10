@@ -1,8 +1,24 @@
 import type { FastifyInstance } from "fastify";
-import { updateProfileSchema, changePasswordSchema } from "../../schemas/profile.schema";
+import { updateProfileSchema, changePasswordSchema, importPayloadSchema } from "../../schemas/profile.schema";
 import type { Prisma } from "../../generated/prisma/client";
 import { calculateFocusStreak, getTimeSummary } from "../../services/statistics.service";
 import { verifyPassword, hashPassword } from "../../utils/password";
+import {
+  exportUserData,
+  importUserData,
+  exportTasksToCsv,
+  exportNotesToCsv,
+  type ExportPayload,
+} from "../../services/export-import.service";
+
+const IMPORT_BODY_LIMIT_BYTES = 5 * 1024 * 1024; // 5 MB
+const IMPORT_MAX_TASKS = 10_000;
+const IMPORT_MAX_HABITS = 5_000;
+const IMPORT_MAX_HABIT_LOGS = 100_000;
+const IMPORT_MAX_NOTES = 10_000;
+const IMPORT_MAX_WORK_SESSIONS = 50_000;
+const IMPORT_MAX_FOCUS_SESSIONS = 50_000;
+const IMPORT_MAX_GOALS = 2_000;
 
 export default async function profileRoutes(app: FastifyInstance) {
   app.addHook("preHandler", app.authenticate);
@@ -104,6 +120,79 @@ export default async function profileRoutes(app: FastifyInstance) {
     });
 
     return reply.send({ message: "Password updated successfully" });
+  });
+
+  app.get("/export", async (request, reply) => {
+    const format = (request.query as { format?: string })?.format ?? "json";
+    const entity = (request.query as { entity?: string })?.entity;
+
+    const payload = await exportUserData(app.prisma, request.user.id);
+
+    if (format === "csv") {
+      if (entity === "tasks") {
+        reply.header("Content-Type", "text/csv; charset=utf-8");
+        reply.header("Content-Disposition", "attachment; filename=tasks.csv");
+        return reply.send(exportTasksToCsv(payload.tasks));
+      }
+      if (entity === "notes") {
+        reply.header("Content-Type", "text/csv; charset=utf-8");
+        reply.header("Content-Disposition", "attachment; filename=notes.csv");
+        return reply.send(exportNotesToCsv(payload.notes));
+      }
+      return reply.code(400).send({ message: "CSV export requires entity=tasks or entity=notes" });
+    }
+
+    reply.header("Content-Type", "application/json");
+    reply.header("Content-Disposition", "attachment; filename=productivity-backup.json");
+    return reply.send(payload);
+  });
+
+  app.post("/import", { bodyLimit: IMPORT_BODY_LIMIT_BYTES }, async (request, reply) => {
+    const result = importPayloadSchema.safeParse(request.body ?? {});
+    if (!result.success) {
+      return reply.code(400).send({ message: "Invalid backup payload", errors: result.error.flatten() });
+    }
+
+    const payload = result.data as unknown as ExportPayload;
+
+    if (payload.tasks.length > IMPORT_MAX_TASKS) {
+      return reply.code(400).send({
+        message: `Import rejected: tasks count (${payload.tasks.length}) exceeds maximum (${IMPORT_MAX_TASKS})`,
+      });
+    }
+    if (payload.habits.length > IMPORT_MAX_HABITS) {
+      return reply.code(400).send({
+        message: `Import rejected: habits count (${payload.habits.length}) exceeds maximum (${IMPORT_MAX_HABITS})`,
+      });
+    }
+    if (payload.habitLogs.length > IMPORT_MAX_HABIT_LOGS) {
+      return reply.code(400).send({
+        message: `Import rejected: habitLogs count (${payload.habitLogs.length}) exceeds maximum (${IMPORT_MAX_HABIT_LOGS})`,
+      });
+    }
+    if (payload.notes.length > IMPORT_MAX_NOTES) {
+      return reply.code(400).send({
+        message: `Import rejected: notes count (${payload.notes.length}) exceeds maximum (${IMPORT_MAX_NOTES})`,
+      });
+    }
+    if (payload.workSessions.length > IMPORT_MAX_WORK_SESSIONS) {
+      return reply.code(400).send({
+        message: `Import rejected: workSessions count (${payload.workSessions.length}) exceeds maximum (${IMPORT_MAX_WORK_SESSIONS})`,
+      });
+    }
+    if (payload.focusSessions.length > IMPORT_MAX_FOCUS_SESSIONS) {
+      return reply.code(400).send({
+        message: `Import rejected: focusSessions count (${payload.focusSessions.length}) exceeds maximum (${IMPORT_MAX_FOCUS_SESSIONS})`,
+      });
+    }
+    if (payload.goals.length > IMPORT_MAX_GOALS) {
+      return reply.code(400).send({
+        message: `Import rejected: goals count (${payload.goals.length}) exceeds maximum (${IMPORT_MAX_GOALS})`,
+      });
+    }
+
+    const { imported } = await importUserData(app.prisma, request.user.id, payload);
+    return reply.send({ message: "Import completed", imported });
   });
 }
 

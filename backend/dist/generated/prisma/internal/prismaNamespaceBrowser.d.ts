@@ -42,6 +42,7 @@ export declare const AnyNull: {
 };
 export declare const ModelName: {
     readonly User: "User";
+    readonly AuditLog: "AuditLog";
     readonly WorkSession: "WorkSession";
     readonly FocusSession: "FocusSession";
     readonly RefreshToken: "RefreshToken";
@@ -74,6 +75,18 @@ export declare const UserScalarFieldEnum: {
     readonly updatedAt: "updatedAt";
 };
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum];
+export declare const AuditLogScalarFieldEnum: {
+    readonly id: "id";
+    readonly userId: "userId";
+    readonly resource: "resource";
+    readonly resourceId: "resourceId";
+    readonly action: "action";
+    readonly details: "details";
+    readonly ipAddress: "ipAddress";
+    readonly userAgent: "userAgent";
+    readonly createdAt: "createdAt";
+};
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum];
 export declare const WorkSessionScalarFieldEnum: {
     readonly id: "id";
     readonly userId: "userId";

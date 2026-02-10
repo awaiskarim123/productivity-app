@@ -7,6 +7,7 @@ exports.default = focusRoutes;
 const dayjs_1 = __importDefault(require("dayjs"));
 const enums_1 = require("../../generated/prisma/enums");
 const focus_schema_1 = require("../../schemas/focus.schema");
+const audit_service_1 = require("../../services/audit.service");
 async function focusRoutes(app) {
     app.addHook("preHandler", app.authenticate);
     app.get("/active", async (request) => {
@@ -44,6 +45,7 @@ async function focusRoutes(app) {
                 startedAt: result.data.startedAt ?? new Date(),
             },
         });
+        await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "focus_session", session.id, "create", { mode: session.mode, targetMinutes: session.targetMinutes }, request);
         return reply.code(201).send({ session });
     });
     app.post("/end", async (request, reply) => {
@@ -73,6 +75,7 @@ async function focusRoutes(app) {
                 notes: result.data.notes ?? session.notes ?? null,
             },
         });
+        await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "focus_session", session.id, "update", { action: "end", durationMinutes }, request);
         return { session: updated };
     });
     app.get("/sessions", async (request, reply) => {
@@ -203,6 +206,7 @@ async function focusRoutes(app) {
             where: { id },
             data: updateData,
         });
+        await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "focus_session", id, "update", { updatedFields: Object.keys(updateData) }, request);
         return { session };
     });
     app.delete("/:id", async (request, reply) => {
@@ -215,6 +219,7 @@ async function focusRoutes(app) {
         if (updateResult.count === 0) {
             return reply.code(404).send({ message: "Focus session not found" });
         }
+        await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "focus_session", id, "delete", {}, request);
         return reply.code(204).send();
     });
 }
