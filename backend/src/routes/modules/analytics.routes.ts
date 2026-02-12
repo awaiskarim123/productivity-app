@@ -13,6 +13,7 @@ import {
   heatmapQuerySchema,
   burnoutQuerySchema,
   productivityScoreQuerySchema,
+  weeklyInsightsQuerySchema,
 } from "../../schemas/analytics.schema";
 
 function buildBuckets(
@@ -174,16 +175,33 @@ export default async function analyticsRoutes(app: FastifyInstance) {
       return reply.code(404).send({ message: "User not found" });
     }
 
-    const query = request.query as { weekStart?: string } | undefined;
-    const weekStart = query?.weekStart
-      ? dayjs(query.weekStart).startOf("week").toDate()
+    const parsed = weeklyInsightsQuerySchema.safeParse(request.query ?? {});
+    const weekStartParam = parsed.success ? parsed.data.weekStart : undefined;
+    const weekStart = weekStartParam
+      ? dayjs(weekStartParam).startOf("week").toDate()
       : dayjs().startOf("week").toDate();
 
     const insights = await getOrGenerateWeeklyInsights(app.prisma, user.id, weekStart);
 
+    const totalSessions = insights.totalSessions;
+    const completedFocusSessions = insights.completedFocusSessions;
+    const completionRate =
+      totalSessions > 0 ? Math.round((completedFocusSessions / totalSessions) * 100) : 0;
+
+    const peakHours = insights.peakHours ?? [];
+    const bestFocusWindow =
+      peakHours.length > 0
+        ? (() => {
+            const sorted = [...peakHours].sort((a, b) => a - b);
+            return { startHour: sorted[0], endHour: sorted[sorted.length - 1] };
+          })()
+        : null;
+
     return {
       weekStart: weekStart.toISOString(),
       weekEnd: dayjs(weekStart).endOf("week").toISOString(),
+      completionRate,
+      bestFocusWindow,
       ...insights,
     };
   });
