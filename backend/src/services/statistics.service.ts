@@ -27,33 +27,56 @@ export async function getWorkDurationInRange(
   return aggregate._sum.durationMinutes ?? 0;
 }
 
-export async function calculateFocusStreak(
-  prisma: PrismaClient,
-  userId: string,
+/**
+ * Compute focus streak from per-day minutes (consecutive days meeting daily goal from today backward).
+ */
+function streakFromDailyMinutes(
+  dailyMinutes: Map<string, number>,
+  today: dayjs.Dayjs,
   dailyGoalMinutes: number,
-  rangeDays = 30,
-): Promise<number> {
+  rangeDays: number,
+): number {
   let streak = 0;
-  const today = dayjs().startOf("day");
-
   for (let dayOffset = 0; dayOffset < rangeDays; dayOffset += 1) {
     const dayStart = today.subtract(dayOffset, "day");
-    const dayEnd = dayStart.endOf("day");
-    const minutes = await getWorkDurationInRange(
-      prisma,
-      userId,
-      dayStart.toDate(),
-      dayEnd.add(1, "millisecond").toDate(),
-    );
-
+    const key = dayStart.format("YYYY-MM-DD");
+    const minutes = dailyMinutes.get(key) ?? 0;
     if (minutes >= dailyGoalMinutes) {
       streak += 1;
     } else {
       break;
     }
   }
-
   return streak;
+}
+
+export async function calculateFocusStreak(
+  prisma: PrismaClient,
+  userId: string,
+  dailyGoalMinutes: number,
+  rangeDays = 30,
+): Promise<number> {
+  const today = dayjs().startOf("day");
+  const rangeStart = today.subtract(rangeDays, "day").toDate();
+
+  const sessions = await prisma.workSession.findMany({
+    where: {
+      userId,
+      startedAt: { gte: rangeStart },
+      durationMinutes: { not: null },
+      deletedAt: null,
+    },
+    select: { startedAt: true, durationMinutes: true },
+  });
+
+  const dailyMinutes = new Map<string, number>();
+  for (const s of sessions) {
+    const d = dayjs(s.startedAt).startOf("day").format("YYYY-MM-DD");
+    const current = dailyMinutes.get(d) ?? 0;
+    dailyMinutes.set(d, current + (s.durationMinutes ?? 0));
+  }
+
+  return streakFromDailyMinutes(dailyMinutes, today, dailyGoalMinutes, rangeDays);
 }
 
 export async function getTimeSummary(

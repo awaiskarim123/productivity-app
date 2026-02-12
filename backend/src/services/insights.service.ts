@@ -35,60 +35,47 @@ export async function generateWeeklyInsights(
   weekStart: Date,
   weekEnd: Date,
 ): Promise<WeeklyInsightData> {
-  // Fetch all work sessions for the week
-  const workSessions = await prisma.workSession.findMany({
-    where: {
-      userId,
-      startedAt: {
-        gte: weekStart,
-        lt: weekEnd,
-      },
-      durationMinutes: { not: null },
-      deletedAt: null,
-    },
-    select: {
-      startedAt: true,
-      durationMinutes: true,
-    },
-  });
+  const previousWeekStart = dayjs(weekStart).subtract(1, "week").toDate();
+  const previousWeekEnd = dayjs(weekEnd).subtract(1, "week").toDate();
 
-  // Fetch all focus sessions for the week
-  const focusSessions = await prisma.focusSession.findMany({
-    where: {
-      userId,
-      startedAt: {
-        gte: weekStart,
-        lt: weekEnd,
+  const [workSessions, focusSessions, habits, previousWeekSessions, user] = await Promise.all([
+    prisma.workSession.findMany({
+      where: {
+        userId,
+        startedAt: { gte: weekStart, lt: weekEnd },
+        durationMinutes: { not: null },
+        deletedAt: null,
       },
-      durationMinutes: { not: null },
-      deletedAt: null,
-    },
-    select: {
-      startedAt: true,
-      durationMinutes: true,
-      completed: true,
-      mode: true,
-    },
-  });
-
-  // Fetch habits and their logs for the week
-  const habits = await prisma.habit.findMany({
-    where: {
-      userId,
-      isActive: true,
-      deletedAt: null,
-    },
-    include: {
-      logs: {
-        where: {
-          date: {
-            gte: weekStart,
-            lt: weekEnd,
-          },
+      select: { startedAt: true, durationMinutes: true },
+    }),
+    prisma.focusSession.findMany({
+      where: {
+        userId,
+        startedAt: { gte: weekStart, lt: weekEnd },
+        durationMinutes: { not: null },
+        deletedAt: null,
+      },
+      select: { startedAt: true, durationMinutes: true, completed: true, mode: true },
+    }),
+    prisma.habit.findMany({
+      where: { userId, isActive: true, deletedAt: null },
+      include: {
+        logs: {
+          where: { date: { gte: weekStart, lt: weekEnd } },
         },
       },
-    },
-  });
+    }),
+    prisma.workSession.findMany({
+      where: {
+        userId,
+        startedAt: { gte: previousWeekStart, lt: previousWeekEnd },
+        durationMinutes: { not: null },
+        deletedAt: null,
+      },
+      select: { durationMinutes: true },
+    }),
+    prisma.user.findUnique({ where: { id: userId }, select: { dailyGoalMinutes: true } }),
+  ]);
 
   // Calculate peak hours (hours with most productivity)
   const hourProductivity = new Map<number, number>();
@@ -123,23 +110,6 @@ export async function generateWeeklyInsights(
     .map(([day]) => day);
 
   // Calculate week-over-week trend
-  const previousWeekStart = dayjs(weekStart).subtract(1, "week").toDate();
-  const previousWeekEnd = dayjs(weekEnd).subtract(1, "week").toDate();
-
-  const previousWeekSessions = await prisma.workSession.findMany({
-    where: {
-      userId,
-      startedAt: {
-        gte: previousWeekStart,
-        lt: previousWeekEnd,
-      },
-      durationMinutes: { not: null },
-      deletedAt: null,
-    },
-    select: {
-      durationMinutes: true,
-    },
-  });
 
   const currentWeekTotal = workSessions.reduce(
     (sum, s) => sum + (s.durationMinutes ?? 0),
@@ -295,7 +265,6 @@ export async function generateWeeklyInsights(
     });
   }
 
-  const user = await prisma.user.findUnique({ where: { id: userId } });
   if (user && averageDailyMinutes < user.dailyGoalMinutes * 0.7) {
     recommendations.push({
       type: "daily_goal",
