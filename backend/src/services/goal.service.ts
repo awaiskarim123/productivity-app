@@ -54,7 +54,10 @@ export async function calculateGoalProgress(
         },
       },
       focusSessions: {
-        where: { deletedAt: null },
+        where: {
+          deletedAt: null,
+          startedAt: logRange,
+        },
         select: { id: true, startedAt: true, endedAt: true, durationMinutes: true },
       },
     },
@@ -116,17 +119,10 @@ export async function calculateGoalProgress(
         : 0;
   }
 
-  // Calculate progress from Focus Sessions (minutes within goal period)
-  const focusSessionsInPeriod = goal.focusSessions.filter((session) => {
-    if (!session.endedAt || !session.durationMinutes) return false;
-    const sessionDate = dayjs(session.startedAt);
-    return (
-      (sessionDate.isAfter(startDate) || sessionDate.isSame(startDate, "day")) &&
-      (sessionDate.isBefore(endDate) || sessionDate.isSame(endDate, "day"))
-    );
-  });
-
-  const totalFocusMinutes = focusSessionsInPeriod.reduce(
+  // Calculate progress from Focus Sessions (minutes within goal period; date filter applied in query via logRange)
+  const totalFocusMinutes = goal.focusSessions
+    .filter((session) => session.endedAt != null && session.durationMinutes != null)
+    .reduce(
     (sum, session) => sum + (session.durationMinutes || 0),
     0
   );
