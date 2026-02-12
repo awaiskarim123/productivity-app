@@ -10,37 +10,70 @@ interface CalculateProgressResult {
 }
 
 /**
- * Calculate goal progress from linked activities
+ * Calculate goal progress from linked activities.
+ * Uses two queries so habit logs are bounded by goal start/end (avoids loading unbounded log history).
  */
 export async function calculateGoalProgress(
   prisma: PrismaClient,
   goalId: string
 ): Promise<CalculateProgressResult> {
-  const goal = await prisma.goal.findUnique({
+  const goalMeta = await prisma.goal.findUnique({
     where: { id: goalId },
-    include: {
+    select: {
+      id: true,
+      startDate: true,
+      endDate: true,
+      targetValue: true,
       keyResults: true,
+    },
+  });
+
+  if (!goalMeta) {
+    throw new Error("Goal not found");
+  }
+
+  const startDate = dayjs(goalMeta.startDate);
+  const endDate = dayjs(goalMeta.endDate);
+  const logRange = { gte: goalMeta.startDate, lte: goalMeta.endDate };
+
+  const activities = await prisma.goal.findUnique({
+    where: { id: goalId },
+    select: {
       tasks: {
         where: { deletedAt: null },
+        select: { id: true, completed: true },
       },
       habits: {
         where: { deletedAt: null },
-        include: {
-          logs: true,
+        select: {
+          id: true,
+          logs: {
+            where: { date: logRange },
+            select: { date: true },
+          },
         },
       },
       focusSessions: {
         where: { deletedAt: null },
+        select: { id: true, startedAt: true, endedAt: true, durationMinutes: true },
       },
     },
   });
 
-  if (!goal) {
+  if (!activities) {
     throw new Error("Goal not found");
   }
 
-  const startDate = dayjs(goal.startDate);
-  const endDate = dayjs(goal.endDate);
+  const goal = {
+    ...goalMeta,
+    startDate: goalMeta.startDate,
+    endDate: goalMeta.endDate,
+    keyResults: goalMeta.keyResults,
+    tasks: activities.tasks,
+    habits: activities.habits,
+    focusSessions: activities.focusSessions,
+  };
+
   const now = dayjs();
   const totalDays = endDate.diff(startDate, "day");
   const elapsedDays = Math.max(0, now.diff(startDate, "day"));
@@ -189,9 +222,21 @@ export async function updateGoalProgress(
 }
 
 /**
- * Get contribution breakdown for a goal
+ * Get contribution breakdown for a goal.
+ * Bounds habit logs by goal period to avoid loading unbounded history.
  */
 export async function getGoalContributions(prisma: PrismaClient, goalId: string) {
+  const goalMeta = await prisma.goal.findUnique({
+    where: { id: goalId },
+    select: { startDate: true, endDate: true },
+  });
+
+  if (!goalMeta) {
+    throw new Error("Goal not found");
+  }
+
+  const logRange = { gte: goalMeta.startDate, lte: goalMeta.endDate };
+
   const goal = await prisma.goal.findUnique({
     where: { id: goalId },
     include: {
@@ -211,9 +256,8 @@ export async function getGoalContributions(prisma: PrismaClient, goalId: string)
           id: true,
           name: true,
           logs: {
-            select: {
-              date: true,
-            },
+            where: { date: logRange },
+            select: { date: true },
           },
         },
       },
@@ -322,12 +366,29 @@ export async function getGoalContributions(prisma: PrismaClient, goalId: string)
 }
 
 /**
- * Get timeline data for a goal
+ * Get timeline data for a goal.
+ * Fetches goal dates first so habit logs can be bounded by goal period (scalability).
  */
 export async function getGoalTimeline(prisma: PrismaClient, goalId: string) {
+  const goalMeta = await prisma.goal.findUnique({
+    where: { id: goalId },
+    select: { id: true, title: true, startDate: true, endDate: true, progressPercent: true },
+  });
+
+  if (!goalMeta) {
+    throw new Error("Goal not found");
+  }
+
+  const logRange = { gte: goalMeta.startDate, lte: goalMeta.endDate };
+
   const goal = await prisma.goal.findUnique({
     where: { id: goalId },
-    include: {
+    select: {
+      id: true,
+      title: true,
+      startDate: true,
+      endDate: true,
+      progressPercent: true,
       tasks: {
         where: { deletedAt: null },
         select: {
@@ -340,11 +401,11 @@ export async function getGoalTimeline(prisma: PrismaClient, goalId: string) {
       },
       habits: {
         where: { deletedAt: null },
-        include: {
+        select: {
+          id: true,
           logs: {
-            select: {
-              date: true,
-            },
+            where: { date: logRange },
+            select: { date: true },
           },
         },
       },
