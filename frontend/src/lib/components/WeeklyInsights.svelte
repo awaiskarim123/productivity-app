@@ -78,13 +78,26 @@
 		}
 	}
 
+	/** Cluster consecutive hours, format each cluster as "start – end" or single hour, return comma-separated list. */
 	function bestFocusWindow(peakHours: number[]): string {
 		if (peakHours.length === 0) return '';
-		const sorted = [...peakHours].sort((a, b) => a - b);
-		const min = sorted[0];
-		const max = sorted[sorted.length - 1];
-		if (min === max) return formatHour(min);
-		return `${formatHour(min)} – ${formatHour(max)}`;
+		const sorted = [...new Set(peakHours)].sort((a, b) => a - b);
+		const clusters: number[][] = [];
+		let current: number[] = [];
+		for (const h of sorted) {
+			if (current.length === 0 || h === current[current.length - 1]! + 1) {
+				current.push(h);
+			} else {
+				clusters.push(current);
+				current = [h];
+			}
+		}
+		if (current.length > 0) clusters.push(current);
+		const formatted = clusters.map((c) => {
+			if (c.length === 1) return formatHour(c[0]!);
+			return `${formatHour(c[0]!)} – ${formatHour(c[c.length - 1]!)}`;
+		});
+		return formatted.join(', ');
 	}
 
 	function getImpactColor(impact: 'positive' | 'neutral' | 'negative'): string {
@@ -107,6 +120,16 @@
 			case 'neutral':
 				return '→';
 		}
+	}
+
+	function formatWeekRangeLabel(weekStart: string | undefined, weekEnd: string | undefined): string | null {
+		if (!weekStart || !weekEnd) return null;
+		const startDate = new Date(weekStart);
+		const endDate = new Date(weekEnd);
+		if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) return null;
+		const startStr = startDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+		const endStr = endDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+		return `${startStr} – ${endStr}`;
 	}
 </script>
 
@@ -151,11 +174,13 @@
 	{:else if insights}
 		<div class="space-y-3">
 			<!-- Week label (for past weeks) -->
-			{#if insights.weekStart && selectedWeek !== 'this'}
-				<p class="text-xs text-gray-500 dark:text-slate-400">
-					Week of {new Date(insights.weekStart).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-					– {new Date(insights.weekEnd).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-				</p>
+			{#if selectedWeek !== 'this'}
+				{@const weekLabelStr = formatWeekRangeLabel(insights.weekStart, insights.weekEnd)}
+				{#if weekLabelStr}
+					<p class="text-xs text-gray-500 dark:text-slate-400">
+						Week of {weekLabelStr}
+					</p>
+				{/if}
 			{/if}
 
 			<!-- Quick stats -->
