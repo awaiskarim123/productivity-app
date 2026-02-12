@@ -197,9 +197,17 @@
 			</div>
 			<div>
 				<h2 class="text-base font-semibold text-gray-900 dark:text-slate-100 sm:text-lg">Insights & recommendations</h2>
-				<p class="text-xs text-gray-600 dark:text-slate-400">Weekly patterns and personalized suggestions</p>
+				<p class="text-xs text-gray-600 dark:text-slate-400">Weekly patterns, habit impact, and personalized suggestions</p>
 			</div>
 		</div>
+		{#if overview != null && overview.streak > 0}
+			<div class="rounded-xl border border-emerald-200 dark:border-emerald-500/40 bg-emerald-50 dark:bg-emerald-500/10 px-4 py-2.5 flex items-center gap-2">
+				<span class="text-lg" aria-hidden="true">🔥</span>
+				<p class="text-sm text-emerald-800 dark:text-emerald-200">
+					<strong>{overview.streak}</strong> day focus streak — keep it up by hitting your daily goal.
+				</p>
+			</div>
+		{/if}
 		<div class="grid gap-2 sm:gap-3 lg:grid-cols-2 lg:gap-3">
 			<WeeklyInsights />
 			<RecommendationsPanel />
