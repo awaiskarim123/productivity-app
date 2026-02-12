@@ -11,3 +11,8 @@ export const burnoutQuerySchema = z.object({
 export const productivityScoreQuerySchema = z.object({
   periodDays: z.coerce.number().int().min(1).max(90).default(7),
 });
+
+/** Optional weekStart (date string YYYY-MM-DD) to fetch insights for a specific week (e.g. last week). */
+export const weeklyInsightsQuerySchema = z.object({
+  weekStart: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+});
