@@ -258,7 +258,10 @@ export async function getGoalContributions(prisma: PrismaClient, goalId: string)
         },
       },
       focusSessions: {
-        where: { deletedAt: null },
+        where: {
+          deletedAt: null,
+          startedAt: logRange,
+        },
         select: {
           id: true,
           startedAt: true,
@@ -302,16 +305,8 @@ export async function getGoalContributions(prisma: PrismaClient, goalId: string)
   );
   const habitContribution = goal.habits.length > 0 ? (habitLogsInPeriod.length / goal.habits.length) * 10 : 0; // Simplified
 
-  // Calculate focus session contribution
-  const focusMinutes = goal.focusSessions
-    .filter((s) => {
-      const sessionDate = dayjs(s.startedAt);
-      return (
-        (sessionDate.isAfter(startDate) || sessionDate.isSame(startDate, "day")) &&
-        (sessionDate.isBefore(endDate) || sessionDate.isSame(endDate, "day"))
-      );
-    })
-    .reduce((sum, s) => sum + (s.durationMinutes || 0), 0);
+  // Focus sessions already date-bounded by logRange in query
+  const focusMinutes = goal.focusSessions.reduce((sum, s) => sum + (s.durationMinutes || 0), 0);
 
   return {
     tasks: {
@@ -406,7 +401,10 @@ export async function getGoalTimeline(prisma: PrismaClient, goalId: string) {
         },
       },
       focusSessions: {
-        where: { deletedAt: null },
+        where: {
+          deletedAt: null,
+          startedAt: logRange,
+        },
         select: {
           id: true,
           startedAt: true,
