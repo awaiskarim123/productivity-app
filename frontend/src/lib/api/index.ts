@@ -10,6 +10,7 @@ import type {
 	WorkSummaryPoint,
 	Task,
 	TaskStats,
+	DailySummary,
 	Habit,
 	HabitLog,
 	HabitStats,
@@ -208,6 +209,11 @@ export async function fetchTaskStats() {
 
 export async function fetchTaskCategories() {
 	return apiFetch<{ categories: string[] }>('/tasks/categories', { method: 'GET' });
+}
+
+// Productivity (daily summary)
+export async function fetchDailySummary() {
+	return apiFetch<DailySummary>('/productivity/daily-summary', { method: 'GET' });
 }
 
 // Habits API
