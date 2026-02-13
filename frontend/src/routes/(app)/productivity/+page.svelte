@@ -13,15 +13,11 @@
 		</p>
 	</div>
 
-	<div class="grid gap-4 sm:gap-6 lg:grid-cols-3">
-		<div class="lg:col-span-2">
-			<TaskList limit={20} />
-		</div>
-		<div class="space-y-4 sm:space-y-6">
-			<DailySnapshot />
-			<HabitTracker limit={10} />
-			<QuickNotes limit={10} />
-		</div>
+	<div class="grid gap-4 sm:gap-6 lg:grid-cols-2">
+		<TaskList limit={20} />
+		<DailySnapshot />
+		<HabitTracker limit={10} />
+		<QuickNotes limit={10} />
 	</div>
 </div>
 
