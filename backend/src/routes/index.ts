@@ -10,6 +10,7 @@ import habitRoutes from "./modules/habit.routes";
 import noteRoutes from "./modules/note.routes";
 import goalRoutes from "./modules/goal.routes";
 import auditRoutes from "./modules/audit.routes";
+import productivityRoutes from "./modules/productivity.routes";
 
 export default async function registerRoutes(app: FastifyInstance) {
   app.get("/health", async () => ({ status: "ok" }));
@@ -25,5 +26,6 @@ export default async function registerRoutes(app: FastifyInstance) {
   app.register(noteRoutes, { prefix: "/notes" });
   app.register(goalRoutes, { prefix: "/goals" });
   app.register(auditRoutes, { prefix: "/audit-logs" });
+  app.register(productivityRoutes, { prefix: "/productivity" });
 }
 

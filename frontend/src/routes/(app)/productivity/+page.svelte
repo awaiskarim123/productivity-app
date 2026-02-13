@@ -2,6 +2,7 @@
 	import TaskList from '$lib/components/TaskList.svelte';
 	import HabitTracker from '$lib/components/HabitTracker.svelte';
 	import QuickNotes from '$lib/components/QuickNotes.svelte';
+	import DailySnapshot from '$lib/components/DailySnapshot.svelte';
 </script>
 
 <div class="mx-auto max-w-7xl space-y-4 sm:space-y-6">
@@ -12,14 +13,11 @@
 		</p>
 	</div>
 
-	<div class="grid gap-4 sm:gap-6 lg:grid-cols-3">
-		<div class="lg:col-span-2">
-			<TaskList limit={20} />
-		</div>
-		<div class="space-y-4 sm:space-y-6">
-			<HabitTracker limit={10} />
-			<QuickNotes limit={10} />
-		</div>
+	<div class="grid gap-4 sm:gap-6 lg:grid-cols-2">
+		<TaskList limit={20} />
+		<DailySnapshot />
+		<HabitTracker limit={10} />
+		<QuickNotes limit={10} />
 	</div>
 </div>
 

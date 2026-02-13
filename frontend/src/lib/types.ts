@@ -104,6 +104,15 @@ export interface TaskStats {
 	thisWeek: number;
 }
 
+export interface DailySummary {
+	tasksCompletedToday: number;
+	focusMinutesToday: number;
+	habitsLoggedToday: number;
+	dailyGoalMinutes: number;
+	focusStreak: number;
+	goalProgressPercent: number;
+}
+
 export interface Habit {
 	id: string;
 	userId: string;
