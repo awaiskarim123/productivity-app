@@ -55,6 +55,14 @@ const goalExportItem = z.object({
   keyResults: z.array(keyResultExportItem).optional(),
 });
 
+export const exportQuerySchema = z.object({
+  format: z.enum(["json", "csv"]).default("json"),
+  entity: z.enum(["tasks", "notes"]).optional(),
+}).refine(
+  (data) => data.format !== "csv" || (data.entity === "tasks" || data.entity === "notes"),
+  { message: "CSV export requires entity=tasks or entity=notes", path: ["entity"] },
+);
+
 export const importPayloadSchema = z.object({
   version: z.number().int().positive(),
   exportedAt: z.string().optional(),
@@ -77,10 +85,12 @@ export const updateProfileSchema = z
     message: "At least one field is required",
   });
 
+const PASSWORD_MAX_LENGTH = 128;
+
 export const changePasswordSchema = z
   .object({
-    currentPassword: z.string().min(8, "Current password must be at least 8 characters"),
-    newPassword: z.string().min(8, "New password must be at least 8 characters"),
+    currentPassword: z.string().min(8, "Current password must be at least 8 characters").max(PASSWORD_MAX_LENGTH),
+    newPassword: z.string().min(8, "New password must be at least 8 characters").max(PASSWORD_MAX_LENGTH),
   })
   .refine(
     (data) => {
