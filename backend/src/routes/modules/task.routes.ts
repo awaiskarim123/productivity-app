@@ -149,9 +149,9 @@ export default async function taskRoutes(app: FastifyInstance) {
         return reply.code(404).send({ message: "Task not found" });
       }
 
-      // Fetch the updated task to return
+      // Fetch the updated task to return (scope by userId for consistency)
       const task = await app.prisma.task.findFirst({
-        where: { id, deletedAt: null },
+        where: { id, userId: request.user.id, deletedAt: null },
       });
 
       if (!task) {

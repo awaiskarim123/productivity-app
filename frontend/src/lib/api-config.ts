@@ -11,12 +11,12 @@
 /** Backend API base (includes /api). From env: VITE_API_URL. */
 export const API_BASE_URL: string = (() => {
   const envUrl = import.meta.env.VITE_API_URL;
-  if (envUrl) return envUrl;
+  const trimmed = typeof envUrl === 'string' ? envUrl.trim() : '';
+  if (trimmed) return trimmed;
 
   if (import.meta.env.PROD) {
-    console.error(
-      "CRITICAL: VITE_API_URL is not set in production environment variables. " +
-        "API calls will fail or default to localhost."
+    throw new Error(
+      'VITE_API_URL is not set in production. Set it in your environment variables (e.g. Vercel, Railway) so API calls use the correct backend.'
     );
   }
 

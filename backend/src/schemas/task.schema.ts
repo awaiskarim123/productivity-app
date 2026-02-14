@@ -20,7 +20,7 @@ export const updateTaskSchema = z.object({
 export const tasksQuerySchema = z.object({
   completed: z.string().transform((val) => val === "true").optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]).optional(),
-  category: z.string().optional(),
+  category: z.string().max(50).optional(),
   limit: z.coerce.number().int().positive().max(100).default(50),
   offset: z.coerce.number().int().nonnegative().default(0),
 });
