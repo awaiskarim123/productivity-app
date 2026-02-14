@@ -1,3 +1,4 @@
+import type { FastifyInstance } from "fastify";
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
@@ -7,12 +8,26 @@ import prismaPlugin from "./plugins/prisma";
 import authPlugin from "./plugins/auth";
 import registerRoutes from "./routes";
 
-function getCorsOrigin(): boolean | string | string[] {
-  if (env.CORS_ORIGIN) {
-    const origins = env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean);
-    return origins.length === 1 ? origins[0]! : origins;
+function getCorsOrigin(app: FastifyInstance): boolean | string | string[] {
+  if (env.CORS_ORIGIN === undefined || env.CORS_ORIGIN === "") {
+    if (process.env.NODE_ENV === "production") {
+      app.log.error(
+        "CORS_ORIGIN is not set in production; refusing to allow all origins. Set CORS_ORIGIN to your frontend origin(s).",
+      );
+      return false;
+    }
+    return true;
   }
-  return true;
+
+  const origins = env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean);
+  if (origins.length === 0) {
+    app.log.warn(
+      "CORS_ORIGIN is empty or whitespace-only after parsing; denying all origins. Check env CORS_ORIGIN.",
+    );
+    return false;
+  }
+
+  return origins.length === 1 ? origins[0]! : origins;
 }
 
 export function buildApp() {
@@ -27,7 +42,7 @@ export function buildApp() {
   });
 
   app.register(cors, {
-    origin: getCorsOrigin(),
+    origin: getCorsOrigin(app),
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
