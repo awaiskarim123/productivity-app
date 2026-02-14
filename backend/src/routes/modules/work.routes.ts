@@ -137,6 +137,50 @@ export default async function workRoutes(app: FastifyInstance) {
     return { sessions };
   });
 
+  app.get("/summary", async (request, reply) => {
+    const result = workSummaryQuerySchema.safeParse(request.query ?? {});
+    if (!result.success) {
+      return reply.code(400).send({ message: "Invalid query", errors: result.error.flatten() });
+    }
+
+    const { period } = result.data;
+    const config = getPeriodConfig(period);
+    const buckets = new Map<string, number>();
+    const now = dayjs();
+    const rangeStart = now.startOf(config.unit).subtract(config.count - 1, config.unit);
+
+    for (let i = 0; i < config.count; i += 1) {
+      const start = rangeStart.add(i, config.unit).startOf(config.unit);
+      buckets.set(start.toISOString(), 0);
+    }
+
+    const sessions = await app.prisma.workSession.findMany({
+      where: {
+        userId: request.user.id,
+        durationMinutes: { not: null },
+        startedAt: { gte: rangeStart.toDate() },
+        deletedAt: null, // Only include non-deleted sessions
+      },
+      select: {
+        startedAt: true,
+        durationMinutes: true,
+      },
+    });
+
+    sessions.forEach((session) => {
+      const bucketKey = dayjs(session.startedAt).startOf(config.unit).toISOString();
+      const current = buckets.get(bucketKey) ?? 0;
+      buckets.set(bucketKey, current + (session.durationMinutes ?? 0));
+    });
+
+    const summary = Array.from(buckets.entries()).map(([periodStart, minutes]) => ({
+      periodStart,
+      minutes,
+    }));
+
+    return { period, summary };
+  });
+
   app.get("/:id", async (request, reply) => {
     const { id } = request.params as { id: string };
     const session = await app.prisma.workSession.findFirst({
@@ -223,50 +267,6 @@ export default async function workRoutes(app: FastifyInstance) {
 
     await logAudit(app.prisma, request.user.id, "work_session", id, "delete", {}, request);
     return reply.code(204).send();
-  });
-
-  app.get("/summary", async (request, reply) => {
-    const result = workSummaryQuerySchema.safeParse(request.query ?? {});
-    if (!result.success) {
-      return reply.code(400).send({ message: "Invalid query", errors: result.error.flatten() });
-    }
-
-    const { period } = result.data;
-    const config = getPeriodConfig(period);
-    const buckets = new Map<string, number>();
-    const now = dayjs();
-    const rangeStart = now.startOf(config.unit).subtract(config.count - 1, config.unit);
-
-    for (let i = 0; i < config.count; i += 1) {
-      const start = rangeStart.add(i, config.unit).startOf(config.unit);
-      buckets.set(start.toISOString(), 0);
-    }
-
-    const sessions = await app.prisma.workSession.findMany({
-      where: {
-        userId: request.user.id,
-        durationMinutes: { not: null },
-        startedAt: { gte: rangeStart.toDate() },
-        deletedAt: null, // Only include non-deleted sessions
-      },
-      select: {
-        startedAt: true,
-        durationMinutes: true,
-      },
-    });
-
-    sessions.forEach((session) => {
-      const bucketKey = dayjs(session.startedAt).startOf(config.unit).toISOString();
-      const current = buckets.get(bucketKey) ?? 0;
-      buckets.set(bucketKey, current + (session.durationMinutes ?? 0));
-    });
-
-    const summary = Array.from(buckets.entries()).map(([periodStart, minutes]) => ({
-      periodStart,
-      minutes,
-    }));
-
-    return { period, summary };
   });
 }
 
