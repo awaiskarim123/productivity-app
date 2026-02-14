@@ -10,7 +10,7 @@ import registerRoutes from "./routes";
 
 function getCorsOrigin(app: FastifyInstance): boolean | string | string[] {
   if (env.CORS_ORIGIN === undefined || env.CORS_ORIGIN === "") {
-    if (process.env.NODE_ENV === "production") {
+    if (env.NODE_ENV === "production") {
       app.log.error(
         "CORS_ORIGIN is not set in production; refusing to allow all origins. Set CORS_ORIGIN to your frontend origin(s).",
       );
