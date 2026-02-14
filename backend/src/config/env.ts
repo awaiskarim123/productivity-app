@@ -11,6 +11,8 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(4000),
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(100),
   RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(900000), // 15 min
+  /** Comma-separated allowed origins for CORS (e.g. https://app.example.com). If unset, allows any origin (dev-only safe). */
+  CORS_ORIGIN: z.string().optional(),
 });
 
 const env = envSchema.parse({
@@ -22,6 +24,7 @@ const env = envSchema.parse({
   PORT: process.env.PORT ?? "4000",
   RATE_LIMIT_MAX: process.env.RATE_LIMIT_MAX ?? "100",
   RATE_LIMIT_WINDOW_MS: process.env.RATE_LIMIT_WINDOW_MS ?? "900000",
+  CORS_ORIGIN: process.env.CORS_ORIGIN,
 });
 
 export type Env = typeof env;

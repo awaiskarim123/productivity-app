@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { updateProfileSchema, changePasswordSchema, importPayloadSchema } from "../../schemas/profile.schema";
+import { updateProfileSchema, changePasswordSchema, importPayloadSchema, exportQuerySchema } from "../../schemas/profile.schema";
 import type { Prisma } from "../../generated/prisma/client";
 import { calculateFocusStreak, getTimeSummary } from "../../services/statistics.service";
 import { verifyPassword, hashPassword } from "../../utils/password";
@@ -123,8 +123,11 @@ export default async function profileRoutes(app: FastifyInstance) {
   });
 
   app.get("/export", async (request, reply) => {
-    const format = (request.query as { format?: string })?.format ?? "json";
-    const entity = (request.query as { entity?: string })?.entity;
+    const parsed = exportQuerySchema.safeParse(request.query ?? {});
+    if (!parsed.success) {
+      return reply.code(400).send({ message: "Invalid export parameters", errors: parsed.error.flatten() });
+    }
+    const { format, entity } = parsed.data;
 
     const payload = await exportUserData(app.prisma, request.user.id);
 

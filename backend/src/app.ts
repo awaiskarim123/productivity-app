@@ -1,10 +1,19 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import helmet from "@fastify/helmet";
 import rateLimit from "@fastify/rate-limit";
 import env from "./config/env";
 import prismaPlugin from "./plugins/prisma";
 import authPlugin from "./plugins/auth";
 import registerRoutes from "./routes";
+
+function getCorsOrigin(): boolean | string | string[] {
+  if (env.CORS_ORIGIN) {
+    const origins = env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean);
+    return origins.length === 1 ? origins[0]! : origins;
+  }
+  return true;
+}
 
 export function buildApp() {
   const app = Fastify({
@@ -12,11 +21,16 @@ export function buildApp() {
     trustProxy: true,
   });
 
+  app.register(helmet, {
+    contentSecurityPolicy: env.NODE_ENV === "production",
+    crossOriginEmbedderPolicy: false,
+  });
+
   app.register(cors, {
-    origin: true,
+    origin: getCorsOrigin(),
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   });
 
   // Per-IP rate limiting (uses Fastify request.ip; trustProxy ensures correct client IP when behind a proxy)
