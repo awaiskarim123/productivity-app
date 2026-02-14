@@ -175,13 +175,18 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 				errorMessage.includes('cors') ||
 				errorMessage.includes('refused')
 			) {
+			// Redact Authorization so tokens are never logged
+			const loggedHeaders: Record<string, string> = {};
+			headers.forEach((value, key) => {
+				loggedHeaders[key] = key.toLowerCase() === 'authorization' ? '[REDACTED]' : value;
+			});
 			console.error(`Network Error [${method} ${path}]:`, {
 				url,
 					error: error.message,
 					errorName: error.name,
 					method,
 					hasBody: !!body,
-					headers: Object.fromEntries(headers.entries())
+					headers: loggedHeaders
 			});
 				// More user-friendly error message
 				throw new Error('Unable to connect to the server. Please check your connection and ensure the backend is running.');
