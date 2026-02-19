@@ -13,6 +13,7 @@ try {
 }
 
 export const handle: Handle = async ({ event, resolve }) => {
+	// Handle favicon.
 	if (event.url.pathname === '/favicon.ico') {
 		if (!faviconContent) {
 			return new Response('Not found', { status: 404 });
