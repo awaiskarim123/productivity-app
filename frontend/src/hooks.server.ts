@@ -3,7 +3,6 @@ import { join } from 'path';
 import { fileURLToPath } from 'url';
 import type { Handle } from '@sveltejs/kit';
 
-// Read favicon once at startup
 let faviconContent: string;
 try {
 	const svgPath = join(fileURLToPath(new URL('.', import.meta.url)), 'lib/assets/favicon.svg');
