@@ -138,12 +138,12 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 				errorMessage = 'Server error. Please try again later';
 			}
 			
-			console.error(`API Error [${method} ${path}]:`, {
-				status: response.status,
-				statusText: response.statusText,
-				message: errorMessage,
-				errors: errorBody.errors
-			});
+			// console.error(`API Error [${method} ${path}]:`, {
+			// 	status: response.status,
+			// 	statusText: response.statusText,
+			// 	message: errorMessage,
+			// 	errors: errorBody.errors
+			// });
 			throw new Error(errorMessage);
 		}
 
