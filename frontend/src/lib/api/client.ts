@@ -95,6 +95,7 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 		try {
 			response = await fetch(url, fetchOptions);
 		} catch (fetchError) {
+			// Log the actual error for debugging
 			console.error(`Fetch Error [${method} ${path}]:`, {
 				url,
 				error: fetchError,
