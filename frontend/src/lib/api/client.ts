@@ -125,7 +125,6 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 			const errorBody = await response.json().catch(() => ({}));
 			let errorMessage = errorBody.message ?? `Request failed with status ${response.status}`;
 			
-			// Make error messages more user-friendly
 			if (response.status === 401) {
 				errorMessage = 'Please log in to continue';
 			} else if (response.status === 403) {
