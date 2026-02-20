@@ -116,7 +116,6 @@ export async function apiFetch<T = unknown>(path: string, options: ApiRequestOpt
 				fetchOptions.headers = headers;
 				response = await fetch(url, fetchOptions);
 			} else {
-				// Refresh failed, user needs to log in again
 				// Don't throw error here, let it fall through to show 401 error
 			}
 		}
