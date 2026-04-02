@@ -7,12 +7,12 @@ exports.default = analyticsRoutes;
 const dayjs_1 = __importDefault(require("dayjs"));
 const utc_1 = __importDefault(require("dayjs/plugin/utc"));
 const enums_1 = require("../../generated/prisma/enums");
-dayjs_1.default.extend(utc_1.default);
 const statistics_service_1 = require("../../services/statistics.service");
 const insights_service_1 = require("../../services/insights.service");
 const advanced_analytics_service_1 = require("../../services/advanced-analytics.service");
 const analytics_schema_1 = require("../../schemas/analytics.schema");
 const parse_request_1 = require("../../utils/parse-request");
+dayjs_1.default.extend(utc_1.default);
 function buildBuckets(start, count, unit) {
     const buckets = new Map();
     for (let i = 0; i < count; i += 1) {
