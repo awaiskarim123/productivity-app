@@ -2,8 +2,6 @@ import type { FastifyInstance } from "fastify";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { FocusSessionMode } from "../../generated/prisma/enums";
-
-dayjs.extend(utc);
 import { getTimeSummary } from "../../services/statistics.service";
 import { getOrGenerateWeeklyInsights } from "../../services/insights.service";
 import {
@@ -19,6 +17,8 @@ import {
   weeklyInsightsQuerySchema,
 } from "../../schemas/analytics.schema";
 import { parseQueryOrBadRequest } from "../../utils/parse-request";
+
+dayjs.extend(utc);
 
 function buildBuckets(
   start: dayjs.Dayjs,
