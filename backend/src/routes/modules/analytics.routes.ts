@@ -18,6 +18,7 @@ import {
   productivityScoreQuerySchema,
   weeklyInsightsQuerySchema,
 } from "../../schemas/analytics.schema";
+import { parseQueryOrBadRequest } from "../../utils/parse-request";
 
 function buildBuckets(
   start: dayjs.Dayjs,
@@ -172,10 +173,8 @@ export default async function analyticsRoutes(app: FastifyInstance) {
   });
 
   app.get("/weekly-insights", async (request, reply) => {
-    const parsed = weeklyInsightsQuerySchema.safeParse(request.query ?? {});
-    if (!parsed.success) {
-      return reply.code(400).send({ message: "Invalid query", errors: parsed.error.flatten() });
-    }
+    const parsed = parseQueryOrBadRequest(reply, weeklyInsightsQuerySchema, request.query);
+    if (!parsed) return;
 
     const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
 
@@ -183,7 +182,7 @@ export default async function analyticsRoutes(app: FastifyInstance) {
       return reply.code(404).send({ message: "User not found" });
     }
 
-    const weekStartParam = parsed.data.weekStart;
+    const weekStartParam = parsed.weekStart;
     const weekStart = weekStartParam
       ? dayjs.utc(weekStartParam).startOf("week").toDate()
       : dayjs.utc().startOf("week").toDate();
@@ -230,11 +229,9 @@ export default async function analyticsRoutes(app: FastifyInstance) {
   });
 
   app.get("/heatmap", async (request, reply) => {
-    const parsed = heatmapQuerySchema.safeParse(request.query ?? {});
-    if (!parsed.success) {
-      return reply.code(400).send({ message: "Invalid query", errors: parsed.error.flatten() });
-    }
-    const { days } = parsed.data;
+    const parsed = parseQueryOrBadRequest(reply, heatmapQuerySchema, request.query);
+    if (!parsed) return;
+    const { days } = parsed;
 
     const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
     if (!user) {
@@ -245,11 +242,9 @@ export default async function analyticsRoutes(app: FastifyInstance) {
   });
 
   app.get("/burnout", async (request, reply) => {
-    const parsed = burnoutQuerySchema.safeParse(request.query ?? {});
-    if (!parsed.success) {
-      return reply.code(400).send({ message: "Invalid query", errors: parsed.error.flatten() });
-    }
-    const { windowDays } = parsed.data;
+    const parsed = parseQueryOrBadRequest(reply, burnoutQuerySchema, request.query);
+    if (!parsed) return;
+    const { windowDays } = parsed;
 
     const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
     if (!user) {
@@ -260,11 +255,9 @@ export default async function analyticsRoutes(app: FastifyInstance) {
   });
 
   app.get("/productivity-score", async (request, reply) => {
-    const parsed = productivityScoreQuerySchema.safeParse(request.query ?? {});
-    if (!parsed.success) {
-      return reply.code(400).send({ message: "Invalid query", errors: parsed.error.flatten() });
-    }
-    const { periodDays } = parsed.data;
+    const parsed = parseQueryOrBadRequest(reply, productivityScoreQuerySchema, request.query);
+    if (!parsed) return;
+    const { periodDays } = parsed;
 
     const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
     if (!user) {

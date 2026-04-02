@@ -221,14 +221,16 @@ async function generateWeeklyInsights(prisma, userId, weekStart, weekEnd) {
     };
 }
 async function getOrGenerateWeeklyInsights(prisma, userId, weekStart) {
-    const weekStartDate = weekStart ?? dayjs_1.default.utc().startOf("week").toDate();
-    const weekEndDate = dayjs_1.default.utc(weekStartDate).endOf("week").toDate();
+    const normalizedWeekStart = weekStart
+        ? dayjs_1.default.utc(weekStart).startOf("week").toDate()
+        : dayjs_1.default.utc().startOf("week").toDate();
+    const weekEndDate = dayjs_1.default.utc(normalizedWeekStart).endOf("week").toDate();
     // Try to get existing insight
     const existing = await prisma.weeklyInsight.findUnique({
         where: {
             userId_weekStart: {
                 userId,
-                weekStart: weekStartDate,
+                weekStart: normalizedWeekStart,
             },
         },
     });
@@ -246,18 +248,18 @@ async function getOrGenerateWeeklyInsights(prisma, userId, weekStart) {
         };
     }
     // Generate new insights
-    const insights = await generateWeeklyInsights(prisma, userId, weekStartDate, weekEndDate);
+    const insights = await generateWeeklyInsights(prisma, userId, normalizedWeekStart, weekEndDate);
     // Store in database
     await prisma.weeklyInsight.upsert({
         where: {
             userId_weekStart: {
                 userId,
-                weekStart: weekStartDate,
+                weekStart: normalizedWeekStart,
             },
         },
         create: {
             userId,
-            weekStart: weekStartDate,
+            weekStart: normalizedWeekStart,
             weekEnd: weekEndDate,
             peakHours: insights.peakHours,
             lowProductivityDays: insights.lowProductivityDays,
