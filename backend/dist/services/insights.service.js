@@ -6,7 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateWeeklyInsights = generateWeeklyInsights;
 exports.getOrGenerateWeeklyInsights = getOrGenerateWeeklyInsights;
 const dayjs_1 = __importDefault(require("dayjs"));
+const utc_1 = __importDefault(require("dayjs/plugin/utc"));
 const enums_1 = require("../generated/prisma/enums");
+dayjs_1.default.extend(utc_1.default);
 async function generateWeeklyInsights(prisma, userId, weekStart, weekEnd) {
     const previousWeekStart = (0, dayjs_1.default)(weekStart).subtract(1, "week").toDate();
     const previousWeekEnd = (0, dayjs_1.default)(weekEnd).subtract(1, "week").toDate();
@@ -219,8 +221,8 @@ async function generateWeeklyInsights(prisma, userId, weekStart, weekEnd) {
     };
 }
 async function getOrGenerateWeeklyInsights(prisma, userId, weekStart) {
-    const weekStartDate = weekStart ?? (0, dayjs_1.default)().startOf("week").toDate();
-    const weekEndDate = (0, dayjs_1.default)(weekStartDate).endOf("week").toDate();
+    const weekStartDate = weekStart ?? dayjs_1.default.utc().startOf("week").toDate();
+    const weekEndDate = dayjs_1.default.utc(weekStartDate).endOf("week").toDate();
     // Try to get existing insight
     const existing = await prisma.weeklyInsight.findUnique({
         where: {

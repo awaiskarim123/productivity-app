@@ -1,28 +1,26 @@
-import { z, cuid } from "zod";
-
-const cuidString = cuid();
+import { z } from "zod";
 
 /** Route params where Prisma models use `@id @default(cuid())`. */
-export const idParamSchema = z.object({ id: cuidString });
+export const idParamSchema = z.object({ id: z.cuid() });
 
-export const goalIdParamSchema = z.object({ goalId: cuidString });
+export const goalIdParamSchema = z.object({ goalId: z.cuid() });
 
 export const habitLogParamsSchema = z.object({
-  id: cuidString,
-  logId: cuidString,
+  id: z.cuid(),
+  logId: z.cuid(),
 });
 
 export const goalTaskLinkParamsSchema = z.object({
-  goalId: cuidString,
-  taskId: cuidString,
+  goalId: z.cuid(),
+  taskId: z.cuid(),
 });
 
 export const goalHabitLinkParamsSchema = z.object({
-  goalId: cuidString,
-  habitId: cuidString,
+  goalId: z.cuid(),
+  habitId: z.cuid(),
 });
 
 export const goalFocusSessionLinkParamsSchema = z.object({
-  goalId: cuidString,
-  sessionId: cuidString,
+  goalId: z.cuid(),
+  sessionId: z.cuid(),
 });

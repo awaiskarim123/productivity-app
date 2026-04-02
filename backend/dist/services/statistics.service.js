@@ -7,6 +7,8 @@ exports.getWorkDurationInRange = getWorkDurationInRange;
 exports.calculateFocusStreak = calculateFocusStreak;
 exports.getTimeSummary = getTimeSummary;
 const dayjs_1 = __importDefault(require("dayjs"));
+const utc_1 = __importDefault(require("dayjs/plugin/utc"));
+dayjs_1.default.extend(utc_1.default);
 async function getWorkDurationInRange(prisma, userId, start, end) {
     const aggregate = await prisma.workSession.aggregate({
         where: {
@@ -67,7 +69,7 @@ async function calculateFocusStreak(prisma, userId, dailyGoalMinutes, rangeDays 
 async function getTimeSummary(prisma, userId) {
     const now = (0, dayjs_1.default)();
     const todayStart = now.startOf("day");
-    const weekStart = now.startOf("week");
+    const weekStart = dayjs_1.default.utc().startOf("week");
     const monthStart = now.startOf("month");
     const [todayMinutes, weeklyMinutes, monthlyMinutes, totalAggregate] = await Promise.all([
         getWorkDurationInRange(prisma, userId, todayStart.toDate(), todayStart.add(1, "day").toDate()),

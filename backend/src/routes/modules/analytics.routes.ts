@@ -1,6 +1,9 @@
 import type { FastifyInstance } from "fastify";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { FocusSessionMode } from "../../generated/prisma/enums";
+
+dayjs.extend(utc);
 import { getTimeSummary } from "../../services/statistics.service";
 import { getOrGenerateWeeklyInsights } from "../../services/insights.service";
 import {
@@ -182,8 +185,8 @@ export default async function analyticsRoutes(app: FastifyInstance) {
 
     const weekStartParam = parsed.data.weekStart;
     const weekStart = weekStartParam
-      ? dayjs(weekStartParam).startOf("week").toDate()
-      : dayjs().startOf("week").toDate();
+      ? dayjs.utc(weekStartParam).startOf("week").toDate()
+      : dayjs.utc().startOf("week").toDate();
 
     const insights = await getOrGenerateWeeklyInsights(app.prisma, user.id, weekStart);
 
@@ -203,7 +206,7 @@ export default async function analyticsRoutes(app: FastifyInstance) {
 
     return {
       weekStart: weekStart.toISOString(),
-      weekEnd: dayjs(weekStart).endOf("week").toISOString(),
+      weekEnd: dayjs.utc(weekStart).endOf("week").toISOString(),
       completionRate,
       bestFocusWindow,
       ...insights,
@@ -217,7 +220,7 @@ export default async function analyticsRoutes(app: FastifyInstance) {
       return reply.code(404).send({ message: "User not found" });
     }
 
-    const weekStart = dayjs().startOf("week").toDate();
+    const weekStart = dayjs.utc().startOf("week").toDate();
     const insights = await getOrGenerateWeeklyInsights(app.prisma, user.id, weekStart);
 
     return {

@@ -1,5 +1,8 @@
 import type { PrismaClient } from "../generated/prisma/client";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 
 export async function getWorkDurationInRange(
   prisma: PrismaClient,
@@ -90,7 +93,7 @@ export async function getTimeSummary(
 }> {
   const now = dayjs();
   const todayStart = now.startOf("day");
-  const weekStart = now.startOf("week");
+  const weekStart = dayjs.utc().startOf("week");
   const monthStart = now.startOf("month");
 
   const [todayMinutes, weeklyMinutes, monthlyMinutes, totalAggregate] = await Promise.all([

@@ -7,7 +7,7 @@ exports.startWorkSchema = zod_1.z.object({
     startedAt: zod_1.z.coerce.date().optional(),
 });
 exports.endWorkSchema = zod_1.z.object({
-    sessionId: (0, zod_1.cuid)(),
+    sessionId: zod_1.z.cuid(),
     endedAt: zod_1.z.coerce.date().optional(),
     notes: zod_1.z.string().max(500).optional(),
 });
