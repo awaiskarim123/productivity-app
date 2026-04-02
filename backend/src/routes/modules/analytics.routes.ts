@@ -169,14 +169,18 @@ export default async function analyticsRoutes(app: FastifyInstance) {
   });
 
   app.get("/weekly-insights", async (request, reply) => {
+    const parsed = weeklyInsightsQuerySchema.safeParse(request.query ?? {});
+    if (!parsed.success) {
+      return reply.code(400).send({ message: "Invalid query", errors: parsed.error.flatten() });
+    }
+
     const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
 
     if (!user) {
       return reply.code(404).send({ message: "User not found" });
     }
 
-    const parsed = weeklyInsightsQuerySchema.safeParse(request.query ?? {});
-    const weekStartParam = parsed.success ? parsed.data.weekStart : undefined;
+    const weekStartParam = parsed.data.weekStart;
     const weekStart = weekStartParam
       ? dayjs(weekStartParam).startOf("week").toDate()
       : dayjs().startOf("week").toDate();
@@ -223,34 +227,46 @@ export default async function analyticsRoutes(app: FastifyInstance) {
   });
 
   app.get("/heatmap", async (request, reply) => {
+    const parsed = heatmapQuerySchema.safeParse(request.query ?? {});
+    if (!parsed.success) {
+      return reply.code(400).send({ message: "Invalid query", errors: parsed.error.flatten() });
+    }
+    const { days } = parsed.data;
+
     const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
     if (!user) {
       return reply.code(404).send({ message: "User not found" });
     }
-    const parsed = heatmapQuerySchema.safeParse(request.query ?? {});
-    const days = parsed.success ? parsed.data.days : 14;
     const heatmap = await getFocusHeatmapData(app.prisma, user.id, days);
     return heatmap;
   });
 
   app.get("/burnout", async (request, reply) => {
+    const parsed = burnoutQuerySchema.safeParse(request.query ?? {});
+    if (!parsed.success) {
+      return reply.code(400).send({ message: "Invalid query", errors: parsed.error.flatten() });
+    }
+    const { windowDays } = parsed.data;
+
     const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
     if (!user) {
       return reply.code(404).send({ message: "User not found" });
     }
-    const parsed = burnoutQuerySchema.safeParse(request.query ?? {});
-    const windowDays = parsed.success ? parsed.data.windowDays : 7;
     const burnout = await getBurnoutSignalData(app.prisma, user.id, windowDays);
     return burnout;
   });
 
   app.get("/productivity-score", async (request, reply) => {
+    const parsed = productivityScoreQuerySchema.safeParse(request.query ?? {});
+    if (!parsed.success) {
+      return reply.code(400).send({ message: "Invalid query", errors: parsed.error.flatten() });
+    }
+    const { periodDays } = parsed.data;
+
     const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
     if (!user) {
       return reply.code(404).send({ message: "User not found" });
     }
-    const parsed = productivityScoreQuerySchema.safeParse(request.query ?? {});
-    const periodDays = parsed.success ? parsed.data.periodDays : 7;
     const score = await getProductivityScoreData(app.prisma, user.id, periodDays);
     return score;
   });

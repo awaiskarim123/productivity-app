@@ -4,7 +4,7 @@ export declare const startWorkSchema: z.ZodObject<{
     startedAt: z.ZodOptional<z.ZodCoercedDate<unknown>>;
 }, z.core.$strip>;
 export declare const endWorkSchema: z.ZodObject<{
-    sessionId: z.ZodString;
+    sessionId: z.ZodCUID;
     endedAt: z.ZodOptional<z.ZodCoercedDate<unknown>>;
     notes: z.ZodOptional<z.ZodString>;
 }, z.core.$strip>;

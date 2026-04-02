@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z, cuid } from "zod";
 
 export const startWorkSchema = z.object({
   notes: z.string().max(500).optional(),
@@ -6,7 +6,7 @@ export const startWorkSchema = z.object({
 });
 
 export const endWorkSchema = z.object({
-  sessionId: z.string().min(1),
+  sessionId: cuid(),
   endedAt: z.coerce.date().optional(),
   notes: z.string().max(500).optional(),
 });

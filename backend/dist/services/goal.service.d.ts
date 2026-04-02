@@ -6,7 +6,8 @@ interface CalculateProgressResult {
     healthStatus: GoalHealthStatus;
 }
 /**
- * Calculate goal progress from linked activities
+ * Calculate goal progress from linked activities.
+ * Uses two queries so habit logs are bounded by goal start/end (avoids loading unbounded log history).
  */
 export declare function calculateGoalProgress(prisma: PrismaClient, goalId: string): Promise<CalculateProgressResult>;
 /**
@@ -14,7 +15,8 @@ export declare function calculateGoalProgress(prisma: PrismaClient, goalId: stri
  */
 export declare function updateGoalProgress(prisma: PrismaClient, goalId: string): Promise<void>;
 /**
- * Get contribution breakdown for a goal
+ * Get contribution breakdown for a goal.
+ * Bounds habit logs by goal period to avoid loading unbounded history.
  */
 export declare function getGoalContributions(prisma: PrismaClient, goalId: string): Promise<{
     tasks: {
@@ -59,7 +61,8 @@ export declare function getGoalContributions(prisma: PrismaClient, goalId: strin
     }[];
 }>;
 /**
- * Get timeline data for a goal
+ * Get timeline data for a goal.
+ * Fetches goal dates first so habit logs can be bounded by goal period (scalability).
  */
 export declare function getGoalTimeline(prisma: PrismaClient, goalId: string): Promise<{
     goal: {

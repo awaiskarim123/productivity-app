@@ -10,6 +10,8 @@ import {
   habitsQuerySchema,
   habitLogsQuerySchema,
 } from "../../schemas/habit.schema";
+import { habitLogParamsSchema, idParamSchema } from "../../schemas/common.schema";
+import { parseOrBadRequest } from "../../utils/parse-request";
 import { logAudit } from "../../services/audit.service";
 
 /**
@@ -146,7 +148,9 @@ export default async function habitRoutes(app: FastifyInstance) {
 
   // Specific routes must come before generic /:id route
   app.post("/:id/log", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const routeParams = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!routeParams) return;
+    const { id } = routeParams;
     const result = logHabitSchema.safeParse(request.body ?? {});
     if (!result.success) {
       return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
@@ -220,7 +224,9 @@ export default async function habitRoutes(app: FastifyInstance) {
   });
 
   app.delete("/:id/log/:logId", async (request, reply) => {
-    const { id, logId } = request.params as { id: string; logId: string };
+    const routeParams = parseOrBadRequest(reply, habitLogParamsSchema, request.params, "Invalid parameters");
+    if (!routeParams) return;
+    const { id, logId } = routeParams;
     const habit = await app.prisma.habit.findFirst({
       where: { id, userId: request.user.id, deletedAt: null },
     });
@@ -259,7 +265,9 @@ export default async function habitRoutes(app: FastifyInstance) {
   });
 
   app.get("/:id/logs", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const routeParams = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!routeParams) return;
+    const { id } = routeParams;
     const result = habitLogsQuerySchema.safeParse(request.query ?? {});
     if (!result.success) {
       return reply.code(400).send({ message: "Invalid query", errors: result.error.flatten() });
@@ -300,7 +308,9 @@ export default async function habitRoutes(app: FastifyInstance) {
   });
 
   app.get("/:id/stats", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const routeParams = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!routeParams) return;
+    const { id } = routeParams;
     const habit = await app.prisma.habit.findFirst({
       where: { id, userId: request.user.id, deletedAt: null },
     });
@@ -348,7 +358,9 @@ export default async function habitRoutes(app: FastifyInstance) {
   });
 
   app.get("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const routeParams = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!routeParams) return;
+    const { id } = routeParams;
     const habit = await app.prisma.habit.findFirst({
       where: { id, userId: request.user.id, deletedAt: null },
       include: {
@@ -367,7 +379,9 @@ export default async function habitRoutes(app: FastifyInstance) {
   });
 
   app.patch("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const routeParams = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!routeParams) return;
+    const { id } = routeParams;
     const result = updateHabitSchema.safeParse(request.body ?? {});
     if (!result.success) {
       return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
@@ -399,7 +413,9 @@ export default async function habitRoutes(app: FastifyInstance) {
   });
 
   app.delete("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const routeParams = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!routeParams) return;
+    const { id } = routeParams;
     
     // Soft delete: set deletedAt timestamp instead of actually deleting
     const updateResult = await app.prisma.habit.updateMany({

@@ -10,7 +10,7 @@ exports.startFocusSchema = zod_1.z.object({
     notes: zod_1.z.string().max(500).optional(),
 });
 exports.endFocusSchema = zod_1.z.object({
-    sessionId: zod_1.z.string().min(1),
+    sessionId: (0, zod_1.cuid)(),
     endedAt: zod_1.z.coerce.date().optional(),
     completed: zod_1.z.boolean().optional(),
     distractions: zod_1.z.coerce.number().int().min(0).max(99).optional(),

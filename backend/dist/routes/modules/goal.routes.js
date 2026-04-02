@@ -7,6 +7,8 @@ exports.default = goalRoutes;
 const dayjs_1 = __importDefault(require("dayjs"));
 const utc_1 = __importDefault(require("dayjs/plugin/utc"));
 const goal_schema_1 = require("../../schemas/goal.schema");
+const common_schema_1 = require("../../schemas/common.schema");
+const parse_request_1 = require("../../utils/parse-request");
 const goal_service_1 = require("../../services/goal.service");
 dayjs_1.default.extend(utc_1.default);
 async function goalRoutes(app) {
@@ -88,7 +90,10 @@ async function goalRoutes(app) {
         return { goals, total, limit, offset };
     });
     app.get("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         const goal = await app.prisma.goal.findFirst({
             where: {
                 id,
@@ -114,7 +119,10 @@ async function goalRoutes(app) {
         return { goal };
     });
     app.patch("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         const result = goal_schema_1.updateGoalSchema.safeParse(request.body ?? {});
         if (!result.success) {
             return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
@@ -172,7 +180,10 @@ async function goalRoutes(app) {
         return { goal: updatedGoal };
     });
     app.delete("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         const goal = await app.prisma.goal.findFirst({
             where: {
                 id,
@@ -192,7 +203,10 @@ async function goalRoutes(app) {
     });
     // ========== Key Results CRUD ==========
     app.post("/:goalId/key-results", async (request, reply) => {
-        const { goalId } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.goalIdParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { goalId } = params;
         const result = goal_schema_1.createKeyResultSchema.safeParse(request.body ?? {});
         if (!result.success) {
             return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
@@ -219,7 +233,10 @@ async function goalRoutes(app) {
         return reply.code(201).send({ keyResult });
     });
     app.patch("/key-results/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         const result = goal_schema_1.updateKeyResultSchema.safeParse(request.body ?? {});
         if (!result.success) {
             return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
@@ -264,7 +281,10 @@ async function goalRoutes(app) {
         return { keyResult: updated };
     });
     app.delete("/key-results/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         const keyResult = await app.prisma.keyResult.findUnique({
             where: { id },
             include: { goal: true },
@@ -281,7 +301,10 @@ async function goalRoutes(app) {
     });
     // ========== Linking Activities to Goals ==========
     app.post("/:goalId/link/task/:taskId", async (request, reply) => {
-        const { goalId, taskId } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.goalTaskLinkParamsSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { goalId, taskId } = params;
         const goal = await app.prisma.goal.findFirst({
             where: {
                 id: goalId,
@@ -311,7 +334,10 @@ async function goalRoutes(app) {
         return reply.code(200).send({ message: "Task linked to goal" });
     });
     app.post("/:goalId/link/habit/:habitId", async (request, reply) => {
-        const { goalId, habitId } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.goalHabitLinkParamsSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { goalId, habitId } = params;
         const goal = await app.prisma.goal.findFirst({
             where: {
                 id: goalId,
@@ -341,7 +367,10 @@ async function goalRoutes(app) {
         return reply.code(200).send({ message: "Habit linked to goal" });
     });
     app.post("/:goalId/link/focus-session/:sessionId", async (request, reply) => {
-        const { goalId, sessionId } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.goalFocusSessionLinkParamsSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { goalId, sessionId } = params;
         const goal = await app.prisma.goal.findFirst({
             where: {
                 id: goalId,
@@ -371,7 +400,10 @@ async function goalRoutes(app) {
         return reply.code(200).send({ message: "Focus session linked to goal" });
     });
     app.delete("/:goalId/unlink/task/:taskId", async (request, reply) => {
-        const { goalId, taskId } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.goalTaskLinkParamsSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { goalId, taskId } = params;
         const task = await app.prisma.task.findFirst({
             where: {
                 id: taskId,
@@ -392,7 +424,10 @@ async function goalRoutes(app) {
         return reply.code(200).send({ message: "Task unlinked from goal" });
     });
     app.delete("/:goalId/unlink/habit/:habitId", async (request, reply) => {
-        const { goalId, habitId } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.goalHabitLinkParamsSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { goalId, habitId } = params;
         const habit = await app.prisma.habit.findFirst({
             where: {
                 id: habitId,
@@ -413,7 +448,10 @@ async function goalRoutes(app) {
         return reply.code(200).send({ message: "Habit unlinked from goal" });
     });
     app.delete("/:goalId/unlink/focus-session/:sessionId", async (request, reply) => {
-        const { goalId, sessionId } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.goalFocusSessionLinkParamsSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { goalId, sessionId } = params;
         const session = await app.prisma.focusSession.findFirst({
             where: {
                 id: sessionId,
@@ -435,7 +473,10 @@ async function goalRoutes(app) {
     });
     // ========== Analysis Endpoints ==========
     app.get("/:id/contributions", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         const goal = await app.prisma.goal.findFirst({
             where: {
                 id,
@@ -450,7 +491,10 @@ async function goalRoutes(app) {
         return { contributions };
     });
     app.get("/:id/timeline", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         const goal = await app.prisma.goal.findFirst({
             where: {
                 id,
@@ -466,7 +510,10 @@ async function goalRoutes(app) {
     });
     // ========== Recalculate Progress ==========
     app.post("/:id/recalculate", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         const goal = await app.prisma.goal.findFirst({
             where: {
                 id,

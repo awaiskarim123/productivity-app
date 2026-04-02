@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z, cuid } from "zod";
 import { FocusSessionMode } from "../generated/prisma/enums";
 
 export const startFocusSchema = z.object({
@@ -9,7 +9,7 @@ export const startFocusSchema = z.object({
 });
 
 export const endFocusSchema = z.object({
-  sessionId: z.string().min(1),
+  sessionId: cuid(),
   endedAt: z.coerce.date().optional(),
   completed: z.boolean().optional(),
   distractions: z.coerce.number().int().min(0).max(99).optional(),

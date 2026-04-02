@@ -98,8 +98,11 @@ async function profileRoutes(app) {
         return reply.send({ message: "Password updated successfully" });
     });
     app.get("/export", async (request, reply) => {
-        const format = request.query?.format ?? "json";
-        const entity = request.query?.entity;
+        const parsed = profile_schema_1.exportQuerySchema.safeParse(request.query ?? {});
+        if (!parsed.success) {
+            return reply.code(400).send({ message: "Invalid export parameters", errors: parsed.error.flatten() });
+        }
+        const { format, entity } = parsed.data;
         const payload = await (0, export_import_service_1.exportUserData)(app.prisma, request.user.id);
         if (format === "csv") {
             if (entity === "tasks") {

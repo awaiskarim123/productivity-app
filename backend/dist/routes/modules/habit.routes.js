@@ -8,6 +8,8 @@ const dayjs_1 = __importDefault(require("dayjs"));
 const utc_1 = __importDefault(require("dayjs/plugin/utc"));
 dayjs_1.default.extend(utc_1.default);
 const habit_schema_1 = require("../../schemas/habit.schema");
+const common_schema_1 = require("../../schemas/common.schema");
+const parse_request_1 = require("../../utils/parse-request");
 const audit_service_1 = require("../../services/audit.service");
 /**
  * Calculate habit streak with proper timezone handling and date boundaries.
@@ -123,7 +125,10 @@ async function habitRoutes(app) {
     });
     // Specific routes must come before generic /:id route
     app.post("/:id/log", async (request, reply) => {
-        const { id } = request.params;
+        const routeParams = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!routeParams)
+            return;
+        const { id } = routeParams;
         const result = habit_schema_1.logHabitSchema.safeParse(request.body ?? {});
         if (!result.success) {
             return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
@@ -185,7 +190,10 @@ async function habitRoutes(app) {
         return { log, habit: updatedHabit };
     });
     app.delete("/:id/log/:logId", async (request, reply) => {
-        const { id, logId } = request.params;
+        const routeParams = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.habitLogParamsSchema, request.params, "Invalid parameters");
+        if (!routeParams)
+            return;
+        const { id, logId } = routeParams;
         const habit = await app.prisma.habit.findFirst({
             where: { id, userId: request.user.id, deletedAt: null },
         });
@@ -212,7 +220,10 @@ async function habitRoutes(app) {
         return { habit: updatedHabit };
     });
     app.get("/:id/logs", async (request, reply) => {
-        const { id } = request.params;
+        const routeParams = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!routeParams)
+            return;
+        const { id } = routeParams;
         const result = habit_schema_1.habitLogsQuerySchema.safeParse(request.query ?? {});
         if (!result.success) {
             return reply.code(400).send({ message: "Invalid query", errors: result.error.flatten() });
@@ -247,7 +258,10 @@ async function habitRoutes(app) {
         return { logs, total, limit, offset };
     });
     app.get("/:id/stats", async (request, reply) => {
-        const { id } = request.params;
+        const routeParams = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!routeParams)
+            return;
+        const { id } = routeParams;
         const habit = await app.prisma.habit.findFirst({
             where: { id, userId: request.user.id, deletedAt: null },
         });
@@ -290,7 +304,10 @@ async function habitRoutes(app) {
         };
     });
     app.get("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const routeParams = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!routeParams)
+            return;
+        const { id } = routeParams;
         const habit = await app.prisma.habit.findFirst({
             where: { id, userId: request.user.id, deletedAt: null },
             include: {
@@ -306,7 +323,10 @@ async function habitRoutes(app) {
         return { habit };
     });
     app.patch("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const routeParams = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!routeParams)
+            return;
+        const { id } = routeParams;
         const result = habit_schema_1.updateHabitSchema.safeParse(request.body ?? {});
         if (!result.success) {
             return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
@@ -338,7 +358,10 @@ async function habitRoutes(app) {
         return { habit };
     });
     app.delete("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const routeParams = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!routeParams)
+            return;
+        const { id } = routeParams;
         // Soft delete: set deletedAt timestamp instead of actually deleting
         const updateResult = await app.prisma.habit.updateMany({
             where: { id, userId: request.user.id, deletedAt: null },

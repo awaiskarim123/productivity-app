@@ -1,4 +1,4 @@
-import type { PrismaClient } from "../generated/prisma";
+import type { PrismaClient } from "../generated/prisma/client";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 

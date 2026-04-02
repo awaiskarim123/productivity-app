@@ -8,58 +8,46 @@ exports.getOrGenerateWeeklyInsights = getOrGenerateWeeklyInsights;
 const dayjs_1 = __importDefault(require("dayjs"));
 const enums_1 = require("../generated/prisma/enums");
 async function generateWeeklyInsights(prisma, userId, weekStart, weekEnd) {
-    // Fetch all work sessions for the week
-    const workSessions = await prisma.workSession.findMany({
-        where: {
-            userId,
-            startedAt: {
-                gte: weekStart,
-                lt: weekEnd,
+    const previousWeekStart = (0, dayjs_1.default)(weekStart).subtract(1, "week").toDate();
+    const previousWeekEnd = (0, dayjs_1.default)(weekEnd).subtract(1, "week").toDate();
+    const [workSessions, focusSessions, habits, previousWeekSessions, user] = await Promise.all([
+        prisma.workSession.findMany({
+            where: {
+                userId,
+                startedAt: { gte: weekStart, lt: weekEnd },
+                durationMinutes: { not: null },
+                deletedAt: null,
             },
-            durationMinutes: { not: null },
-            deletedAt: null,
-        },
-        select: {
-            startedAt: true,
-            durationMinutes: true,
-        },
-    });
-    // Fetch all focus sessions for the week
-    const focusSessions = await prisma.focusSession.findMany({
-        where: {
-            userId,
-            startedAt: {
-                gte: weekStart,
-                lt: weekEnd,
+            select: { startedAt: true, durationMinutes: true },
+        }),
+        prisma.focusSession.findMany({
+            where: {
+                userId,
+                startedAt: { gte: weekStart, lt: weekEnd },
+                durationMinutes: { not: null },
+                deletedAt: null,
             },
-            durationMinutes: { not: null },
-            deletedAt: null,
-        },
-        select: {
-            startedAt: true,
-            durationMinutes: true,
-            completed: true,
-            mode: true,
-        },
-    });
-    // Fetch habits and their logs for the week
-    const habits = await prisma.habit.findMany({
-        where: {
-            userId,
-            isActive: true,
-            deletedAt: null,
-        },
-        include: {
-            logs: {
-                where: {
-                    date: {
-                        gte: weekStart,
-                        lt: weekEnd,
-                    },
+            select: { startedAt: true, durationMinutes: true, completed: true, mode: true },
+        }),
+        prisma.habit.findMany({
+            where: { userId, isActive: true, deletedAt: null },
+            include: {
+                logs: {
+                    where: { date: { gte: weekStart, lt: weekEnd } },
                 },
             },
-        },
-    });
+        }),
+        prisma.workSession.findMany({
+            where: {
+                userId,
+                startedAt: { gte: previousWeekStart, lt: previousWeekEnd },
+                durationMinutes: { not: null },
+                deletedAt: null,
+            },
+            select: { durationMinutes: true },
+        }),
+        prisma.user.findUnique({ where: { id: userId }, select: { dailyGoalMinutes: true } }),
+    ]);
     // Calculate peak hours (hours with most productivity)
     const hourProductivity = new Map();
     workSessions.forEach((session) => {
@@ -87,22 +75,6 @@ async function generateWeeklyInsights(prisma, userId, weekStart, weekEnd) {
         .filter(([, minutes]) => minutes < averageDailyMinutes * 0.7)
         .map(([day]) => day);
     // Calculate week-over-week trend
-    const previousWeekStart = (0, dayjs_1.default)(weekStart).subtract(1, "week").toDate();
-    const previousWeekEnd = (0, dayjs_1.default)(weekEnd).subtract(1, "week").toDate();
-    const previousWeekSessions = await prisma.workSession.findMany({
-        where: {
-            userId,
-            startedAt: {
-                gte: previousWeekStart,
-                lt: previousWeekEnd,
-            },
-            durationMinutes: { not: null },
-            deletedAt: null,
-        },
-        select: {
-            durationMinutes: true,
-        },
-    });
     const currentWeekTotal = workSessions.reduce((sum, s) => sum + (s.durationMinutes ?? 0), 0);
     const previousWeekTotal = previousWeekSessions.reduce((sum, s) => sum + (s.durationMinutes ?? 0), 0);
     let weekOverWeekTrend = "stable";
@@ -216,7 +188,6 @@ async function generateWeeklyInsights(prisma, userId, weekStart, weekEnd) {
             confidence: "medium",
         });
     }
-    const user = await prisma.user.findUnique({ where: { id: userId } });
     if (user && averageDailyMinutes < user.dailyGoalMinutes * 0.7) {
         recommendations.push({
             type: "daily_goal",

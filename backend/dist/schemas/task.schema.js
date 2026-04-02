@@ -20,7 +20,7 @@ exports.updateTaskSchema = zod_1.z.object({
 exports.tasksQuerySchema = zod_1.z.object({
     completed: zod_1.z.string().transform((val) => val === "true").optional(),
     priority: zod_1.z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]).optional(),
-    category: zod_1.z.string().optional(),
+    category: zod_1.z.string().max(50).optional(),
     limit: zod_1.z.coerce.number().int().positive().max(100).default(50),
     offset: zod_1.z.coerce.number().int().nonnegative().default(0),
 });

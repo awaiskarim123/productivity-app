@@ -6,6 +6,8 @@ import {
   updateTaskSchema,
   tasksQuerySchema,
 } from "../../schemas/task.schema";
+import { idParamSchema } from "../../schemas/common.schema";
+import { parseOrBadRequest } from "../../utils/parse-request";
 import { logAudit } from "../../services/audit.service";
 
 dayjs.extend(utc);
@@ -87,7 +89,9 @@ export default async function taskRoutes(app: FastifyInstance) {
   });
 
   app.get("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
     const task = await app.prisma.task.findFirst({
       where: {
         id,
@@ -104,7 +108,9 @@ export default async function taskRoutes(app: FastifyInstance) {
   });
 
   app.patch("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
     const result = updateTaskSchema.safeParse(request.body ?? {});
     if (!result.success) {
       return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
@@ -171,7 +177,9 @@ export default async function taskRoutes(app: FastifyInstance) {
   });
 
   app.delete("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
     
     // Soft delete: set deletedAt timestamp instead of actually deleting
     const updateResult = await app.prisma.task.updateMany({

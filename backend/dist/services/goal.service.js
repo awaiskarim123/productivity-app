@@ -9,32 +9,64 @@ exports.getGoalContributions = getGoalContributions;
 exports.getGoalTimeline = getGoalTimeline;
 const dayjs_1 = __importDefault(require("dayjs"));
 /**
- * Calculate goal progress from linked activities
+ * Calculate goal progress from linked activities.
+ * Uses two queries so habit logs are bounded by goal start/end (avoids loading unbounded log history).
  */
 async function calculateGoalProgress(prisma, goalId) {
-    const goal = await prisma.goal.findUnique({
+    const goalMeta = await prisma.goal.findUnique({
         where: { id: goalId },
-        include: {
+        select: {
+            id: true,
+            startDate: true,
+            endDate: true,
+            targetValue: true,
             keyResults: true,
+        },
+    });
+    if (!goalMeta) {
+        throw new Error("Goal not found");
+    }
+    const startDate = (0, dayjs_1.default)(goalMeta.startDate);
+    const endDate = (0, dayjs_1.default)(goalMeta.endDate);
+    const logRange = { gte: goalMeta.startDate, lte: goalMeta.endDate };
+    const activities = await prisma.goal.findUnique({
+        where: { id: goalId },
+        select: {
             tasks: {
                 where: { deletedAt: null },
+                select: { id: true, completed: true },
             },
             habits: {
                 where: { deletedAt: null },
-                include: {
-                    logs: true,
+                select: {
+                    id: true,
+                    logs: {
+                        where: { date: logRange },
+                        select: { date: true },
+                    },
                 },
             },
             focusSessions: {
-                where: { deletedAt: null },
+                where: {
+                    deletedAt: null,
+                    startedAt: logRange,
+                },
+                select: { id: true, startedAt: true, endedAt: true, durationMinutes: true },
             },
         },
     });
-    if (!goal) {
+    if (!activities) {
         throw new Error("Goal not found");
     }
-    const startDate = (0, dayjs_1.default)(goal.startDate);
-    const endDate = (0, dayjs_1.default)(goal.endDate);
+    const goal = {
+        ...goalMeta,
+        startDate: goalMeta.startDate,
+        endDate: goalMeta.endDate,
+        keyResults: goalMeta.keyResults,
+        tasks: activities.tasks,
+        habits: activities.habits,
+        focusSessions: activities.focusSessions,
+    };
     const now = (0, dayjs_1.default)();
     const totalDays = endDate.diff(startDate, "day");
     const elapsedDays = Math.max(0, now.diff(startDate, "day"));
@@ -72,15 +104,10 @@ async function calculateGoalProgress(prisma, goalId) {
                 ? habitProgresses.reduce((sum, p) => sum + p, 0) / habitProgresses.length
                 : 0;
     }
-    // Calculate progress from Focus Sessions (minutes within goal period)
-    const focusSessionsInPeriod = goal.focusSessions.filter((session) => {
-        if (!session.endedAt || !session.durationMinutes)
-            return false;
-        const sessionDate = (0, dayjs_1.default)(session.startedAt);
-        return ((sessionDate.isAfter(startDate) || sessionDate.isSame(startDate, "day")) &&
-            (sessionDate.isBefore(endDate) || sessionDate.isSame(endDate, "day")));
-    });
-    const totalFocusMinutes = focusSessionsInPeriod.reduce((sum, session) => sum + (session.durationMinutes || 0), 0);
+    // Calculate progress from Focus Sessions (minutes within goal period; date filter applied in query via logRange)
+    const totalFocusMinutes = goal.focusSessions
+        .filter((session) => session.endedAt != null && session.durationMinutes != null)
+        .reduce((sum, session) => sum + (session.durationMinutes || 0), 0);
     // Estimate target focus minutes (assuming daily goal * days in period)
     // This is a simplified calculation - you might want to make it configurable
     const estimatedTargetMinutes = totalDays * 60; // Default: 60 minutes per day
@@ -151,9 +178,18 @@ async function updateGoalProgress(prisma, goalId) {
     });
 }
 /**
- * Get contribution breakdown for a goal
+ * Get contribution breakdown for a goal.
+ * Bounds habit logs by goal period to avoid loading unbounded history.
  */
 async function getGoalContributions(prisma, goalId) {
+    const goalMeta = await prisma.goal.findUnique({
+        where: { id: goalId },
+        select: { startDate: true, endDate: true },
+    });
+    if (!goalMeta) {
+        throw new Error("Goal not found");
+    }
+    const logRange = { gte: goalMeta.startDate, lte: goalMeta.endDate };
     const goal = await prisma.goal.findUnique({
         where: { id: goalId },
         include: {
@@ -173,14 +209,16 @@ async function getGoalContributions(prisma, goalId) {
                     id: true,
                     name: true,
                     logs: {
-                        select: {
-                            date: true,
-                        },
+                        where: { date: logRange },
+                        select: { date: true },
                     },
                 },
             },
             focusSessions: {
-                where: { deletedAt: null },
+                where: {
+                    deletedAt: null,
+                    startedAt: logRange,
+                },
                 select: {
                     id: true,
                     startedAt: true,
@@ -215,14 +253,8 @@ async function getGoalContributions(prisma, goalId) {
             (logDate.isBefore(endDate) || logDate.isSame(endDate, "day")));
     }));
     const habitContribution = goal.habits.length > 0 ? (habitLogsInPeriod.length / goal.habits.length) * 10 : 0; // Simplified
-    // Calculate focus session contribution
-    const focusMinutes = goal.focusSessions
-        .filter((s) => {
-        const sessionDate = (0, dayjs_1.default)(s.startedAt);
-        return ((sessionDate.isAfter(startDate) || sessionDate.isSame(startDate, "day")) &&
-            (sessionDate.isBefore(endDate) || sessionDate.isSame(endDate, "day")));
-    })
-        .reduce((sum, s) => sum + (s.durationMinutes || 0), 0);
+    // Focus sessions already date-bounded by logRange in query
+    const focusMinutes = goal.focusSessions.reduce((sum, s) => sum + (s.durationMinutes || 0), 0);
     return {
         tasks: {
             total: totalTasks,
@@ -271,12 +303,26 @@ async function getGoalContributions(prisma, goalId) {
     };
 }
 /**
- * Get timeline data for a goal
+ * Get timeline data for a goal.
+ * Fetches goal dates first so habit logs can be bounded by goal period (scalability).
  */
 async function getGoalTimeline(prisma, goalId) {
+    const goalMeta = await prisma.goal.findUnique({
+        where: { id: goalId },
+        select: { id: true, title: true, startDate: true, endDate: true, progressPercent: true },
+    });
+    if (!goalMeta) {
+        throw new Error("Goal not found");
+    }
+    const logRange = { gte: goalMeta.startDate, lte: goalMeta.endDate };
     const goal = await prisma.goal.findUnique({
         where: { id: goalId },
-        include: {
+        select: {
+            id: true,
+            title: true,
+            startDate: true,
+            endDate: true,
+            progressPercent: true,
             tasks: {
                 where: { deletedAt: null },
                 select: {
@@ -289,16 +335,19 @@ async function getGoalTimeline(prisma, goalId) {
             },
             habits: {
                 where: { deletedAt: null },
-                include: {
+                select: {
+                    id: true,
                     logs: {
-                        select: {
-                            date: true,
-                        },
+                        where: { date: logRange },
+                        select: { date: true },
                     },
                 },
             },
             focusSessions: {
-                where: { deletedAt: null },
+                where: {
+                    deletedAt: null,
+                    startedAt: logRange,
+                },
                 select: {
                     id: true,
                     startedAt: true,

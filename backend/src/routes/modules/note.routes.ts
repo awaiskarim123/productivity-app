@@ -4,6 +4,8 @@ import {
   updateNoteSchema,
   notesQuerySchema,
 } from "../../schemas/note.schema";
+import { idParamSchema } from "../../schemas/common.schema";
+import { parseOrBadRequest } from "../../utils/parse-request";
 import { logAudit } from "../../services/audit.service";
 
 export default async function noteRoutes(app: FastifyInstance) {
@@ -89,7 +91,9 @@ export default async function noteRoutes(app: FastifyInstance) {
 
   // Parameterized routes come after literal routes
   app.get("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
     const note = await app.prisma.note.findFirst({
       where: {
         id,
@@ -106,7 +110,9 @@ export default async function noteRoutes(app: FastifyInstance) {
   });
 
   app.patch("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
     const result = updateNoteSchema.safeParse(request.body ?? {});
     if (!result.success) {
       return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
@@ -136,7 +142,9 @@ export default async function noteRoutes(app: FastifyInstance) {
   });
 
   app.delete("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
     
     // Soft delete: set deletedAt timestamp instead of actually deleting
     const updateResult = await app.prisma.note.updateMany({
