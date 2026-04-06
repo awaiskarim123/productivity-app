@@ -7,6 +7,8 @@ import {
   workSessionsQuerySchema,
   updateWorkSessionSchema,
 } from "../../schemas/work.schema";
+import { idParamSchema } from "../../schemas/common.schema";
+import { parseOrBadRequest } from "../../utils/parse-request";
 import { calculateFocusStreak, getTimeSummary } from "../../services/statistics.service";
 import { logAudit } from "../../services/audit.service";
 
@@ -182,7 +184,9 @@ export default async function workRoutes(app: FastifyInstance) {
   });
 
   app.get("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
     const session = await app.prisma.workSession.findFirst({
       where: {
         id,
@@ -199,7 +203,9 @@ export default async function workRoutes(app: FastifyInstance) {
   });
 
   app.patch("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
     const result = updateWorkSessionSchema.safeParse(request.body ?? {});
     if (!result.success) {
       return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
@@ -253,7 +259,9 @@ export default async function workRoutes(app: FastifyInstance) {
   });
 
   app.delete("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
     
     // Soft delete: set deletedAt timestamp instead of actually deleting
     const updateResult = await app.prisma.workSession.updateMany({

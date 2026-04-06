@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.changePasswordSchema = exports.updateProfileSchema = exports.importPayloadSchema = void 0;
+exports.changePasswordSchema = exports.updateProfileSchema = exports.importPayloadSchema = exports.exportQuerySchema = void 0;
 const zod_1 = require("zod");
 const taskExportItem = zod_1.z.object({
     title: zod_1.z.string(),
@@ -56,6 +56,10 @@ const goalExportItem = zod_1.z.object({
     targetValue: zod_1.z.number().optional(),
     keyResults: zod_1.z.array(keyResultExportItem).optional(),
 });
+exports.exportQuerySchema = zod_1.z.object({
+    format: zod_1.z.enum(["json", "csv"]).default("json"),
+    entity: zod_1.z.enum(["tasks", "notes"]).optional(),
+}).refine((data) => data.format !== "csv" || (data.entity === "tasks" || data.entity === "notes"), { message: "CSV export requires entity=tasks or entity=notes", path: ["entity"] });
 exports.importPayloadSchema = zod_1.z.object({
     version: zod_1.z.number().int().positive(),
     exportedAt: zod_1.z.string().optional(),
@@ -76,10 +80,11 @@ exports.updateProfileSchema = zod_1.z
     .refine((data) => Object.keys(data).length > 0, {
     message: "At least one field is required",
 });
+const PASSWORD_MAX_LENGTH = 128;
 exports.changePasswordSchema = zod_1.z
     .object({
-    currentPassword: zod_1.z.string().min(8, "Current password must be at least 8 characters"),
-    newPassword: zod_1.z.string().min(8, "New password must be at least 8 characters"),
+    currentPassword: zod_1.z.string().min(8, "Current password must be at least 8 characters").max(PASSWORD_MAX_LENGTH),
+    newPassword: zod_1.z.string().min(8, "New password must be at least 8 characters").max(PASSWORD_MAX_LENGTH),
 })
     .refine((data) => {
     const password = data.newPassword;

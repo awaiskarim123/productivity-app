@@ -29,7 +29,7 @@ async function createTokenPair(app, user) {
 }
 async function authRoutes(app) {
     app.post("/register", async (request, reply) => {
-        const result = auth_schema_1.registerSchema.safeParse(request.body);
+        const result = auth_schema_1.registerSchema.safeParse(request.body ?? {});
         if (!result.success) {
             return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
         }
@@ -61,7 +61,7 @@ async function authRoutes(app) {
         });
     });
     app.post("/login", async (request, reply) => {
-        const result = auth_schema_1.loginSchema.safeParse(request.body);
+        const result = auth_schema_1.loginSchema.safeParse(request.body ?? {});
         if (!result.success) {
             return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
         }
@@ -92,7 +92,7 @@ async function authRoutes(app) {
         });
     });
     app.post("/refresh", async (request, reply) => {
-        const result = auth_schema_1.refreshSchema.safeParse(request.body);
+        const result = auth_schema_1.refreshSchema.safeParse(request.body ?? {});
         if (!result.success) {
             return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
         }
@@ -126,7 +126,7 @@ async function authRoutes(app) {
         });
     });
     app.post("/logout", async (request, reply) => {
-        const result = auth_schema_1.refreshSchema.safeParse(request.body);
+        const result = auth_schema_1.refreshSchema.safeParse(request.body ?? {});
         if (!result.success) {
             return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
         }

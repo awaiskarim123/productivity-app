@@ -30,7 +30,7 @@ async function createTokenPair(app: FastifyInstance, user: { id: string; email: 
 
 export default async function authRoutes(app: FastifyInstance) {
   app.post("/register", async (request, reply) => {
-    const result = registerSchema.safeParse(request.body);
+    const result = registerSchema.safeParse(request.body ?? {});
     if (!result.success) {
       return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
     }
@@ -68,7 +68,7 @@ export default async function authRoutes(app: FastifyInstance) {
   });
 
   app.post("/login", async (request, reply) => {
-    const result = loginSchema.safeParse(request.body);
+    const result = loginSchema.safeParse(request.body ?? {});
     if (!result.success) {
       return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
     }
@@ -106,7 +106,7 @@ export default async function authRoutes(app: FastifyInstance) {
   });
 
   app.post("/refresh", async (request, reply) => {
-    const result = refreshSchema.safeParse(request.body);
+    const result = refreshSchema.safeParse(request.body ?? {});
     if (!result.success) {
       return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
     }
@@ -147,7 +147,7 @@ export default async function authRoutes(app: FastifyInstance) {
   });
 
   app.post("/logout", async (request, reply) => {
-    const result = refreshSchema.safeParse(request.body);
+    const result = refreshSchema.safeParse(request.body ?? {});
     if (!result.success) {
       return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
     }

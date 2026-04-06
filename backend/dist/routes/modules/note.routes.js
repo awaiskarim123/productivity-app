@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = noteRoutes;
 const note_schema_1 = require("../../schemas/note.schema");
+const common_schema_1 = require("../../schemas/common.schema");
+const parse_request_1 = require("../../utils/parse-request");
 const audit_service_1 = require("../../services/audit.service");
 async function noteRoutes(app) {
     app.addHook("preHandler", app.authenticate);
@@ -72,7 +74,10 @@ async function noteRoutes(app) {
     });
     // Parameterized routes come after literal routes
     app.get("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         const note = await app.prisma.note.findFirst({
             where: {
                 id,
@@ -86,7 +91,10 @@ async function noteRoutes(app) {
         return { note };
     });
     app.patch("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         const result = note_schema_1.updateNoteSchema.safeParse(request.body ?? {});
         if (!result.success) {
             return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
@@ -114,7 +122,10 @@ async function noteRoutes(app) {
         return { note };
     });
     app.delete("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         // Soft delete: set deletedAt timestamp instead of actually deleting
         const updateResult = await app.prisma.note.updateMany({
             where: { id, userId: request.user.id, deletedAt: null },

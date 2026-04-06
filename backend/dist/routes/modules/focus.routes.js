@@ -7,6 +7,8 @@ exports.default = focusRoutes;
 const dayjs_1 = __importDefault(require("dayjs"));
 const enums_1 = require("../../generated/prisma/enums");
 const focus_schema_1 = require("../../schemas/focus.schema");
+const common_schema_1 = require("../../schemas/common.schema");
+const parse_request_1 = require("../../utils/parse-request");
 const audit_service_1 = require("../../services/audit.service");
 async function focusRoutes(app) {
     app.addHook("preHandler", app.authenticate);
@@ -170,7 +172,10 @@ async function focusRoutes(app) {
         };
     });
     app.get("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         const session = await app.prisma.focusSession.findFirst({
             where: {
                 id,
@@ -184,7 +189,10 @@ async function focusRoutes(app) {
         return { session };
     });
     app.patch("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         const result = focus_schema_1.updateFocusSessionSchema.safeParse(request.body ?? {});
         if (!result.success) {
             return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
@@ -210,7 +218,10 @@ async function focusRoutes(app) {
         return { session };
     });
     app.delete("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         // Soft delete: set deletedAt timestamp instead of actually deleting
         const updateResult = await app.prisma.focusSession.updateMany({
             where: { id, userId: request.user.id, deletedAt: null },

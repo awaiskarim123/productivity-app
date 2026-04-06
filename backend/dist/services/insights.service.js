@@ -6,60 +6,50 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateWeeklyInsights = generateWeeklyInsights;
 exports.getOrGenerateWeeklyInsights = getOrGenerateWeeklyInsights;
 const dayjs_1 = __importDefault(require("dayjs"));
+const utc_1 = __importDefault(require("dayjs/plugin/utc"));
 const enums_1 = require("../generated/prisma/enums");
+dayjs_1.default.extend(utc_1.default);
 async function generateWeeklyInsights(prisma, userId, weekStart, weekEnd) {
-    // Fetch all work sessions for the week
-    const workSessions = await prisma.workSession.findMany({
-        where: {
-            userId,
-            startedAt: {
-                gte: weekStart,
-                lt: weekEnd,
+    const previousWeekStart = (0, dayjs_1.default)(weekStart).subtract(1, "week").toDate();
+    const previousWeekEnd = (0, dayjs_1.default)(weekEnd).subtract(1, "week").toDate();
+    const [workSessions, focusSessions, habits, previousWeekSessions, user] = await Promise.all([
+        prisma.workSession.findMany({
+            where: {
+                userId,
+                startedAt: { gte: weekStart, lt: weekEnd },
+                durationMinutes: { not: null },
+                deletedAt: null,
             },
-            durationMinutes: { not: null },
-            deletedAt: null,
-        },
-        select: {
-            startedAt: true,
-            durationMinutes: true,
-        },
-    });
-    // Fetch all focus sessions for the week
-    const focusSessions = await prisma.focusSession.findMany({
-        where: {
-            userId,
-            startedAt: {
-                gte: weekStart,
-                lt: weekEnd,
+            select: { startedAt: true, durationMinutes: true },
+        }),
+        prisma.focusSession.findMany({
+            where: {
+                userId,
+                startedAt: { gte: weekStart, lt: weekEnd },
+                durationMinutes: { not: null },
+                deletedAt: null,
             },
-            durationMinutes: { not: null },
-            deletedAt: null,
-        },
-        select: {
-            startedAt: true,
-            durationMinutes: true,
-            completed: true,
-            mode: true,
-        },
-    });
-    // Fetch habits and their logs for the week
-    const habits = await prisma.habit.findMany({
-        where: {
-            userId,
-            isActive: true,
-            deletedAt: null,
-        },
-        include: {
-            logs: {
-                where: {
-                    date: {
-                        gte: weekStart,
-                        lt: weekEnd,
-                    },
+            select: { startedAt: true, durationMinutes: true, completed: true, mode: true },
+        }),
+        prisma.habit.findMany({
+            where: { userId, isActive: true, deletedAt: null },
+            include: {
+                logs: {
+                    where: { date: { gte: weekStart, lt: weekEnd } },
                 },
             },
-        },
-    });
+        }),
+        prisma.workSession.findMany({
+            where: {
+                userId,
+                startedAt: { gte: previousWeekStart, lt: previousWeekEnd },
+                durationMinutes: { not: null },
+                deletedAt: null,
+            },
+            select: { durationMinutes: true },
+        }),
+        prisma.user.findUnique({ where: { id: userId }, select: { dailyGoalMinutes: true } }),
+    ]);
     // Calculate peak hours (hours with most productivity)
     const hourProductivity = new Map();
     workSessions.forEach((session) => {
@@ -87,22 +77,6 @@ async function generateWeeklyInsights(prisma, userId, weekStart, weekEnd) {
         .filter(([, minutes]) => minutes < averageDailyMinutes * 0.7)
         .map(([day]) => day);
     // Calculate week-over-week trend
-    const previousWeekStart = (0, dayjs_1.default)(weekStart).subtract(1, "week").toDate();
-    const previousWeekEnd = (0, dayjs_1.default)(weekEnd).subtract(1, "week").toDate();
-    const previousWeekSessions = await prisma.workSession.findMany({
-        where: {
-            userId,
-            startedAt: {
-                gte: previousWeekStart,
-                lt: previousWeekEnd,
-            },
-            durationMinutes: { not: null },
-            deletedAt: null,
-        },
-        select: {
-            durationMinutes: true,
-        },
-    });
     const currentWeekTotal = workSessions.reduce((sum, s) => sum + (s.durationMinutes ?? 0), 0);
     const previousWeekTotal = previousWeekSessions.reduce((sum, s) => sum + (s.durationMinutes ?? 0), 0);
     let weekOverWeekTrend = "stable";
@@ -216,7 +190,6 @@ async function generateWeeklyInsights(prisma, userId, weekStart, weekEnd) {
             confidence: "medium",
         });
     }
-    const user = await prisma.user.findUnique({ where: { id: userId } });
     if (user && averageDailyMinutes < user.dailyGoalMinutes * 0.7) {
         recommendations.push({
             type: "daily_goal",
@@ -248,14 +221,16 @@ async function generateWeeklyInsights(prisma, userId, weekStart, weekEnd) {
     };
 }
 async function getOrGenerateWeeklyInsights(prisma, userId, weekStart) {
-    const weekStartDate = weekStart ?? (0, dayjs_1.default)().startOf("week").toDate();
-    const weekEndDate = (0, dayjs_1.default)(weekStartDate).endOf("week").toDate();
+    const normalizedWeekStart = weekStart
+        ? dayjs_1.default.utc(weekStart).startOf("week").toDate()
+        : dayjs_1.default.utc().startOf("week").toDate();
+    const weekEndDate = dayjs_1.default.utc(normalizedWeekStart).endOf("week").toDate();
     // Try to get existing insight
     const existing = await prisma.weeklyInsight.findUnique({
         where: {
             userId_weekStart: {
                 userId,
-                weekStart: weekStartDate,
+                weekStart: normalizedWeekStart,
             },
         },
     });
@@ -273,18 +248,18 @@ async function getOrGenerateWeeklyInsights(prisma, userId, weekStart) {
         };
     }
     // Generate new insights
-    const insights = await generateWeeklyInsights(prisma, userId, weekStartDate, weekEndDate);
+    const insights = await generateWeeklyInsights(prisma, userId, normalizedWeekStart, weekEndDate);
     // Store in database
     await prisma.weeklyInsight.upsert({
         where: {
             userId_weekStart: {
                 userId,
-                weekStart: weekStartDate,
+                weekStart: normalizedWeekStart,
             },
         },
         create: {
             userId,
-            weekStart: weekStartDate,
+            weekStart: normalizedWeekStart,
             weekEnd: weekEndDate,
             peakHours: insights.peakHours,
             lowProductivityDays: insights.lowProductivityDays,

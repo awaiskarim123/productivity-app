@@ -11,7 +11,9 @@ const envSchema = zod_1.z.object({
     JWT_REFRESH_TOKEN_TTL: zod_1.z.string().default("30d"),
     PORT: zod_1.z.coerce.number().default(4000),
     RATE_LIMIT_MAX: zod_1.z.coerce.number().int().positive().default(100),
-    RATE_LIMIT_WINDOW_MS: zod_1.z.coerce.number().int().positive().default(900000), // 15 min
+    RATE_LIMIT_WINDOW_MS: zod_1.z.coerce.number().int().positive().default(60000), // 60 sec
+    /** Comma-separated allowed origins for CORS (e.g. https://app.example.com). If unset, allows any origin (dev-only safe). */
+    CORS_ORIGIN: zod_1.z.string().optional(),
 });
 const env = envSchema.parse({
     NODE_ENV: process.env.NODE_ENV ?? "development",
@@ -21,7 +23,8 @@ const env = envSchema.parse({
     JWT_REFRESH_TOKEN_TTL: process.env.JWT_REFRESH_TOKEN_TTL ?? "30d",
     PORT: process.env.PORT ?? "4000",
     RATE_LIMIT_MAX: process.env.RATE_LIMIT_MAX ?? "100",
-    RATE_LIMIT_WINDOW_MS: process.env.RATE_LIMIT_WINDOW_MS ?? "900000",
+    RATE_LIMIT_WINDOW_MS: process.env.RATE_LIMIT_WINDOW_MS ?? "60000",
+    CORS_ORIGIN: process.env.CORS_ORIGIN,
 });
 exports.default = env;
 //# sourceMappingURL=env.js.map

@@ -9,7 +9,7 @@ export declare const startFocusSchema: z.ZodObject<{
     notes: z.ZodOptional<z.ZodString>;
 }, z.core.$strip>;
 export declare const endFocusSchema: z.ZodObject<{
-    sessionId: z.ZodString;
+    sessionId: z.ZodCUID;
     endedAt: z.ZodOptional<z.ZodCoercedDate<unknown>>;
     completed: z.ZodOptional<z.ZodBoolean>;
     distractions: z.ZodOptional<z.ZodCoercedNumber<unknown>>;

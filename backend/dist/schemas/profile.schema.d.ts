@@ -1,4 +1,14 @@
 import { z } from "zod";
+export declare const exportQuerySchema: z.ZodObject<{
+    format: z.ZodDefault<z.ZodEnum<{
+        json: "json";
+        csv: "csv";
+    }>>;
+    entity: z.ZodOptional<z.ZodEnum<{
+        tasks: "tasks";
+        notes: "notes";
+    }>>;
+}, z.core.$strip>;
 export declare const importPayloadSchema: z.ZodObject<{
     version: z.ZodNumber;
     exportedAt: z.ZodOptional<z.ZodString>;

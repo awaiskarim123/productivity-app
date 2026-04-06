@@ -7,6 +7,7 @@ declare const env: {
     PORT: number;
     RATE_LIMIT_MAX: number;
     RATE_LIMIT_WINDOW_MS: number;
+    CORS_ORIGIN?: string | undefined;
 };
 export type Env = typeof env;
 export default env;

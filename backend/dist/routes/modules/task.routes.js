@@ -7,6 +7,8 @@ exports.default = taskRoutes;
 const dayjs_1 = __importDefault(require("dayjs"));
 const utc_1 = __importDefault(require("dayjs/plugin/utc"));
 const task_schema_1 = require("../../schemas/task.schema");
+const common_schema_1 = require("../../schemas/common.schema");
+const parse_request_1 = require("../../utils/parse-request");
 const audit_service_1 = require("../../services/audit.service");
 dayjs_1.default.extend(utc_1.default);
 async function taskRoutes(app) {
@@ -76,7 +78,10 @@ async function taskRoutes(app) {
         return { categories };
     });
     app.get("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         const task = await app.prisma.task.findFirst({
             where: {
                 id,
@@ -90,7 +95,10 @@ async function taskRoutes(app) {
         return { task };
     });
     app.patch("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         const result = task_schema_1.updateTaskSchema.safeParse(request.body ?? {});
         if (!result.success) {
             return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
@@ -134,9 +142,9 @@ async function taskRoutes(app) {
             if (updateResult.count === 0) {
                 return reply.code(404).send({ message: "Task not found" });
             }
-            // Fetch the updated task to return
+            // Fetch the updated task to return (scope by userId for consistency)
             const task = await app.prisma.task.findFirst({
-                where: { id, deletedAt: null },
+                where: { id, userId: request.user.id, deletedAt: null },
             });
             if (!task) {
                 return reply.code(404).send({ message: "Task not found" });
@@ -154,7 +162,10 @@ async function taskRoutes(app) {
         }
     });
     app.delete("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         // Soft delete: set deletedAt timestamp instead of actually deleting
         const updateResult = await app.prisma.task.updateMany({
             where: { id, userId: request.user.id, deletedAt: null },

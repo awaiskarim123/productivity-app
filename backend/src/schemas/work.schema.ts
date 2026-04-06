@@ -6,7 +6,7 @@ export const startWorkSchema = z.object({
 });
 
 export const endWorkSchema = z.object({
-  sessionId: z.string().min(1),
+  sessionId: z.cuid(),
   endedAt: z.coerce.date().optional(),
   notes: z.string().max(500).optional(),
 });

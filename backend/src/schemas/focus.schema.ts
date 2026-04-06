@@ -9,7 +9,7 @@ export const startFocusSchema = z.object({
 });
 
 export const endFocusSchema = z.object({
-  sessionId: z.string().min(1),
+  sessionId: z.cuid(),
   endedAt: z.coerce.date().optional(),
   completed: z.boolean().optional(),
   distractions: z.coerce.number().int().min(0).max(99).optional(),

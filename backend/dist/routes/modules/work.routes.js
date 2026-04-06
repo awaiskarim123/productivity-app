@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = workRoutes;
 const dayjs_1 = __importDefault(require("dayjs"));
 const work_schema_1 = require("../../schemas/work.schema");
+const common_schema_1 = require("../../schemas/common.schema");
+const parse_request_1 = require("../../utils/parse-request");
 const statistics_service_1 = require("../../services/statistics.service");
 const audit_service_1 = require("../../services/audit.service");
 function getPeriodConfig(period) {
@@ -107,8 +109,48 @@ async function workRoutes(app) {
         });
         return { sessions };
     });
+    app.get("/summary", async (request, reply) => {
+        const result = work_schema_1.workSummaryQuerySchema.safeParse(request.query ?? {});
+        if (!result.success) {
+            return reply.code(400).send({ message: "Invalid query", errors: result.error.flatten() });
+        }
+        const { period } = result.data;
+        const config = getPeriodConfig(period);
+        const buckets = new Map();
+        const now = (0, dayjs_1.default)();
+        const rangeStart = now.startOf(config.unit).subtract(config.count - 1, config.unit);
+        for (let i = 0; i < config.count; i += 1) {
+            const start = rangeStart.add(i, config.unit).startOf(config.unit);
+            buckets.set(start.toISOString(), 0);
+        }
+        const sessions = await app.prisma.workSession.findMany({
+            where: {
+                userId: request.user.id,
+                durationMinutes: { not: null },
+                startedAt: { gte: rangeStart.toDate() },
+                deletedAt: null, // Only include non-deleted sessions
+            },
+            select: {
+                startedAt: true,
+                durationMinutes: true,
+            },
+        });
+        sessions.forEach((session) => {
+            const bucketKey = (0, dayjs_1.default)(session.startedAt).startOf(config.unit).toISOString();
+            const current = buckets.get(bucketKey) ?? 0;
+            buckets.set(bucketKey, current + (session.durationMinutes ?? 0));
+        });
+        const summary = Array.from(buckets.entries()).map(([periodStart, minutes]) => ({
+            periodStart,
+            minutes,
+        }));
+        return { period, summary };
+    });
     app.get("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         const session = await app.prisma.workSession.findFirst({
             where: {
                 id,
@@ -122,7 +164,10 @@ async function workRoutes(app) {
         return { session };
     });
     app.patch("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         const result = work_schema_1.updateWorkSessionSchema.safeParse(request.body ?? {});
         if (!result.success) {
             return reply.code(400).send({ message: "Invalid input", errors: result.error.flatten() });
@@ -167,7 +212,10 @@ async function workRoutes(app) {
         return { session };
     });
     app.delete("/:id", async (request, reply) => {
-        const { id } = request.params;
+        const params = (0, parse_request_1.parseOrBadRequest)(reply, common_schema_1.idParamSchema, request.params, "Invalid parameters");
+        if (!params)
+            return;
+        const { id } = params;
         // Soft delete: set deletedAt timestamp instead of actually deleting
         const updateResult = await app.prisma.workSession.updateMany({
             where: { id, userId: request.user.id, deletedAt: null },
@@ -178,43 +226,6 @@ async function workRoutes(app) {
         }
         await (0, audit_service_1.logAudit)(app.prisma, request.user.id, "work_session", id, "delete", {}, request);
         return reply.code(204).send();
-    });
-    app.get("/summary", async (request, reply) => {
-        const result = work_schema_1.workSummaryQuerySchema.safeParse(request.query ?? {});
-        if (!result.success) {
-            return reply.code(400).send({ message: "Invalid query", errors: result.error.flatten() });
-        }
-        const { period } = result.data;
-        const config = getPeriodConfig(period);
-        const buckets = new Map();
-        const now = (0, dayjs_1.default)();
-        const rangeStart = now.startOf(config.unit).subtract(config.count - 1, config.unit);
-        for (let i = 0; i < config.count; i += 1) {
-            const start = rangeStart.add(i, config.unit).startOf(config.unit);
-            buckets.set(start.toISOString(), 0);
-        }
-        const sessions = await app.prisma.workSession.findMany({
-            where: {
-                userId: request.user.id,
-                durationMinutes: { not: null },
-                startedAt: { gte: rangeStart.toDate() },
-                deletedAt: null, // Only include non-deleted sessions
-            },
-            select: {
-                startedAt: true,
-                durationMinutes: true,
-            },
-        });
-        sessions.forEach((session) => {
-            const bucketKey = (0, dayjs_1.default)(session.startedAt).startOf(config.unit).toISOString();
-            const current = buckets.get(bucketKey) ?? 0;
-            buckets.set(bucketKey, current + (session.durationMinutes ?? 0));
-        });
-        const summary = Array.from(buckets.entries()).map(([periodStart, minutes]) => ({
-            periodStart,
-            minutes,
-        }));
-        return { period, summary };
     });
 }
 //# sourceMappingURL=work.routes.js.map

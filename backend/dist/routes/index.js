@@ -15,6 +15,7 @@ const habit_routes_1 = __importDefault(require("./modules/habit.routes"));
 const note_routes_1 = __importDefault(require("./modules/note.routes"));
 const goal_routes_1 = __importDefault(require("./modules/goal.routes"));
 const audit_routes_1 = __importDefault(require("./modules/audit.routes"));
+const productivity_routes_1 = __importDefault(require("./modules/productivity.routes"));
 async function registerRoutes(app) {
     app.get("/health", async () => ({ status: "ok" }));
     app.register(auth_routes_1.default, { prefix: "/auth" });
@@ -28,5 +29,6 @@ async function registerRoutes(app) {
     app.register(note_routes_1.default, { prefix: "/notes" });
     app.register(goal_routes_1.default, { prefix: "/goals" });
     app.register(audit_routes_1.default, { prefix: "/audit-logs" });
+    app.register(productivity_routes_1.default, { prefix: "/productivity" });
 }
 //# sourceMappingURL=index.js.map

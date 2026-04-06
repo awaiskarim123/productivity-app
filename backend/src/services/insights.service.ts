@@ -1,6 +1,9 @@
 import type { PrismaClient } from "../generated/prisma/client";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { FocusSessionMode } from "../generated/prisma/enums";
+
+dayjs.extend(utc);
 
 export interface WeeklyInsightData {
   peakHours: number[];
@@ -303,15 +306,17 @@ export async function getOrGenerateWeeklyInsights(
   userId: string,
   weekStart?: Date,
 ): Promise<WeeklyInsightData> {
-  const weekStartDate = weekStart ?? dayjs().startOf("week").toDate();
-  const weekEndDate = dayjs(weekStartDate).endOf("week").toDate();
+  const normalizedWeekStart = weekStart
+    ? dayjs.utc(weekStart).startOf("week").toDate()
+    : dayjs.utc().startOf("week").toDate();
+  const weekEndDate = dayjs.utc(normalizedWeekStart).endOf("week").toDate();
 
   // Try to get existing insight
   const existing = await prisma.weeklyInsight.findUnique({
     where: {
       userId_weekStart: {
         userId,
-        weekStart: weekStartDate,
+        weekStart: normalizedWeekStart,
       },
     },
   });
@@ -331,19 +336,19 @@ export async function getOrGenerateWeeklyInsights(
   }
 
   // Generate new insights
-  const insights = await generateWeeklyInsights(prisma, userId, weekStartDate, weekEndDate);
+  const insights = await generateWeeklyInsights(prisma, userId, normalizedWeekStart, weekEndDate);
 
   // Store in database
   await prisma.weeklyInsight.upsert({
     where: {
       userId_weekStart: {
         userId,
-        weekStart: weekStartDate,
+        weekStart: normalizedWeekStart,
       },
     },
     create: {
       userId,
-      weekStart: weekStartDate,
+      weekStart: normalizedWeekStart,
       weekEnd: weekEndDate,
       peakHours: insights.peakHours,
       lowProductivityDays: insights.lowProductivityDays,

@@ -7,8 +7,15 @@ import {
   createKeyResultSchema,
   updateKeyResultSchema,
   goalsQuerySchema,
-  linkToGoalSchema,
 } from "../../schemas/goal.schema";
+import {
+  goalFocusSessionLinkParamsSchema,
+  goalHabitLinkParamsSchema,
+  goalIdParamSchema,
+  goalTaskLinkParamsSchema,
+  idParamSchema,
+} from "../../schemas/common.schema";
+import { parseOrBadRequest } from "../../utils/parse-request";
 import {
   calculateGoalProgress,
   updateGoalProgress,
@@ -110,7 +117,9 @@ export default async function goalRoutes(app: FastifyInstance) {
   });
 
   app.get("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
 
     const goal = await app.prisma.goal.findFirst({
       where: {
@@ -140,7 +149,9 @@ export default async function goalRoutes(app: FastifyInstance) {
   });
 
   app.patch("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
     const result = updateGoalSchema.safeParse(request.body ?? {});
 
     if (!result.success) {
@@ -207,7 +218,9 @@ export default async function goalRoutes(app: FastifyInstance) {
   });
 
   app.delete("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
 
     const goal = await app.prisma.goal.findFirst({
       where: {
@@ -233,7 +246,9 @@ export default async function goalRoutes(app: FastifyInstance) {
   // ========== Key Results CRUD ==========
 
   app.post("/:goalId/key-results", async (request, reply) => {
-    const { goalId } = request.params as { goalId: string };
+    const params = parseOrBadRequest(reply, goalIdParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { goalId } = params;
     const result = createKeyResultSchema.safeParse(request.body ?? {});
 
     if (!result.success) {
@@ -267,7 +282,9 @@ export default async function goalRoutes(app: FastifyInstance) {
   });
 
   app.patch("/key-results/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
     const result = updateKeyResultSchema.safeParse(request.body ?? {});
 
     if (!result.success) {
@@ -321,7 +338,9 @@ export default async function goalRoutes(app: FastifyInstance) {
   });
 
   app.delete("/key-results/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
 
     const keyResult = await app.prisma.keyResult.findUnique({
       where: { id },
@@ -345,7 +364,9 @@ export default async function goalRoutes(app: FastifyInstance) {
   // ========== Linking Activities to Goals ==========
 
   app.post("/:goalId/link/task/:taskId", async (request, reply) => {
-    const { goalId, taskId } = request.params as { goalId: string; taskId: string };
+    const params = parseOrBadRequest(reply, goalTaskLinkParamsSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { goalId, taskId } = params;
 
     const goal = await app.prisma.goal.findFirst({
       where: {
@@ -383,7 +404,9 @@ export default async function goalRoutes(app: FastifyInstance) {
   });
 
   app.post("/:goalId/link/habit/:habitId", async (request, reply) => {
-    const { goalId, habitId } = request.params as { goalId: string; habitId: string };
+    const params = parseOrBadRequest(reply, goalHabitLinkParamsSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { goalId, habitId } = params;
 
     const goal = await app.prisma.goal.findFirst({
       where: {
@@ -421,7 +444,14 @@ export default async function goalRoutes(app: FastifyInstance) {
   });
 
   app.post("/:goalId/link/focus-session/:sessionId", async (request, reply) => {
-    const { goalId, sessionId } = request.params as { goalId: string; sessionId: string };
+    const params = parseOrBadRequest(
+      reply,
+      goalFocusSessionLinkParamsSchema,
+      request.params,
+      "Invalid parameters",
+    );
+    if (!params) return;
+    const { goalId, sessionId } = params;
 
     const goal = await app.prisma.goal.findFirst({
       where: {
@@ -459,7 +489,9 @@ export default async function goalRoutes(app: FastifyInstance) {
   });
 
   app.delete("/:goalId/unlink/task/:taskId", async (request, reply) => {
-    const { goalId, taskId } = request.params as { goalId: string; taskId: string };
+    const params = parseOrBadRequest(reply, goalTaskLinkParamsSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { goalId, taskId } = params;
 
     const task = await app.prisma.task.findFirst({
       where: {
@@ -486,7 +518,9 @@ export default async function goalRoutes(app: FastifyInstance) {
   });
 
   app.delete("/:goalId/unlink/habit/:habitId", async (request, reply) => {
-    const { goalId, habitId } = request.params as { goalId: string; habitId: string };
+    const params = parseOrBadRequest(reply, goalHabitLinkParamsSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { goalId, habitId } = params;
 
     const habit = await app.prisma.habit.findFirst({
       where: {
@@ -513,7 +547,14 @@ export default async function goalRoutes(app: FastifyInstance) {
   });
 
   app.delete("/:goalId/unlink/focus-session/:sessionId", async (request, reply) => {
-    const { goalId, sessionId } = request.params as { goalId: string; sessionId: string };
+    const params = parseOrBadRequest(
+      reply,
+      goalFocusSessionLinkParamsSchema,
+      request.params,
+      "Invalid parameters",
+    );
+    if (!params) return;
+    const { goalId, sessionId } = params;
 
     const session = await app.prisma.focusSession.findFirst({
       where: {
@@ -542,7 +583,9 @@ export default async function goalRoutes(app: FastifyInstance) {
   // ========== Analysis Endpoints ==========
 
   app.get("/:id/contributions", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
 
     const goal = await app.prisma.goal.findFirst({
       where: {
@@ -562,7 +605,9 @@ export default async function goalRoutes(app: FastifyInstance) {
   });
 
   app.get("/:id/timeline", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
 
     const goal = await app.prisma.goal.findFirst({
       where: {
@@ -584,7 +629,9 @@ export default async function goalRoutes(app: FastifyInstance) {
   // ========== Recalculate Progress ==========
 
   app.post("/:id/recalculate", async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const params = parseOrBadRequest(reply, idParamSchema, request.params, "Invalid parameters");
+    if (!params) return;
+    const { id } = params;
 
     const goal = await app.prisma.goal.findFirst({
       where: {

@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { FocusSessionMode } from "../../generated/prisma/enums";
 import { getTimeSummary } from "../../services/statistics.service";
 import { getOrGenerateWeeklyInsights } from "../../services/insights.service";
@@ -15,6 +16,9 @@ import {
   productivityScoreQuerySchema,
   weeklyInsightsQuerySchema,
 } from "../../schemas/analytics.schema";
+import { parseQueryOrBadRequest } from "../../utils/parse-request";
+
+dayjs.extend(utc);
 
 function buildBuckets(
   start: dayjs.Dayjs,
@@ -169,17 +173,19 @@ export default async function analyticsRoutes(app: FastifyInstance) {
   });
 
   app.get("/weekly-insights", async (request, reply) => {
+    const parsed = parseQueryOrBadRequest(reply, weeklyInsightsQuerySchema, request.query);
+    if (!parsed) return;
+
     const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
 
     if (!user) {
       return reply.code(404).send({ message: "User not found" });
     }
 
-    const parsed = weeklyInsightsQuerySchema.safeParse(request.query ?? {});
-    const weekStartParam = parsed.success ? parsed.data.weekStart : undefined;
+    const weekStartParam = parsed.weekStart;
     const weekStart = weekStartParam
-      ? dayjs(weekStartParam).startOf("week").toDate()
-      : dayjs().startOf("week").toDate();
+      ? dayjs.utc(weekStartParam).startOf("week").toDate()
+      : dayjs.utc().startOf("week").toDate();
 
     const insights = await getOrGenerateWeeklyInsights(app.prisma, user.id, weekStart);
 
@@ -199,7 +205,7 @@ export default async function analyticsRoutes(app: FastifyInstance) {
 
     return {
       weekStart: weekStart.toISOString(),
-      weekEnd: dayjs(weekStart).endOf("week").toISOString(),
+      weekEnd: dayjs.utc(weekStart).endOf("week").toISOString(),
       completionRate,
       bestFocusWindow,
       ...insights,
@@ -213,7 +219,7 @@ export default async function analyticsRoutes(app: FastifyInstance) {
       return reply.code(404).send({ message: "User not found" });
     }
 
-    const weekStart = dayjs().startOf("week").toDate();
+    const weekStart = dayjs.utc().startOf("week").toDate();
     const insights = await getOrGenerateWeeklyInsights(app.prisma, user.id, weekStart);
 
     return {
@@ -223,34 +229,40 @@ export default async function analyticsRoutes(app: FastifyInstance) {
   });
 
   app.get("/heatmap", async (request, reply) => {
+    const parsed = parseQueryOrBadRequest(reply, heatmapQuerySchema, request.query);
+    if (!parsed) return;
+    const { days } = parsed;
+
     const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
     if (!user) {
       return reply.code(404).send({ message: "User not found" });
     }
-    const parsed = heatmapQuerySchema.safeParse(request.query ?? {});
-    const days = parsed.success ? parsed.data.days : 14;
     const heatmap = await getFocusHeatmapData(app.prisma, user.id, days);
     return heatmap;
   });
 
   app.get("/burnout", async (request, reply) => {
+    const parsed = parseQueryOrBadRequest(reply, burnoutQuerySchema, request.query);
+    if (!parsed) return;
+    const { windowDays } = parsed;
+
     const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
     if (!user) {
       return reply.code(404).send({ message: "User not found" });
     }
-    const parsed = burnoutQuerySchema.safeParse(request.query ?? {});
-    const windowDays = parsed.success ? parsed.data.windowDays : 7;
     const burnout = await getBurnoutSignalData(app.prisma, user.id, windowDays);
     return burnout;
   });
 
   app.get("/productivity-score", async (request, reply) => {
+    const parsed = parseQueryOrBadRequest(reply, productivityScoreQuerySchema, request.query);
+    if (!parsed) return;
+    const { periodDays } = parsed;
+
     const user = await app.prisma.user.findUnique({ where: { id: request.user.id } });
     if (!user) {
       return reply.code(404).send({ message: "User not found" });
     }
-    const parsed = productivityScoreQuerySchema.safeParse(request.query ?? {});
-    const periodDays = parsed.success ? parsed.data.periodDays : 7;
     const score = await getProductivityScoreData(app.prisma, user.id, periodDays);
     return score;
   });
